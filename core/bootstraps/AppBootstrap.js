@@ -274,7 +274,15 @@ AppBootstrap.prototype._walkDir=function(cb,dir,context,parentModules){
 	}
 	
 }
+AppBootstrap.prototype._appHasConfigFile = function() {
+	return  fs.existsSync(this._path+'/config/app.js');
+}
 AppBootstrap.prototype.buildApp = function(cb) {
+	if(!this._appHasConfigFile){
+		//There isn't an app here
+		cb();
+		return;
+	}
 	try{
 		this._walkDir(cb,this._path,CONTEXT_ROOT);
 	}

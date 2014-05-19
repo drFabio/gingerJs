@@ -500,7 +500,7 @@ Ginger.prototype._startGateways = function (cb) {
         }
         asyncFunctions.push(funcToCreateGateway(name, this._config.gateways[name]));
     }
-    async.parallel(asyncFunctions, function (err, res) {
+    async.series(asyncFunctions, function (err, res) {
         cb(err);
     });
 };
