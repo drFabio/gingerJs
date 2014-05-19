@@ -1,0 +1,10 @@
+module.exports={
+	message:null,
+	code:null,
+	data:null.
+	init:function(data,message,code){
+		this.message=message;
+		this.code=code;
+		this.data=data;
+	}
+}

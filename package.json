@@ -1,0 +1,22 @@
+{
+    "name": "GingerJS",
+    "private": true,
+    "version": "0.0.0",
+    "description": "A HMVC framework",
+    "dependencies": {
+        "chai":"*",
+        "lodash":"*",
+        "express":"*",
+        "socket.io":"*",
+		"class.extend":"*",
+        "async":"*"
+    },
+    "scripts": {
+        "start": "node app.js",
+        "debug": "node debug app.js"
+    },
+    "main": "app.js",
+    "repository": "",
+    "author": "Fabio Oliveira Costa <fabio@dexus.com.br>",
+    "license": ""
+}
