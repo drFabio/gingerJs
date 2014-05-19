@@ -20,6 +20,7 @@ describe('Ginger',function(){
 			it('Should Have the defualt componets',function(){
 				console.log('-----');
 				ginger.getComponent('express');
+				console.log(require('express'));
 				console.log('####');
 				expect(ginger.getComponent('express')).to.exist;
 			});
