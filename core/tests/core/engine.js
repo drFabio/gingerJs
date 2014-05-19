@@ -18,11 +18,8 @@ describe('Ginger',function(){
 		});
 		describe('component',function(){
 			it('Should Have the defualt componets',function(){
-				console.log('-----');
-				ginger.getComponent('express');
-				console.log(require('express'));
-				console.log('####');
-				expect(ginger.getComponent('express')).to.exist;
+				
+				expect(ginger.getComponent('Express')).to.exist;
 			});
 		
 		});
@@ -31,7 +28,7 @@ describe('Ginger',function(){
 				
 					var gateway=ginger.getGateway('HTTP');
 					expect(gateway).to.exist;
-					gateway=ginger.getGateway('JSONRpc');
+					gateway=ginger.getGateway('JSONRPC');
 					expect(gateway).to.exist;
 					gateway=ginger.getGateway('SocketIO');
 					expect(gateway).to.exist;

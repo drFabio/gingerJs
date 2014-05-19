@@ -287,7 +287,6 @@ Ginger.prototype.setAppPath = function (path) {
  * @return {[type]}        [description]
  */
 Ginger.prototype.getComponent = function (name, params) {
-    name = name.toLowerCase();
     if (!this.isComponentLoaded(name)) {
         if (this.isComponentSet(name)) {
             this._components[name] = this._createComponent(name, params);
@@ -320,7 +319,6 @@ Ginger.prototype.getBootstrapper = function (name, params) {
  * @param {[type]} component [description]
  */
 Ginger.prototype.setComponent = function (name, component) {
-    name = name.toLowerCase();
     this._components[name] = component;
 };
 /**
@@ -404,7 +402,6 @@ Ginger.prototype.isGatewayCancelled = function (name) {
  * @return {[type]}      [description]
  */
 Ginger.prototype._createComponent = function (name, params) {
-    name = name.toLowerCase();
     var path;
     var ComponentsClass;
     if (!params) {
@@ -603,11 +600,9 @@ Ginger.prototype.createGateway = function (cb, name, params, getDefault, path) {
  * @param {[type]} data [description]
  */
 Ginger.prototype.setController = function (name, data) {
-    name = name.toLowerCase();
     this.controllerMap[name] = data;
 }
 Ginger.prototype.setModel = function (name, data) {
-    name = name.toLowerCase();
     this.modelMap[name] = data;
 }
 /**
@@ -615,7 +610,6 @@ Ginger.prototype.setModel = function (name, data) {
  * @type {[type]}
  */
 Ginger.prototype.setModule = function (name) {
-    name = name.toLowerCase();
     this.moduleMap[name] = true;
 };
 /**
@@ -624,7 +618,6 @@ Ginger.prototype.setModule = function (name) {
  * @return {Boolean}      [description]
  */
 Ginger.prototype.hasController = function (name) {
-    name = name.toLowerCase();
 
     return !!this.controllerMap[name];
 }
@@ -634,7 +627,6 @@ Ginger.prototype.hasController = function (name) {
  * @return {Boolean}      [description]
  */
 Ginger.prototype.hasModel = function (name) {
-    name = name.toLowerCase();
     return !!this.modelMap[name];
 }
 /**
@@ -643,7 +635,6 @@ Ginger.prototype.hasModel = function (name) {
  * @return {Boolean}      [description]
  */
 Ginger.prototype.hasModule = function (name) {
-    name = name.toLowerCase();
     return !!this.moduleMap[name];
 }
 module.exports = Ginger;
