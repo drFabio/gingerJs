@@ -2,6 +2,7 @@
     "name": "GingerJS",
     "private": true,
     "version": "0.0.0",
+
     "description": "A HMVC framework",
     "dependencies": {
         "chai":"*",
@@ -22,5 +23,8 @@
         "url": "https://github.com/drFabio/gingerJs"
     },
     "author": "Fabio Oliveira Costa <fabio@dexus.com.br>",
-    "license": ""
+    "license": "",
+    "engines": {
+        "node": ">=0.10.22"
+    }
 }
