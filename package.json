@@ -16,7 +16,8 @@
         "debug": "node debug app.js"
     },
     "main": "app.js",
-    "repository": "",
+    "repository": ","
     "author": "Fabio Oliveira Costa <fabio@dexus.com.br>",
-    "license": ""
+    "license": "",
+    "test":" mocha  core/tests/core/engine.js"
 }
