@@ -18,9 +18,10 @@ describe('Ginger',function(){
 		});
 		describe('component',function(){
 			it('Should Have the defualt componets',function(){
-			
-					expect(ginger.getComponent('express')).to.exist;
-				
+				console.log('-----');
+				ginger.getComponent('express');
+				console.log('####');
+				expect(ginger.getComponent('express')).to.exist;
 			});
 		
 		});
