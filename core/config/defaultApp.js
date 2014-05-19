@@ -4,26 +4,26 @@
 module.exports={
 	//Components configurations
 	'components':{
-		'express':{
+		'Express':{
 			'port':3000,
 			'host':'0.0.0.0'
 		},
-		'socketio':{
+		'SocketIO':{
 			'port':3040
 		},
-		'db':{
+		'DataBase':{
 			'mongo':{
 				'uri':'mongodb://localhost/ginger'
 			}
 		},
-		'session':{
+		'Session':{
 			'secret':'Change_this!'
 		},
-		'log':{}
+		'Log':{}
 	},
 	'gateways':{
 		'HTTP':{},
-		'JSONRpc':{'prefix':'JSONRPC'},
+		'JSONRPC':{'prefix':'JSONRPC'},
 		'SocketIO':{}
 	},
 	'errors':[
