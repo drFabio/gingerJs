@@ -286,15 +286,30 @@ Ginger.prototype.setAppPath = function (path) {
  * @param  {object} params (Optional) if not given it will be used the one from the application config, if the application config doesn't implement it the abstract config will be used
  * @return {[type]}        [description]
  */
-Ginger.prototype.getComponent = function (name, params) {
+Ginger.prototype.getComponent = function (name,cb,params) {
+    var self=this;
+
+    //We already made it no need to do it again
     if (!this.isComponentLoaded(name)) {
-        if (this.isComponentSet(name)) {
-            this._components[name] = this._createComponent(name, params);
+        //The component is set it's not cancelled
+        if (!this.isComponentCancelled(name)) {
+            var cbCreateComponent=function(err,component){
+                if(err){
+                    cb(err);
+                    return;
+                }
+                self._components[name]=component;
+                cb(null,self._components[name]);
+            }
+            self._createComponent(name, params,cbCreateComponent);
         } else {
-            this._components[name] = null;
+            self._components[name] = null;
+            cb(null,self._components[name]);
+
         }
+        return;
     }
-    return this._components[name];
+    cb(null,this._components[name]);
 }
 
 
@@ -321,24 +336,7 @@ Ginger.prototype.getBootstrapper = function (name, params) {
 Ginger.prototype.setComponent = function (name, component) {
     this._components[name] = component;
 };
-/**
- * Check whether a component is set, if it's avaible trough config
- * @param  {[type]}  name [description]
- * @return {Boolean}      [description]
- */
-Ginger.prototype.isComponentSet = function (name) {
 
-    if (this._config.components) {
-        if (this._config.components[name] === false) {
-            return false;
-        } else if (!!this._config.components[name]) {
-            return true;
-
-        }
-    }
-
-    return false;
-}
 /**
  * Checks whether a ocmponent has already been loaded
  * @param  {[type]} name [description]
@@ -401,7 +399,7 @@ Ginger.prototype.isGatewayCancelled = function (name) {
  * @param  {[type]} name [description]
  * @return {[type]}      [description]
  */
-Ginger.prototype._createComponent = function (name, params) {
+Ginger.prototype._createComponent = function (name, params,cb) {
     var path;
     var ComponentsClass;
     if (!params) {
@@ -420,7 +418,7 @@ Ginger.prototype._createComponent = function (name, params) {
 
     var appComponentDir = this.getConfigValue('componentDir');
 
-    var getComponent = function (dir, name) {
+    var getComponentFile = function (dir, name) {
 
         path = dir + name + '.js';
         if (fs.existsSync(path)) {
@@ -432,27 +430,29 @@ Ginger.prototype._createComponent = function (name, params) {
     if (appComponentDir) {
         if (_.isArray(appComponentDir)) {
             for (var x in appComponentDir) {
-                ComponentsClass = getComponent(appComponentDir[x], name);
+                ComponentsClass = getComponentFile(appComponentDir[x], name);
                 if (ComponentsClass) {
                     break;
                 }
             }
         } else {
-            ComponentsClass = getComponent(appComponentDir, name);
+            ComponentsClass = getComponentFile(appComponentDir, name);
         }
     }
     //Didn't found the component yet, try the engine ones
     if (!ComponentsClass) {
-        ComponentsClass = getComponent(this._engineConfig.componentDir, name);
+        ComponentsClass = getComponentFile(this._engineConfig.componentDir, name);
         if (!ComponentsClass) {
-            return null;
+            cb(null,null);
         }
 
     }
 
-    var ret = new ComponentsClass(this);
-    ret.init(this, params);
-    return ret;
+    var comp = new ComponentsClass(this);
+    var componentCb=function(err){
+        cb(err,comp);
+    }
+    comp.init(this, params,componentCb);
 };
 
 /**

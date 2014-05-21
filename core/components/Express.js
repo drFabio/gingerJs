@@ -9,10 +9,11 @@ function Express(engine){
 	this._params;
 	this.server;
 }
-Express.prototype.init = function(engine,params) {
+Express.prototype.init = function(engine,params,cb) {
 	this._engine=engine;
 	this._params=params;
 	this._app = express();
+	cb(null);
 };
 
 Express.prototype.listen = function(cb,port,host) {

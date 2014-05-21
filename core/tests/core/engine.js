@@ -17,9 +17,14 @@ describe('Ginger',function(){
 				expect(ginger._config).not.to.be.empty;
 		});
 		describe('component',function(){
-			it('Should Have the defualt componets',function(){
+			it('Should Have the defualt componets',function(done){
 				
-				expect(ginger.getComponent('Express')).to.exist;
+				var getComponentCb=function(err,component){
+
+					expect(component).to.exist;
+					done(err);
+				}
+				ginger.getComponent('Express',getComponentCb);
 			});
 		
 		});
@@ -65,8 +70,6 @@ describe('Ginger',function(){
 				ginger.down(done);
 			});
 
-
-
 		});
 	});
 
@@ -99,13 +102,12 @@ describe('Ginger',function(){
 
 			describe('#component',function(){
 				it('Should be able to remove a component by setting it to false',function(){
-					expect(ginger.isComponentSet('db')).to.be.false;
+					expect(ginger.isComponentCancelled('db')).to.be.true;
 				});
 			});
 
 			describe('#gateway',function(){
 				it('Should be able to remove a gateway by setting it to false',function(){
-
 					var gateway=ginger.getGateway('HTTP');
 					expect(gateway).to.not.exist;
 				});
@@ -125,11 +127,22 @@ describe('Ginger',function(){
 			ginger.up(done);
 
 		});
-		it('Should overwritte a component after it\'s loaded by setting the component',function(){
-		
-			expect(ginger.getComponent('Log')).to.exist;
-			ginger.setComponent('Log',{'foo':'bar'});
-			expect(ginger.getComponent('Log').foo).to.equal('bar');
+		it('Should overwritte a component after it\'s loaded by setting the component',function(done){
+			
+			var getComponentCb=function(err,component){
+				if(err){
+					done(err);
+					return;
+				}
+				expect(component).to.exist;
+				ginger.setComponent('Log',{'foo':'bar'});
+				ginger.getComponent('Log',function(err,component){
+					expect(component.foo).to.equal('bar');
+					done(err);
+				});
+
+			}
+			ginger.getComponent('Log',getComponentCb);
 			
 		});
 		after(function(done){

@@ -1,5 +1,4 @@
 module.exports={
-	init:function(message,data){
-		
-	}
+	defaultMessage:'Internal error',
+
 };

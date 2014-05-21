@@ -5,15 +5,18 @@ module.exports={
 	_expressComponent:null,
 	init: function(engine,params,cb) {
 		this._configParams(engine,params);
-		this._expressComponent=this._engine.getComponent('Express');
-		if(!this._expressComponent){
-			throw new Error('The express component is required to run the HTTP gateway');
-		}
 		var self=this;
-		this._app=this._expressComponent.getApp();
-		this._expressComponent.listen(function(err){
-			cb(err,self);
-		});
+		var expressCb=function(err,express){
+			if(!express){
+				throw new Error('The express component is required to run the HTTP gateway');
+			}
+			self._expressComponent=express;
+			self._app=self._expressComponent.getApp();
+			self._expressComponent.listen(function(err){
+				cb(err,self);
+			});
+		}
+		this._engine.getComponent('Express',expressCb);
 	},
 	_buildRoute:function(controllerIndex,action,controllerData){
 		var prefix=this._params.prefix || '';

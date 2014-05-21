@@ -7,6 +7,8 @@ var socketio=require( 'socket.io' );
 function SocketIO(){
 
 }
-SocketIO.prototype.init = function(engine,params) {
+SocketIO.prototype.init = function(engine,params,cb) {
 	var port=params.port;
+	cb(null);
+
 }
