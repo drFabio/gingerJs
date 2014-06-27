@@ -1,4 +1,5 @@
 var Class = require('class.extend');
+var util=require('util');
  /**
  * This class handles the initialization of several components, as well as path mapping, inheritances and namespace colisions
  * It's serve as a common library for object,classes and paths lookup
@@ -21,17 +22,48 @@ var classFactory={
 	//A map of directories based on the namespace
 	namespaceDirMap:{
 
-	}
+	},
 	/**
 	 * Get a class object from the given object
 	 * @param  {[type]} namespace [description]
 	 * @return {[type]}           [description]
 	 */
 	getClass:function(name){
-
+		if(this.isClassSet(name)){
+			return this.classMap[name];
+		}
+		if(!this.isClassFileSet(name)){
+			throw new Error('The class '+name+' doesn\'t have a path or is not set ');
+		}
+		if(this.setClassFromPojo(name,require(this.classFileMap[name]))){
+			return this.classMap[name];
+		}
+		else{
+			throw new Error('Was not able to load the class '+name+' on the path '+this.classFileMap[name]);
+		}
+		
 	},
-	getObject:function(name,params,cb){
+	isClassSet:function(name){
+		return !!this.classMap[name];
+	},
+	getObject:function(name, var_args){
+		//Getting the var_args
+	    var params = Array.prototype.slice.call(arguments, 1);
+		if(!this.isClassSet(name)){
+			throw new Error('The class "'+name+'" is not set');
+		}
+		var DesiredClass=this.getClass(name);
+		//Needed for us to apply the constructor
+	    var object = Object.create(DesiredClass.prototype);
 
+		result= DesiredClass.apply(object, params);
+		if (typeof result === 'object') {
+			return result;
+		} else {
+			return object;
+		}
+
+		
 	},
 	getSingletonObject:function(name,params,cb){
 
@@ -40,18 +72,53 @@ var classFactory={
 	 * Sets a class on the given namespace to be the class object
 	 * @type {[type]}
 	 */
+	setClassFromPojo:function(name,pojoData){
+		var ParentClass;
+		if(pojoData.parent){
+			ParentClass=this.getClass(pojoData.parent);
+		}
+		else{
+			ParentClass=Class;
+		}
+		return this.setClass(name,ParentClass.extend(pojoData));
+		
+	},
+	
+	/**
+	 * Sets a class on the given namespace to be the class object
+	 * @type {[type]}
+	 */
 	setClass:function(name,classObject){
-
+		if(this.isClassSet(name)){
+			throw new Error('The class '+name+' is already set');
+		}
+		this.classMap[name]=classObject;
+		return true;
 	},
 	setNamespaceDir:function(name,dir){
+		if(this.isNamespaceSet(name)){
+			throw new Error('The namespace '+name+' is already set');
+		}
+		this.namespaceDirMap[name]=dir;
+		return true;
+	},
+	isNamespaceSet:function(name){
+		return !!this.namespaceDirMap[name];
+	},
+	isClassFileSet:function(name){
+		return !!this.classFileMap[name];
 
 	},
 	setClassFile:function(name,file){
-
+		if(this.isClassFileSet(name)){
+			throw new Error('The class '+name+' is already set with a path');
+		}
+		this.classFileMap[name]=file;
+		return true;
 	},
 	setObject:function(name,object){
 
-	}
+	},
 	/**
 	 * Loads a class
 	 * @param  {[type]} name [description]
