@@ -1,6 +1,7 @@
 var Class = require('class.extend');
  /**
  * This class handles the initialization of several components, as well as path mapping, inheritances and namespace colisions
+ * It's serve as a common library for object,classes and paths lookup
  * @type {Object}
  */
 var classFactory={
@@ -29,10 +30,12 @@ var classFactory={
 	getClass:function(name){
 
 	},
-	getObject:function(name,isSingleton,params,cb){
+	getObject:function(name,params,cb){
 
 	},
-	
+	getSingletonObject:function(name,params,cb){
+
+	},
 	/**
 	 * Sets a class on the given namespace to be the class object
 	 * @type {[type]}
