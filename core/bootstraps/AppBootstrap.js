@@ -1,6 +1,6 @@
 var fs = require('fs');
 var Class = require('class.extend');
-
+var util=require('util');
 var CONTEXT_MODULE=4;
 var CONTEXT_MODEL=1;
 var CONTEXT_VIEW=2;
@@ -96,6 +96,7 @@ AppBootstrap.prototype._handleFile = function(fullPath,fileName,context,parentMo
 		case CONTEXT_GATEWAYS:
 			var name=this.parseGatewayName(fileName);
 			this._addGateway(fullPath,name,cb);
+			cb();
 		break;
 		case CONTEXT_COMPONENTS:
 			var name=this.parseComponentName(fileName);
@@ -208,6 +209,7 @@ AppBootstrap.prototype.removeExtension = function(name) {
  * @param  {[type]}   context       [description]
  * @param  {[type]}   parentModules [description]
  * @return {[type]}                 [description]
+ * @todo  refatorar mover dir walker para outro classe
  */
 AppBootstrap.prototype._walkDir=function(cb,dir,context,parentModules){
 	if(!parentModules){
@@ -278,7 +280,7 @@ AppBootstrap.prototype._appHasConfigFile = function() {
 	return  fs.existsSync(this._path+'/config/app.js');
 }
 AppBootstrap.prototype.buildApp = function(cb) {
-	if(!this._appHasConfigFile){
+	if(!this._appHasConfigFile()){
 		//There isn't an app here
 		cb();
 		return;

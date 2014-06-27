@@ -198,6 +198,7 @@ Ginger.prototype._startApp = function (cb) {
     if (!this._appPath) {
         this.setAppPath();
     }
+    
     appInit.setApplicationPath(this._appPath);
     try {
 
@@ -276,8 +277,7 @@ Ginger.prototype.setAppPath = function (path) {
         this._appPath = this._config['app']['dir'];
     } else {
         this._appPath = process.cwd();
-        //It still doesn't have n application path
-        //return false;
+  
     }
 };
 /**

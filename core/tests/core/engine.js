@@ -174,6 +174,7 @@ describe('Ginger',function(){
 				ginger.up(done);
 			});
 			it('Should have the config by the application');
+			
 			it('Should have loaded all the modules',function(){
 				expect(ginger.hasModule('sum')).to.be.true;
 				expect(ginger.hasModule('sum/multiplication')).to.be.true;
@@ -191,7 +192,7 @@ describe('Ginger',function(){
 				expect(ginger.hasModel('sum/multiplication/Index')).to.be.true;
 
 			});
-			it('Should overwrite a gateway without needing to config',function(){
+			it.skip('Should overwrite a gateway without needing to config',function(){
 				expect(ginger.getGateway('HTTP').iAmOverwritten).to.be.true;
 			});
 			it('Should overwrite a component without needing to config');

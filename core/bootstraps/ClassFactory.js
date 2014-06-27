@@ -67,9 +67,5 @@ var classFactory={
 
 	}
 };
-
-module.exports=function(engine){
-	var classFactoryClass= Class.extend(classFactory);
-	return new  classFactoryClass(engine);
-}
+module.exports=Class.extend(classFactory);
 
