@@ -1,6 +1,5 @@
 var InternalError=require(__dirname+'/../errors/InternalError');
 module.exports={
-	inheritsAbstract:true,
 	_app:null,
 	_expressComponent:null,
 	init: function(engine,params,cb) {

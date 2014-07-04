@@ -1,14 +1,8 @@
 var socketio=require( 'socket.io' );
+module.exports={
+	init: function(engine,params,cb) {
+		var port=params.port;
+		cb(null);
 
-/**
- * SocketIO component wrapper
- * @todo
- */
-function SocketIO(){
-
-}
-SocketIO.prototype.init = function(engine,params,cb) {
-	var port=params.port;
-	cb(null);
-
+	}
 }

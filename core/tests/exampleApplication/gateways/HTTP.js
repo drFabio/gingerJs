@@ -1,5 +1,5 @@
 var HTTP={
-	'parent':'ginger/HTTP',
+	'parent':'ginger.gateway.HTTP',
 	_buildRoute:function(controllerIndex,action,controllerData){
 		action+='abc';
 		this._super(controllerIndex,action,controllerData);

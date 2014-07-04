@@ -1,9 +1,7 @@
-function Log(){
 
+module.exports={
+	init:function(engine,params,cb) {
+		cb(null);
+
+	}
 }
-
-Log.prototype.init = function(engine,params,cb) {
-	cb(null);
-
-};
-module.exports=Log;

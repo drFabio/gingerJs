@@ -2,14 +2,13 @@ var async = require('async');
 var util = require('util');
 var fs = require('fs');
 var _ = require('lodash');
-var Class = require('class.extend');
+var OliveOil=require('olive_oil')();
 var libs = {
     async: async,
     util: util,
     fs: fs,
     _: _,
-    Class: Class
-};
+    };
 /**
  * The application main Ginger
  */
@@ -66,15 +65,7 @@ function Ginger() {
      * @type {String}
      */
     this._appPath = null;
-    /**
-     * Map of the abstract classes that we use to extend our models,controllers and gateways
-     * @type {Object}
-     */
-    this._abstractClasses = {
-        'gateway': null,
-        'model': null,
-        'controller': null
-    };
+
     /**
      * Function to check if we can launch the application
      * @param  {Ginger} ginger
@@ -135,13 +126,18 @@ Ginger.getDefaultConfig = function () {
  */
 Ginger.prototype.up = function (cb) {
 
+
     if (_.isEmpty(this._config)) {
         this._config = Ginger.getDefaultConfig();
     }
     this._engineConfig = require(__dirname + '/config/defaultEngine.js');
-
-    this._loadAbstracts();
+    var oliveOil=new OliveOil(null);
+    oliveOil.setNamespaceDir('ginger',__dirname+'/');
+    this.libs.oliveOil=oliveOil;
+    this._setNamespaces();
     var self = this;
+
+
     var startAppCb = function (err) {
         if (err) {
             cb(err);
@@ -178,13 +174,12 @@ Ginger.prototype.setPreLaunchFunction = function (prelaunchFunction) {
  * Loads the abstract Gateway,Model and Controllers
  * @return {[type]} [description]
  */
-Ginger.prototype._loadAbstracts = function () {
-
-    this._abstractClasses['gateway'] = Class.extend(require(this.getConfigValue('abstractGatewayPath')));
-    // this._abstractClasses['gateway']=require(this.getConfigValue('abstractGateway)]);
-    this._abstractClasses['model'] = Class.extend(require(this.getConfigValue('abstractModelPath')));
-    this._abstractClasses['controller'] = Class.extend(require(this.getConfigValue('abstractControllerPath')));
-
+Ginger.prototype._setNamespaces = function () {
+    this.libs.oliveOil.setMultipleNamespacesDir({
+        'ginger.gateway':this.getConfigValue('gatewayDir'),
+        'ginger.components':this.getConfigValue('componentsDir'),
+        'ginger.bootstraps':this.getConfigValue('bootstrapsDir')
+    });
 }
 /**
  * Starts the application using the AppInitializer component
@@ -198,7 +193,7 @@ Ginger.prototype._startApp = function (cb) {
     if (!this._appPath) {
         this.setAppPath();
     }
-    
+    this.oliveOil.setNoNamespaceDir(this._appPath);
     appInit.setApplicationPath(this._appPath);
     try {
 
@@ -320,9 +315,9 @@ Ginger.prototype.getComponent = function (name,cb,params) {
  * @return {[type]}        [description]
  */
 Ginger.prototype.getBootstrapper = function (name, params) {
-
-    if (!this.isBootstrapperLoaded(name)) {
-        this._bootstrappers[name] = this._createBootstrapper(name, params);
+    var fullName='ginger.bootstraps.'+name;
+    if (!this.libs.oliveOil.isObjectSet(fullName)) {
+        this._bootstrappers[name] = this._createBootstrapper(fullName, params);
     }
     return this._bootstrappers[name];
 }
@@ -348,9 +343,6 @@ Ginger.prototype.isComponentLoaded = function (name) {
 Ginger.prototype.isGatewayLoaded = function (name) {
     return !!this._gateways[name];
 }
-Ginger.prototype.isBootstrapperLoaded = function (name) {
-    return !!this._bootstrappers[name];
-}
 
 /**
  * Creates a component based on the name
@@ -358,10 +350,7 @@ Ginger.prototype.isBootstrapperLoaded = function (name) {
  * @return {[type]}      [description]
  */
 Ginger.prototype._createBootstrapper = function (name, params) {
-    var path;
-    var BootStraperClass;
     if (!params) {
-
         //Trying to get params configuration if none is passed
         if (this._engineConfig.bootstrappers && !!this._engineConfig.bootstrappers[name]) {
             params = this._engineConfig.bootstrappers[name];
@@ -369,16 +358,7 @@ Ginger.prototype._createBootstrapper = function (name, params) {
             params = {};
         }
     }
-
-    path = this._engineConfig.bootstrapDir + name + '.js';
-    if (fs.existsSync(path)) {
-        BootStraperClass = require(path);
-
-    } else {
-        return null;
-    }
-    var ret = new BootStraperClass(this);
-    ret.init(this, params);
+    var ret=this.libs.oliveOil.getSingletonObject(name,this,params);
     return ret;
 };
 Ginger.prototype.isComponentCancelled = function (name) {
@@ -416,7 +396,6 @@ Ginger.prototype._createComponent = function (name, params,cb) {
         }
     }
 
-    var appComponentDir = this.getConfigValue('componentDir');
 
     var getComponentFile = function (dir, name) {
 

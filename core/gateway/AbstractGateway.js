@@ -2,10 +2,6 @@ module.exports={
 	_engine:null,
 	_params:null,
 	init: function(engine,params,cb) {
-		console.log(engine);
-		console.log(params);
-		console.log(cb);
-		
 		this._configParams(engine,params);
 		cb(null,this);
 

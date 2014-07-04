@@ -10,7 +10,8 @@
         "express":"*",
         "socket.io":"*",
 		"class.extend":"*",
-        "async":"*"
+        "async":"*",
+        "olive_oil":"*"
     },
     "scripts": {
         "start": "node app.js",

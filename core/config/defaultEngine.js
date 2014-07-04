@@ -3,10 +3,9 @@
  */
 module.exports={
 	'gatewayDir':__dirname+'/../gateway/',
-	'componentDir':__dirname+'/../components/',
-	'bootstrapDir':__dirname+'/../bootstraps/',
+	'componentsDir':__dirname+'/../components/',
+	'bootstrapsDir':__dirname+'/../bootstraps/',
 	'abstractGatewayPath':__dirname+'/../gateway/AbstractGateway.js',
 	'abstractModelPath':__dirname+'/../mvc/AbstractModel.js',
 	'abstractControllerPath':__dirname+'/../mvc/AbstractController.js',
-	'bootstrapPath':__dirname+'/../Bootstrap.js'
 };
