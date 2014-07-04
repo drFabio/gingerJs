@@ -8,7 +8,7 @@ var Ginger=require(__dirname+'/../../Ginger.js');
 var should = chai.should();
 
 describe('Ginger',function(){
-	describe.only('vanilla setup',function(){
+	describe('vanilla setup',function(){
 		var ginger=new Ginger();
 		it('Should go up smoothly',function(done){
 			ginger.up(done);

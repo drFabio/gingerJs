@@ -2,7 +2,7 @@ var async = require('async');
 var util = require('util');
 var fs = require('fs');
 var _ = require('lodash');
-var OliveOil=require('olive_oil')();
+
 var libs = {
     async: async,
     util: util,
@@ -125,6 +125,7 @@ Ginger.prototype._setConfigAsDefaultIfNoneSet = function() {
     }
 };
 Ginger.prototype.setClassFactoryAndNamespaceHandler = function() {
+    var OliveOil=require('olive_oil')();
     var oliveOil=new OliveOil(null);
     oliveOil.setNamespaceDir('ginger',__dirname+'/');
     oliveOil.setNamespaceDir('ginger.bootstraps',this.getEngineConfigValue('bootstrapsDir'));
