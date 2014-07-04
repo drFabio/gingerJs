@@ -15,19 +15,6 @@ describe('Ginger',function(){
 		});
 		it('should have a default config',function(){
 				expect(ginger._config).not.to.be.empty;
-		});
-		describe('component',function(){
-			it('Should Have the defualt componets',function(done){
-				
-				var getComponentCb=function(err,component){
-
-					expect(component).to.exist;
-					done(err);
-				}
-				ginger.getComponent('Express',getComponentCb);
-			});
-		
-		});
 		describe('gateway',function(){
 			it('Should have the default gateways',function(){
 				
@@ -40,6 +27,19 @@ describe('Ginger',function(){
 					
 
 			});
+		});
+		});
+		describe('component',function(){
+			it('Should Have the default componets',function(done){
+				
+				var getComponentCb=function(err,component){
+
+					expect(component).to.exist;
+					done(err);
+				}
+				ginger.getComponent('Express',getComponentCb);
+			});
+		
 		});
 		it('Should go down smoothly',function(done){
 			ginger.down(done);

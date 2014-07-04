@@ -16,12 +16,12 @@ function Ginger() {
     /**
      * Components are helpers for the application, like logs,errors, socketIo etc
      */
-    this._components = {};
+    this._componentsNameMap = {};
     /**
      * Bootstrapers are used to launch the application, they are factories for the application startup
      * @type {Object}
      */
-    this._bootstrappers = {};
+    this._bootstrap = {};
     /**
      * gateWays to access the application like socketIO,JSONRPC ,HTTP etc
      */
@@ -112,12 +112,25 @@ Ginger.prototype.down = function (cb) {
     }
     endNextGateway();
 };
-/**
- * Returns the default config data
- * @return {[type]} [description]
- */
+
 Ginger.getDefaultConfig = function () {
     return require(__dirname + '/config/defaultApp.js');
+};
+Ginger.prototype._setupEngineConfig = function() {
+    this._engineConfig = require(__dirname + '/config/defaultEngine.js');
+};
+Ginger.prototype._setConfigAsDefaultIfNoneSet = function() {
+    if (_.isEmpty(this._config)) {
+        this._config = Ginger.getDefaultConfig();
+    }
+};
+Ginger.prototype.setClassFactoryAndNamespaceHandler = function() {
+    var oliveOil=new OliveOil(null);
+    oliveOil.setNamespaceDir('ginger',__dirname+'/');
+    oliveOil.setNamespaceDir('ginger.bootstraps',this.getEngineConfigValue('bootstrapsDir'));
+    oliveOil.setNamespaceDir('ginger.components',this.getEngineConfigValue('componentsDir'));
+    oliveOil.setNamespaceDir('ginger.gateways',this.getEngineConfigValue('gatewaysDir'));
+    this.libs.classFactory=oliveOil;
 };
 /**
  * Starts the application
@@ -126,27 +139,17 @@ Ginger.getDefaultConfig = function () {
  */
 Ginger.prototype.up = function (cb) {
 
-
-    if (_.isEmpty(this._config)) {
-        this._config = Ginger.getDefaultConfig();
-    }
-    this._engineConfig = require(__dirname + '/config/defaultEngine.js');
-    var oliveOil=new OliveOil(null);
-    oliveOil.setNamespaceDir('ginger',__dirname+'/');
-    this.libs.oliveOil=oliveOil;
-    this._setNamespaces();
+    this._setConfigAsDefaultIfNoneSet();
+    this._setupEngineConfig();
+    this.setClassFactoryAndNamespaceHandler();
     var self = this;
-
-
     var startAppCb = function (err) {
         if (err) {
             cb(err);
             return;
         } else {
-            //if there isn't a config we set it
-
             var preLaunchCb = function (err) {
-                //If the preLaunch didn't work we call the callbackj with the error
+                //If the preLaunch didn't work we call the callback with the error
                 if (err) {
                     cb(err);
                     return;
@@ -161,42 +164,27 @@ Ginger.prototype.up = function (cb) {
             } else {
                 self._launch(cb);
             }
-
-
         }
     }
-    this._startApp(startAppCb);
+    this._setupApp(startAppCb);
 };
 Ginger.prototype.setPreLaunchFunction = function (prelaunchFunction) {
     this._preLaunchFunction = prelaunchFunction;
 }
-/**
- * Loads the abstract Gateway,Model and Controllers
- * @return {[type]} [description]
- */
-Ginger.prototype._setNamespaces = function () {
-    this.libs.oliveOil.setMultipleNamespacesDir({
-        'ginger.gateway':this.getConfigValue('gatewayDir'),
-        'ginger.components':this.getConfigValue('componentsDir'),
-        'ginger.bootstraps':this.getConfigValue('bootstrapsDir')
-    });
-}
-/**
- * Starts the application using the AppInitializer component
- * @param  {Function} cb [description]
- *
- */
-Ginger.prototype._startApp = function (cb) {
+Ginger.prototype._setNoNamespaceDirToAppRoot = function() {
+    this.libs.classFactory.setNoNamespaceDir(this._appPath);
+};
+
+Ginger.prototype._setupApp = function (cb) {
     //Trying to get the app params if any
-    var appInit = this.getBootstrapper('AppBootstrap');
+    var appInit = this.getBootstrap('AppBootstrap');
     //There is no app path set one
     if (!this._appPath) {
         this.setAppPath();
     }
-    this.oliveOil.setNoNamespaceDir(this._appPath);
+    this._setNoNamespaceDirToAppRoot();
     appInit.setApplicationPath(this._appPath);
     try {
-
         appInit.buildApp(cb);
     } catch (err) {
         cb(err);
@@ -239,6 +227,15 @@ Ginger.prototype.getConfigValue = function (name) {
 
     return null;
 };
+
+Ginger.prototype.getEngineConfigValue = function (name) {
+    if (!!this._engineConfig && this._engineConfig[name]) {
+        return this._engineConfig[name];
+    }
+
+    return null;
+};
+
 Ginger.prototype.getConfig = function () {
     return this._config;
 };
@@ -287,39 +284,43 @@ Ginger.prototype.getComponent = function (name,cb,params) {
     //We already made it no need to do it again
     if (!this.isComponentLoaded(name)) {
         //The component is set it's not cancelled
-        if (!this.isComponentCancelled(name)) {
-            var cbCreateComponent=function(err,component){
+        if (this.isComponentCancelled(name)) {
+            self._componentsNameMap[name] = false;
+            cb(null,self._componentsNameMap[name]);
+        } else {
+            var isComponentLoaded;
+            var isComponentInitialized;
+            var cbCreateComponent=function(err){
                 if(err){
                     cb(err);
                     return;
                 }
-                self._components[name]=component;
-                cb(null,self._components[name]);
+                isComponentInitialized=true;
+                //Call the cb just if the component is already loaded also
+                if(isComponentLoaded){
+                    cb(null,self._componentsNameMap[name]);
+                }
             }
-            self._createComponent(name, params,cbCreateComponent);
-        } else {
-            self._components[name] = null;
-            cb(null,self._components[name]);
-
+            self._componentsNameMap[name]=self._createComponent(name, params,cbCreateComponent);
+            isComponentLoaded=true;
+            //Call the cb just if the componet is initialized also
+            if(isComponentInitialized){
+                 cb(null,self._componentsNameMap[name]);
+            }
         }
         return;
     }
-    cb(null,this._components[name]);
+    cb(null,this._componentsNameMap[name]);
 }
 
 
-/**
- * Get a component if it doesn't exists it is created
- * @param  {String} name   The name of the component
- * @param  {object} params (Optional) if not given it will be used the one from the application config, if the application config doesn't implement it the abstract config will be used
- * @return {[type]}        [description]
- */
-Ginger.prototype.getBootstrapper = function (name, params) {
+
+Ginger.prototype.getBootstrap = function (name, params) {
     var fullName='ginger.bootstraps.'+name;
-    if (!this.libs.oliveOil.isObjectSet(fullName)) {
-        this._bootstrappers[name] = this._createBootstrapper(fullName, params);
+    if (!this.libs.classFactory.isObjectSet(fullName)) {
+        this._bootstrap[name] = this._createBootstrap(fullName, params);
     }
-    return this._bootstrappers[name];
+    return this._bootstrap[name];
 }
 
 
@@ -329,7 +330,7 @@ Ginger.prototype.getBootstrapper = function (name, params) {
  * @param {[type]} component [description]
  */
 Ginger.prototype.setComponent = function (name, component) {
-    this._components[name] = component;
+    this._componentsNameMap[name] = component;
 };
 
 /**
@@ -338,7 +339,7 @@ Ginger.prototype.setComponent = function (name, component) {
  * @return {[type]}      [description]
  */
 Ginger.prototype.isComponentLoaded = function (name) {
-    return !!this._components[name];
+    return !!this._componentsNameMap[name];
 }
 Ginger.prototype.isGatewayLoaded = function (name) {
     return !!this._gateways[name];
@@ -349,16 +350,16 @@ Ginger.prototype.isGatewayLoaded = function (name) {
  * @param  {[type]} name [description]
  * @return {[type]}      [description]
  */
-Ginger.prototype._createBootstrapper = function (name, params) {
+Ginger.prototype._createBootstrap = function (name, params) {
     if (!params) {
         //Trying to get params configuration if none is passed
-        if (this._engineConfig.bootstrappers && !!this._engineConfig.bootstrappers[name]) {
-            params = this._engineConfig.bootstrappers[name];
+        if (this._engineConfig.bootstrap && !!this._engineConfig.bootstrap[name]) {
+            params = this._engineConfig.bootstrap[name];
         } else {
             params = {};
         }
     }
-    var ret=this.libs.oliveOil.getSingletonObject(name,this,params);
+    var ret=this.libs.classFactory.getSingletonObject(name,this,params);
     return ret;
 };
 Ginger.prototype.isComponentCancelled = function (name) {
@@ -380,58 +381,22 @@ Ginger.prototype.isGatewayCancelled = function (name) {
  * @return {[type]}      [description]
  */
 Ginger.prototype._createComponent = function (name, params,cb) {
-    var path;
-    var ComponentsClass;
-    if (!params) {
-        //If the user cancelled the component
-        if (this.isComponentCancelled(name)) {
-            return null;
-        }
-        //Trying to get params configuration if none is passed
-        if (this._config.components && !!this._config.components[name]) {
-
-            params = this._config.components[name];
-        } else {
-            params = {};
-        }
+  
+    var appComponentName='components.'+name;
+    var gingerComponentName='ginger.components.'+name;
+    //First let's check if the namespace of compoennts is set
+    if(this.libs.classFactory.classFileExists(appComponentName)){
+       return  this.libs.classFactory.getSingletonObject(appComponentName,this,params,cb);
     }
-
-
-    var getComponentFile = function (dir, name) {
-
-        path = dir + name + '.js';
-        if (fs.existsSync(path)) {
-            return require(path);
-        }
-        return null;
-    };
-    //The user set a component dir
-    if (appComponentDir) {
-        if (_.isArray(appComponentDir)) {
-            for (var x in appComponentDir) {
-                ComponentsClass = getComponentFile(appComponentDir[x], name);
-                if (ComponentsClass) {
-                    break;
-                }
-            }
-        } else {
-            ComponentsClass = getComponentFile(appComponentDir, name);
-        }
-    }
-    //Didn't found the component yet, try the engine ones
-    if (!ComponentsClass) {
-        ComponentsClass = getComponentFile(this._engineConfig.componentDir, name);
-        if (!ComponentsClass) {
-            cb(null,null);
-        }
+    else if(this.libs.classFactory.classFileExists(gingerComponentName)){
+       return this.libs.classFactory.getSingletonObject(gingerComponentName,this,params,cb);
 
     }
-
-    var comp = new ComponentsClass(this);
-    var componentCb=function(err){
-        cb(err,comp);
+    else{
+        cb();
+        return;
     }
-    comp.init(this, params,componentCb);
+
 };
 
 /**
