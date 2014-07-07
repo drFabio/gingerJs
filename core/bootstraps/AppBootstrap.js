@@ -10,7 +10,7 @@ var CONTEXT_COMPONENTS=6;
 var CONTEXT_GATEWAYS=7;
 module.exports={
 	_classFactory:null,
-	_controllerBootstrap:null,
+	_controllerFactory:null,
 	/**
 	 * Set the application path
 	 * @param {String} path The file type
@@ -36,9 +36,10 @@ module.exports={
 		this._engine=engine;
 		this._params=params;
 		this._classFactory=engine.libs.classFactory;
-		this._controllerBootstrap=this._engine.getBootstrap('ControllerBootstrap');
-		this._modelBootstrap=this._engine.getBootstrap('ModelBootstrap');
+		this._controllerFactory=this._engine.getBootstrap('ControllerFactory');
+		this._modelFactory=this._engine.getBootstrap('ModelFactory');
 		this._moduleBootstrap=this._engine.getBootstrap('ModuleBootstrap');
+		this._gatewayFactory=this._engine.getBootstrap('GatewayFactory');
 
 		if(this._params['path']){
 			this.setApplicationPath(this._params['path']);
@@ -94,11 +95,8 @@ module.exports={
 			case CONTEXT_GATEWAYS:
 				var name=this.parseGatewayName(fileName);
 				this._addGateway(fullPath,name,cb);
-				cb();
 			break;
 			case CONTEXT_COMPONENTS:
-				console.log(JSON.stringify(fileName));
-
 				var name=this.parseComponentName(fileName);
 				cb();
 			break;
@@ -113,16 +111,9 @@ module.exports={
 	 * @param {[type]} name [description]
 	 */
 	_addGateway:function(path,name,cb) {
-		var self=this;
-		var createGatewaycb=function(err,gateway){
-			if(err){
-				cb(err);
-				return;
-			}
-			self._engine.setGateway(name,gateway);
-			cb();
-		}
-		this._engine.createGateway(createGatewaycb,name,null,false,path);
+		
+		this._gatewayFactory.setAppGatewayClass(name,path);
+		cb();
 	},
 	_addNamespace:function(moduleName,parentModules,path) {
 		var namespace=parentModules;
@@ -135,7 +126,7 @@ module.exports={
 		this._classFactory.setNamespaceDir(namespace,path);
 	},
 	_addModel:function(path,modelName,parentModules) {
-		this._modelBootstrap.addToEngine(modelName,path,parentModules);
+		this._modelFactory.addToEngine(modelName,path,parentModules);
 		
 	},
 	/*
@@ -145,7 +136,7 @@ module.exports={
 	 * @param {[type]} modules        [description]
 	 */
 	_addController:function(path,controllerName,parentModules) {
-		this._controllerBootstrap.addToEngine(controllerName,path,parentModules);
+		this._controllerFactory.addToEngine(controllerName,path,parentModules);
 	},
 	parseControllerName :function(name) {
 		return this.removeExtension(name);

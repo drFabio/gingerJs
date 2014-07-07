@@ -2,7 +2,10 @@ var async = require('async');
 var util = require('util');
 var fs = require('fs');
 var _ = require('lodash');
-
+/**
+ * Mover component para component factory
+ * @type {Object}
+ */
 var libs = {
     async: async,
     util: util,
@@ -53,13 +56,7 @@ function Ginger() {
     this.moduleMap = {
 
     };
-    /**
-     * A map of the gateways by name
-     * @type {Object}
-     */
-    this.gatewayMap = {
 
-    };
     /**
      * The path to the application.It can set programmatically,by config data or if everything file it will be proccess.cwd
      * @type {String}
@@ -181,6 +178,7 @@ Ginger.prototype._setNoNamespaceDirToAppRoot = function() {
 Ginger.prototype._setupApp = function (cb) {
     //Trying to get the app params if any
     var appInit = this.getBootstrap('AppBootstrap');
+
     //There is no app path set one
     if (!this._appPath) {
         this.setAppPath();
@@ -371,12 +369,7 @@ Ginger.prototype.isComponentCancelled = function (name) {
     }
     return false;
 }
-Ginger.prototype.isGatewayCancelled = function (name) {
-    if (this._config.gateways && this._config.gateways[name] === false) {
-        return true;
-    }
-    return false;
-}
+
 
 /**
  * Creates a component based on the name
@@ -384,7 +377,12 @@ Ginger.prototype.isGatewayCancelled = function (name) {
  * @return {[type]}      [description]
  */
 Ginger.prototype._createComponent = function (name, params,cb) {
-  
+    if(!params){
+        var compValues=this.getConfigValue('components');
+        if(compValues[name]){
+            params=compValues[name];
+        }
+    }
     var appComponentName='components.'+name;
     var gingerComponentName='ginger.components.'+name;
     //First let's check if the namespace of compoennts is set
@@ -415,6 +413,7 @@ Ginger.prototype._launch = function (cb) {
  * @return {[type]}                [description]
  */
 Ginger.prototype._startGateways = function (cb) {
+    var gatewayFactory=this.getBootstrap('GatewayFactory');
     //Functions that we will use to initialize the gateways
     var asyncFunctions = [];
     var self = this;
@@ -434,7 +433,7 @@ Ginger.prototype._startGateways = function (cb) {
                     }
 
                 }
-                self.createGateway(createGatewayCb, name, params);
+                gatewayFactory.createGateway(name, params,createGatewayCb);
             }
         }
         //Looping trough each gateway to create it assynchronously
@@ -458,88 +457,6 @@ Ginger.prototype.getGateway = function (name) {
 };
 Ginger.prototype.setGateway = function (name, gateway) {
     this._gateways[name] = gateway;
-};
-/**
- * Get the core gigner gateway class
- * @param  {[type]} name   [description]
- * @param  {[type]} params [description]
- * @return {[type]}        [description]
- */
-Ginger.prototype.getGingerGatewayClass = function (name, params) {
-    return this.getGatewayClass(name, params, true);
-}
-/**
- * @todo Refatorar
- * [getGatewayClass description]
- * @param  {String} name       The name of the component that we will search on the configs
- * @param  {[type]} params     [description]
- * @param  {boolean} getDefault (optional) If we should get the default gateway
- * @param  {String} path       (optional) the path to the component
- * @return {[type]}            [description]
- */
-Ginger.prototype.getGatewayClass = function (name, params, getDefault, path) {
-    var gatewayData;
-    if (this.isGatewayCancelled(name)) {
-        return false;
-    }
-    if (!params) {
-        //If the user cancelled the component
-        //Trying to get params configuration if none is passed
-        if (!getDefault && this._config.gateways && !!this._config.gateways[name]) {
-            params = this._config.gateways[name];
-        }
-
-    }
-    if (!path) {
-
-        if (getDefault) {
-            path = this._engineConfig.gatewayDir + name + '.js';
-        }
-        //It was not given us a path
-        else {
-            path = this._config.gatewayDir + name + '.js';
-        }
-    }
-    if (fs.existsSync(path)) {
-        gatewayData = require(path);
-    } else {
-        return false;
-    }
-
-    var ret;
-    var GatewayClass;
-
-    //This have a factory method invoke it
-    if (gatewayData.factory) {
-        return gatewayData;
-    } else {
-        if (gatewayData.inheritsAbstract) {
-            GatewayClass = this._abstractClasses['gateway'].extend(gatewayData);
-            // GatewayClass.prototype=_.extend(GatewayClass.prototype,this._abstractClasses['gateway'].prototype);
-        } else {
-            GatewayClass = Class.extend(gatewayData);
-        }
-        return GatewayClass;
-    }
-};
-/**
- * Try to create the gateway first using the app data, them the default (If you pass getDefault by true it will create the default)
- * @param  {[type]} name   [description]
- * @param  {[type]} params [description]
- * @return {Object}        The gateway object or null if not found
- */
-Ginger.prototype.createGateway = function (cb, name, params, getDefault, path) {
-    var GatewayClass = this.getGatewayClass(name, params, getDefault, path);
-    if (GatewayClass === false) {
-        cb(null, false);
-        return;
-    }
-    if (GatewayClass.factory) {
-        GatewayClass.factory(this, params, cb);
-    } else {
-        new GatewayClass(this, params, cb);
-    }
-
 };
 
 /**

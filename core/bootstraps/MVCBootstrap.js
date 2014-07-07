@@ -33,9 +33,13 @@ module.exports={
 	},
 	_getPojo:function(path,defaultParent){
 		var pojo=require(path);
-		if(!pojo.parent && !!defaultParent){
+		return this._setDefaultParentOnPOJO(pojo,defaultParent);
+	},
+	_setDefaultParentOnPOJO:function(pojo,defaultParent){
+		if(pojo.parent!==false && !pojo.parent && !!defaultParent){
 			pojo.parent=defaultParent;
 		}
 		return pojo;
-	},
+
+	}
 }

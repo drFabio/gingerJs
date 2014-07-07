@@ -2,6 +2,7 @@ var InternalError=require(__dirname+'/../errors/InternalError');
 module.exports={
 	_app:null,
 	_expressComponent:null,
+	
 	init: function(engine,params,cb) {
 		this._configParams(engine,params);
 		var self=this;
