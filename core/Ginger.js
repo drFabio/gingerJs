@@ -20,6 +20,7 @@ function Ginger() {
      * Components are helpers for the application, like logs,errors, socketIo etc
      */
     this._componentsNameMap = {};
+    this._componentFactory=null;
     /**
      * Bootstrapers are used to launch the application, they are factories for the application startup
      * @type {Object}
@@ -176,9 +177,9 @@ Ginger.prototype._setNoNamespaceDirToAppRoot = function() {
 };
 
 Ginger.prototype._setupApp = function (cb) {
+    this._componentFactory=this.getBootstrap('ComponentFactory');
     //Trying to get the app params if any
     var appInit = this.getBootstrap('AppBootstrap');
-
     //There is no app path set one
     if (!this._appPath) {
         this.setAppPath();
@@ -302,7 +303,7 @@ Ginger.prototype.getComponent = function (name,cb,params) {
                     cb(null,self._componentsNameMap[name]);
                 }
             }
-            self._componentsNameMap[name]=self._createComponent(name, params,cbCreateComponent);
+            self._componentsNameMap[name]=self._componentFactory.createComponent(name, params,cbCreateComponent);
             isComponentLoaded=true;
             //Call the cb just if the componet is initialized also
             if(isComponentInitialized){
@@ -313,9 +314,6 @@ Ginger.prototype.getComponent = function (name,cb,params) {
     }
     cb(null,this._componentsNameMap[name]);
 }
-
-
-
 Ginger.prototype.getBootstrap = function (name, params) {
     var fullName='ginger.bootstraps.'+name;
     if (!this.libs.classFactory.isObjectSet(fullName)) {
@@ -363,42 +361,20 @@ Ginger.prototype._createBootstrap = function (name, params) {
     var ret=this.libs.classFactory.getSingletonObject(name,this,params);
     return ret;
 };
+Ginger.prototype.isGatewayCancelled =function (name) {
+    if (this._config.gateways && this._config.gateways[name] === false) {
+        return true;
+    }
+    return false;
+};
 Ginger.prototype.isComponentCancelled = function (name) {
     if (this._config.components && this._config.components[name] === false) {
         return true;
     }
     return false;
-}
-
-
-/**
- * Creates a component based on the name
- * @param  {[type]} name [description]
- * @return {[type]}      [description]
- */
-Ginger.prototype._createComponent = function (name, params,cb) {
-    if(!params){
-        var compValues=this.getConfigValue('components');
-        if(compValues[name]){
-            params=compValues[name];
-        }
-    }
-    var appComponentName='components.'+name;
-    var gingerComponentName='ginger.components.'+name;
-    //First let's check if the namespace of compoennts is set
-    if(this.libs.classFactory.classFileExists(appComponentName)){
-       return  this.libs.classFactory.getSingletonObject(appComponentName,this,params,cb);
-    }
-    else if(this.libs.classFactory.classFileExists(gingerComponentName)){
-       return this.libs.classFactory.getSingletonObject(gingerComponentName,this,params,cb);
-
-    }
-    else{
-        cb();
-        return;
-    }
-
 };
+
+
 
 /**
  * Makes the application go live

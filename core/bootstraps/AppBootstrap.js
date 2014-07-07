@@ -40,7 +40,7 @@ module.exports={
 		this._modelFactory=this._engine.getBootstrap('ModelFactory');
 		this._moduleBootstrap=this._engine.getBootstrap('ModuleBootstrap');
 		this._gatewayFactory=this._engine.getBootstrap('GatewayFactory');
-
+		this._componentFactory=this._engine.getBootstrap('ComponentFactory');
 		if(this._params['path']){
 			this.setApplicationPath(this._params['path']);
 		}
@@ -76,6 +76,9 @@ module.exports={
 				return false;
 		}
 	},
+	_addComponent:function(path,name,parentNamespace){
+		this._componentFactory.setAppComponentClass(name,path,parentNamespace);
+	},
 	_handleFile:function(fullPath,fileName,context,parentModules,cb) {
 		switch(context){
 			case CONTEXT_CONTROLLER:
@@ -98,6 +101,7 @@ module.exports={
 			break;
 			case CONTEXT_COMPONENTS:
 				var name=this.parseComponentName(fileName);
+				this._addComponent(fullPath,name,parentModules);
 				cb();
 			break;
 			default:

@@ -12,7 +12,7 @@ module.exports={
 	},
 	createGateway:function(name,params,cb){
 	    var gatewayData;
-	    if (this.isGatewayCancelled(name)) {
+	    if (this._engine.isGatewayCancelled(name)) {
 	         cb(null,false);
 	        return;
 	    }
@@ -42,12 +42,6 @@ module.exports={
 	    return;
   
 
-	},
-	isGatewayCancelled :function (name) {
-	    if (this._engine._config.gateways && this._engine._config.gateways[name] === false) {
-	        return true;
-	    }
-	    return false;
 	},
 	getParams:function(params){
         if (!params && !!this._engine._config.gateways && !!this._engine._config.gateways[name]) {
