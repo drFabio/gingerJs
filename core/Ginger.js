@@ -131,6 +131,8 @@ Ginger.prototype.setClassFactoryAndNamespaceHandler = function() {
     oliveOil.setNamespaceDir('ginger.bootstraps',this.getEngineConfigValue('bootstrapsDir'));
     oliveOil.setNamespaceDir('ginger.components',this.getEngineConfigValue('componentsDir'));
     oliveOil.setNamespaceDir('ginger.gateways',this.getEngineConfigValue('gatewaysDir'));
+    oliveOil.setNamespaceDir('ginger.mvc',this.getEngineConfigValue('mvcDir'));
+    
     this.libs.classFactory=oliveOil;
 };
 /**
@@ -467,6 +469,7 @@ Ginger.prototype.getGingerGatewayClass = function (name, params) {
     return this.getGatewayClass(name, params, true);
 }
 /**
+ * @todo Refatorar
  * [getGatewayClass description]
  * @param  {String} name       The name of the component that we will search on the configs
  * @param  {[type]} params     [description]

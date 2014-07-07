@@ -9,7 +9,8 @@ var CONTEXT_ROOT=8;
 var CONTEXT_COMPONENTS=6;
 var CONTEXT_GATEWAYS=7;
 module.exports={
-
+	_classFactory:null,
+	_controllerBootstrap:null,
 	/**
 	 * Set the application path
 	 * @param {String} path The file type
@@ -34,6 +35,11 @@ module.exports={
 	init:function(engine,params){
 		this._engine=engine;
 		this._params=params;
+		this._classFactory=engine.libs.classFactory;
+		this._controllerBootstrap=this._engine.getBootstrap('ControllerBootstrap');
+		this._modelBootstrap=this._engine.getBootstrap('ModelBootstrap');
+		this._moduleBootstrap=this._engine.getBootstrap('ModuleBootstrap');
+
 		if(this._params['path']){
 			this.setApplicationPath(this._params['path']);
 		}
@@ -91,6 +97,8 @@ module.exports={
 				cb();
 			break;
 			case CONTEXT_COMPONENTS:
+				console.log(JSON.stringify(fileName));
+
 				var name=this.parseComponentName(fileName);
 				cb();
 			break;
@@ -116,33 +124,19 @@ module.exports={
 		}
 		this._engine.createGateway(createGatewaycb,name,null,false,path);
 	},
-	_addModule:function(moduleName,parentModules) {
-		var indexName=parentModules.join('/');
-		if(indexName){
-			indexName+='/';
-		}
-		indexName+=moduleName;
-		this._engine.setModule(indexName);
-	},
-	_addModel:function(modelFile,modelName,modules) {
-		var modelData=require(modelFile);
-		var ModelClass;
-		if(modelData.inheritsAbstract){
-			ModelClass=this._engine._abstractClasses['model'].extend(modelData);
+	_addNamespace:function(moduleName,parentModules,path) {
+		var namespace=parentModules;
+		if(namespace===''){
+			namespace=moduleName;
 		}
 		else{
-			ModelClass=Class.extend(modelData);
+			namespace+='.'+moduleName;
 		}
-		var self=this;
-		var mapIndex=modules.join('/');
-		if(mapIndex){
-			mapIndex+='/';
-		}
-		mapIndex+=modelName;
-		this._engine.setModel(mapIndex,{
-			'modules':modules,
-			'class': ModelClass
-		});
+		this._classFactory.setNamespaceDir(namespace,path);
+	},
+	_addModel:function(path,modelName,parentModules) {
+		this._modelBootstrap.addToEngine(modelName,path,parentModules);
+		
 	},
 	/*
 	 * Adds a controller to the controller map
@@ -150,45 +144,24 @@ module.exports={
 	 * @param {[type]} controllerName [description]
 	 * @param {[type]} modules        [description]
 	 */
-	_addController:function(path,controllerName,modules) {
-
-		var controllerData=require(path);
-		var ControllerClass;
-		var controllerParser=this._engine.getBootstrapper('ControllerBootstrap');
-		if(controllerData.inheritsAbstract){
-			ControllerClass=this._engine._abstractClasses['controller'].extend(controllerData);
-		}
-		else{
-			ControllerClass=Class.extend(controllerData);
-		}
-		var self=this;
-		var mapIndex=modules.join('/');
-		var	controllerLowerName = controllerName.substring(0, 1).toLowerCase() + controllerName.substring(1);
-		var sanitizedUrl=mapIndex;
-		if(mapIndex){
-			mapIndex+='/';
-			sanitizedUrl+='/';
-		}
-		mapIndex+=controllerName;
-		sanitizedUrl+=controllerLowerName;
-		var actions=controllerParser.getActionsMap(controllerData);
-		this._engine.setController(mapIndex,{
-			'modules':modules,
-			'object':new ControllerClass(self._engine),
-			'actions':actions,
-			'name':controllerName,
-			'url':sanitizedUrl
-		});
-
+	_addController:function(path,controllerName,parentModules) {
+		this._controllerBootstrap.addToEngine(controllerName,path,parentModules);
 	},
-	removeExtensionFn:function(name) {
+	parseControllerName :function(name) {
 		return this.removeExtension(name);
 	},
-	parseControllerName :this.removeExtensionFn,
-	parseModelName :this.removeExtensionFn,
-	parseViewName :this.removeExtensionFn,
-	parseGatewayName :this.removeExtensionFn,
-	parseComponentName :this.removeExtensionFn,
+	parseModelName :function(name) {
+		return this.removeExtension(name);
+	},
+	parseViewName :function(name) {
+		return this.removeExtension(name);
+	},
+	parseGatewayName :function(name) {
+		return this.removeExtension(name);
+	},
+	parseComponentName :function(name) {
+		return this.removeExtension(name);
+	},
 
 
 	removeExtension:function(name) {
@@ -205,7 +178,7 @@ module.exports={
 	 */
 	_walkDir:function(cb,dir,context,parentModules){
 		if(!parentModules){
-			parentModules=[];
+			parentModules='';
 		}
 		var self=this;
 		var path;
@@ -224,11 +197,11 @@ module.exports={
 			if( stat.isDirectory()){
 				//We just care about directories on modules and on root
 				if(context===CONTEXT_MODULE_ROOT || context===CONTEXT_ROOT){
+
 					var childContext=self._getDirectoryContext(item);
 					//If it's not on a child context we don't handle it
 					if(childContext!==false){
-						
-						
+						self._addNamespace(item,parentModules,path);
 						if(childContext===CONTEXT_COMPONENTS || childContext===CONTEXT_GATEWAYS){
 							//Just root handle components and gateways
 							if(context===CONTEXT_ROOT){
@@ -243,10 +216,12 @@ module.exports={
 				}
 				else if(context===CONTEXT_MODULE){
 					//It's a module lets put it on the map
-					self._addModule(item,parentModules);
-					
-					//It's a module for all intents all directories here are module names with module structure
-					asyncFunctions=asyncFunctions.concat(self._walkDir(false,path,CONTEXT_MODULE_ROOT,parentModules.concat([item])));
+					self._addNamespace(item,parentModules,path);
+					var newParentmodules=self._buildNamespace(parentModules,item);
+					self._moduleBootstrap.addToEngine(item,path,parentModules);
+					//It's a m
+					//odule for all intents all directories here are module names with module structure
+					asyncFunctions=asyncFunctions.concat(self._walkDir(false,path,CONTEXT_MODULE_ROOT,newParentmodules));
 				}
 			}
 			else{
@@ -268,6 +243,17 @@ module.exports={
 		}
 		
 	},
+	_buildNamespace:function(parentNamespace,currentDirectory){
+		var ret;
+		if(parentNamespace===''){
+			ret=currentDirectory;
+		}
+		else{
+			ret=parentNamespace+'.'+currentDirectory;
+		}
+		return ret;
+	},
+
 	_appHasConfigFile:function() {
 		return  fs.existsSync(this._path+'/config/app.js');
 	},

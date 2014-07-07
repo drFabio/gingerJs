@@ -17,7 +17,6 @@ describe('Ginger',function(){
 				expect(ginger._config).not.to.be.empty;
 		describe('gateway',function(){
 			it('Should have the default gateways',function(){
-				
 					var gateway=ginger.getGateway('HTTP');
 					expect(gateway).to.exist;
 					gateway=ginger.getGateway('JSONRPC');
@@ -166,7 +165,7 @@ describe('Ginger',function(){
 	});
 	describe('Application',function(){
 		var ginger;
-		describe('up() \'by path\'',function(){
+		describe.only('up() \'by path\'',function(){
 			//Initializing the app by path first
 			before(function(done){
 				ginger=new Ginger();
@@ -181,15 +180,15 @@ describe('Ginger',function(){
 			});
 			
 			it('Should have loaded all controllers',function(){
-				expect(ginger.hasController('Hello')).to.be.true;
-				expect(ginger.hasController('sum/Index')).to.be.true;
-				expect(ginger.hasController('sum/multiplication/Index')).to.be.true;
+				expect(ginger.hasController('hello')).to.be.true;
+				expect(ginger.hasController('sum/index')).to.be.true;
+				expect(ginger.hasController('sum/multiplication/index')).to.be.true;
 
 			});
 			it('Should have loaded all models',function(){
-				expect(ginger.hasModel('Hello')).to.be.true;
-				expect(ginger.hasModel('sum/Index')).to.be.true;
-				expect(ginger.hasModel('sum/multiplication/Index')).to.be.true;
+				expect(ginger.hasModel('hello')).to.be.true;
+				expect(ginger.hasModel('sum/index')).to.be.true;
+				expect(ginger.hasModel('sum/multiplication/index')).to.be.true;
 
 			});
 			it.skip('Should overwrite a gateway without needing to config',function(){
