@@ -61,7 +61,10 @@ describe('Error',function(){
 
 	});
 
-	it('Should be able to overwritte errors');
+	it('Should be able to overwritte errors',function(){
+		var error=ginger.getError('NotFound');
+		expect(error.iAmOverwritten).to.be.true;
+	});
 	after(function(done){
 		ginger.down(done);
 	});

@@ -44,7 +44,7 @@ module.exports={
 		this._moduleBootstrap=engine.getBootstrap('ModuleBootstrap');
 		this._gatewayFactory=engine.getBootstrap('GatewayFactory');
 		this._componentFactory=engine.getBootstrap('ComponentFactory');
-		
+		this._errorFactory=engine.getBootstrap('ErrorFactory');
 		if(this._params['path']){
 			this.setApplicationPath(this._params['path']);
 		}
@@ -105,6 +105,9 @@ module.exports={
 				cb();
 			break;
 			case CONTEXT_ERROR:
+				var name=this.removeExtension(fileName);
+				this._addError(fullPath,name,parentModules);
+
 				cb();
 			break;
 			default:
@@ -112,6 +115,10 @@ module.exports={
 			break;
 		}
 	},
+	_addError:function(path,name,parentNamespace){
+		this._errorFactory.setAppClass(name,path,parentNamespace);
+	},
+	
 	/**
 	 * Adds a gateway
 	 * @param {[type]} path [description]

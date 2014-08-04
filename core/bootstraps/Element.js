@@ -35,7 +35,11 @@ module.exports={
 			return false;
 		}
 		var pojo=this._classFactory.getClassFileContents(engineName);
-		pojo=this._setDefaultParentOnPOJO(pojo,this._defaultParent);
+		var defaultParent=this._defaultParent;
+		if(engineName==this._defaultParent){
+			defaultParent=null;
+		}
+		pojo=this._setDefaultParentOnPOJO(pojo,defaultParent);
 		this._classFactory.setClassFromPojo(engineName,pojo);
 		return true;
 	},
@@ -60,7 +64,7 @@ module.exports={
 		if(this._isSingleton){
 	       return  classFactory.getSingletonObject.apply(classFactory,newArgs);
 		}
-		return classFactory.createComponent.apply(classFactory,newArgs);
+		return classFactory.createObject.apply(classFactory,newArgs);
 	},
 	isConfigurable:function(){
 		return !! this._configValue;
