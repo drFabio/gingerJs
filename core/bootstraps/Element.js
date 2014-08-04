@@ -48,30 +48,45 @@ module.exports={
 	    }
 	    return params;
 	},
-	_getObject:function(name,params,cb){
-		if(this._isSingleton){
-	       return  this._classFactory.getSingletonObject(name,this._engine,params,cb);
+	_getObject:function(name,var_args){
+		var newArgs=[];
+		newArgs.push(name);
+		//By default all objects have the engine as the first argument
+		arguments[0]=this._engine;
+		for(var x in arguments){
+			newArgs.push(arguments[x]);
 		}
-		return this._classFactory.createComponent(name,this._engine,params,cb);
+		var classFactory=this._classFactory;
+		if(this._isSingleton){
+	       return  classFactory.getSingletonObject.apply(classFactory,newArgs);
+		}
+		return classFactory.createComponent.apply(classFactory,newArgs);
 	},
-	create : function (name, params,cb) {
-	    params=this._getParams(name,params);
+	isConfigurable:function(){
+		return !! this._configValue;
+	},
+	create : function (name, var_args) {
+		//If is configurable the first argument is the parasm from the config
+		if(this.isConfigurable()){
+	    	var params=this._getParams(name,arguments[1]);
+	    	arguments[1]=params;
+		}
 	    var appName=this._defaulAppNamespace+'.'+name;
 	    var engineName=this._defaultParentNamespace+'.'+name;
 	    //First let's check if the namespace of compoennts is set
 	    if(this._classFactory.classFileExists(appName)){
-	        if(this._classFactory.isClassSet(appName)){
-	    	   return  this._getObject(appName,params,cb);
-	   		}else{
+	        if(!this._classFactory.isClassSet(appName)){
 	   			this.setAppClass(appName);
-	   			return  this._getObject(appName,params,cb);
 	   		}
+   			arguments[0]=appName;
+   			return  this._getObject.apply(this,arguments);
 	    }
 	    else if(this._classFactory.classFileExists(engineName)){
 	    	if(!this._classFactory.isClassSet(engineName)){
 	    		this.setEngineClass(name);
 	    	}
-	       return this._getObject(engineName,params,cb);
+	    	arguments[0]=engineName;
+	       return this._getObject.apply(this,arguments);
 
 	    }
 	    else{

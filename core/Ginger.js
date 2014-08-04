@@ -492,7 +492,7 @@ Ginger.prototype.hasModule = function (name) {
 Ginger.prototype.getLib = function(name) {
     return this.libs[name];
 };
-Ginger.prototype.getError = function(name) {
+Ginger.prototype.getError = function(name,params) {
     var classFactory=this.libs.classFactory;
     name='errors.'+name;
     if(classFactory.classFileExists(name)){
