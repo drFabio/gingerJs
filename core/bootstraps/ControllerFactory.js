@@ -11,6 +11,12 @@ module.exports={
 		}
 		return actionsMap;
 	},
+	init : function(engine,params) {
+		this._super(engine,params);
+		if(!this._params.actionSuffix){
+			this._params.actionSuffix='Action';
+		}
+	},
 	addToEngine:function(name,path,parentNamespace){
 		var controllerPOJO=this._getPojo(path,'ginger.mvc.AbstractController');
 		var controllerNamespace=this._buildNamespace(parentNamespace,'controllers.'+name);

@@ -3,9 +3,7 @@ module.exports={
 		this._engine=engine;
 		this._params=params;
 		this._classFactory=this._engine.libs.classFactory;
-		if(!this._params.actionSuffix){
-			this._params.actionSuffix='Action';
-		}
+		
 	},
 	buildMapIndex:function(name,parentNamespace){
 		var saneName=this.sanitizeName(name);

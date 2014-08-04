@@ -5,9 +5,10 @@ var CONTEXT_MODEL=1;
 var CONTEXT_VIEW=2;
 var CONTEXT_CONTROLLER=3;
 var CONTEXT_MODULE_ROOT=5;
-var CONTEXT_ROOT=8;
 var CONTEXT_COMPONENTS=6;
 var CONTEXT_GATEWAYS=7;
+var CONTEXT_ROOT=8;
+var CONTEXT_ERROR=9;
 module.exports={
 	_classFactory:null,
 	_controllerFactory:null,
@@ -59,22 +60,18 @@ module.exports={
 		switch(dirName){
 			case 'modules':
 				return CONTEXT_MODULE;
-			break;
 			case 'models':
 				return CONTEXT_MODEL;
-			break;
 			case 'views':
 				return CONTEXT_VIEW;
-			break;
 			case 'controllers':
 				return CONTEXT_CONTROLLER;
-			break;
 			case 'components':
 				return CONTEXT_COMPONENTS;
-			break;
 			case 'gateways':
 				return CONTEXT_GATEWAYS;
-			break;
+			case 'errors':
+				return CONTEXT_ERROR;
 			default:
 				return false;
 		}
@@ -105,6 +102,9 @@ module.exports={
 			case CONTEXT_COMPONENTS:
 				var name=this.removeExtension(fileName);
 				this._addComponent(fullPath,name,parentModules);
+				cb();
+			break;
+			case CONTEXT_ERROR:
 				cb();
 			break;
 			default:

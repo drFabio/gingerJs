@@ -144,14 +144,9 @@ Ginger.prototype._setGatewaysClasses = function() {
         gatewayFactory.setEngineGateway(name);
     }
 };
-Ginger.prototype._setComponentClasses = function(first_argument) {
-    for (var name in this._config.components) {
-        this._componentFactory.setEngineComponentClass(name);
-    }
-};
+
 Ginger.prototype._mapClasses = function() {
     this._setGatewaysClasses();
-    this._setComponentClasses();
 };
 /**
  * Starts the application

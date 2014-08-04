@@ -38,7 +38,9 @@ describe('Application',function(){
 			expect(ginger.getGateway('HTTP').iAmOverwritten).to.be.true;
 		});
 		it('Should be able to overwride a component',function(){
-			expect(ginger.getComponent('Log').iAmOverwritten).to.be.true;
+			ginger.getComponent('Log',function(err,component){
+				expect(component.iAmOverwritten).to.be.true;
+			});
 		});
 
 		after(function(done){

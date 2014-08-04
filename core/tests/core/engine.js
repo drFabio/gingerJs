@@ -81,7 +81,7 @@ describe('Ginger',function(){
 			var exampleConfig={
 				'myVar':'foo',
 				'components':{
-					'db':false
+					'DataBase':false
 				},
 				'gateways':{
 					'HTTP':false
@@ -101,7 +101,7 @@ describe('Ginger',function(){
 
 			describe('#component',function(){
 				it('Should be able to remove a component by setting it to false',function(){
-					expect(ginger.isComponentCancelled('db')).to.be.true;
+					expect(ginger.isComponentCancelled('DataBase')).to.be.true;
 				});
 			});
 
