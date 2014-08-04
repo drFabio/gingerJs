@@ -151,14 +151,19 @@ describe('Ginger',function(){
 	describe('gateway',function(){
 		it('Should give the same Reponse content independant of the gateway');
 	});
-	describe('Error',function(){
+	describe.only('Error',function(){
 		var ginger=new Ginger();
 		before(function(done){
 			ginger.up(done);
 
 		});
-		it('Should have the default errors');
-		it('Should be able to overwritte the errors behaviours');
+		it('Should have the default errors',function(){
+			var errors=['Default','Internal','InvalidParams','InvalidRequest','NotFound','Validation'];
+			for(var x in errors){
+				expect(ginger.getError(errors[x])).not.empty;
+			}
+		});
+		it('Should be able to overwritte errors');
 		after(function(done){
 			ginger.down(done);
 		});

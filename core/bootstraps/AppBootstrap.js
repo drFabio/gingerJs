@@ -35,12 +35,15 @@ module.exports={
 	init:function(engine,params){
 		this._engine=engine;
 		this._params=params;
-		this._classFactory=engine.libs.classFactory;
-		this._controllerFactory=this._engine.getBootstrap('ControllerFactory');
-		this._modelFactory=this._engine.getBootstrap('ModelFactory');
-		this._moduleBootstrap=this._engine.getBootstrap('ModuleBootstrap');
-		this._gatewayFactory=this._engine.getBootstrap('GatewayFactory');
-		this._componentFactory=this._engine.getBootstrap('ComponentFactory');
+		this._classFactory=engine.getLib('classFactory');
+		
+
+		this._controllerFactory=engine.getBootstrap('ControllerFactory');
+		this._modelFactory=engine.getBootstrap('ModelFactory');
+		this._moduleBootstrap=engine.getBootstrap('ModuleBootstrap');
+		this._gatewayFactory=engine.getBootstrap('GatewayFactory');
+		this._componentFactory=engine.getBootstrap('ComponentFactory');
+		
 		if(this._params['path']){
 			this.setApplicationPath(this._params['path']);
 		}

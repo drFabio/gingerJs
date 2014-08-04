@@ -122,16 +122,24 @@ Ginger.prototype._setConfigAsDefaultIfNoneSet = function() {
         this._config = Ginger.getDefaultConfig();
     }
 };
-Ginger.prototype.setClassFactoryAndNamespaceHandler = function() {
+Ginger.prototype._setNamespaceFromEngineConfig = function(name,configValue) {
+    this.libs.classFactory.setNamespaceDir(name,this.getEngineConfigValue(configValue));
+};
+Ginger.prototype._setClassFactory = function(first_argument) {
     var OliveOil=require('olive_oil')();
     var oliveOil=new OliveOil(null);
-    oliveOil.setNamespaceDir('ginger',__dirname+'/');
-    oliveOil.setNamespaceDir('ginger.bootstraps',this.getEngineConfigValue('bootstrapsDir'));
-    oliveOil.setNamespaceDir('ginger.components',this.getEngineConfigValue('componentsDir'));
-    oliveOil.setNamespaceDir('ginger.gateways',this.getEngineConfigValue('gatewaysDir'));
-    oliveOil.setNamespaceDir('ginger.mvc',this.getEngineConfigValue('mvcDir'));
-    
     this.libs.classFactory=oliveOil;
+};
+Ginger.prototype._setDefaultNamespaces = function() {
+    this._setNamespaceFromEngineConfig('ginger','rootDir');
+    this._setNamespaceFromEngineConfig('ginger.bootstraps','bootstrapsDir');
+    this._setNamespaceFromEngineConfig('ginger.components','componentsDir');
+    this._setNamespaceFromEngineConfig('ginger.gateways','gatewaysDir');
+    this._setNamespaceFromEngineConfig('ginger.mvc','mvcDir');
+    this._setNamespaceFromEngineConfig('ginger.errors','errorsDir');
+
+    
+
 };
 /**
  * Starts the application
@@ -142,7 +150,9 @@ Ginger.prototype.up = function (cb) {
 
     this._setConfigAsDefaultIfNoneSet();
     this._setupEngineConfig();
-    this.setClassFactoryAndNamespaceHandler();
+    this._setClassFactory();
+    this._setDefaultNamespaces();
+
     var self = this;
     var startAppCb = function (err) {
         if (err) {
@@ -459,7 +469,6 @@ Ginger.prototype.setModule = function (name) {
  * @return {Boolean}      [description]
  */
 Ginger.prototype.hasController = function (name) {
-
     return !!this.controllerMap[name];
 }
 /**
@@ -478,4 +487,16 @@ Ginger.prototype.hasModel = function (name) {
 Ginger.prototype.hasModule = function (name) {
     return !!this.moduleMap[name];
 }
+Ginger.prototype.getLib = function(name) {
+    return this.libs[name];
+};
+Ginger.prototype.getError = function(name) {
+    var classFactory=this.libs.classFactory;
+    name='errors.'+name;
+    if(classFactory.classFileExists(name)){
+        return classFactory.getClass(name)
+    }
+    name='ginger.'+name;
+    return classFactory.getClass(name)
+};
 module.exports = Ginger;

@@ -5,5 +5,7 @@ module.exports={
 	'gatewaysDir':__dirname+'/../gateways/',
 	'componentsDir':__dirname+'/../components/',
 	'bootstrapsDir':__dirname+'/../bootstraps/',
-	'mvcDir':__dirname+'/../mvc/'
+	'mvcDir':__dirname+'/../mvc/',
+	'errorsDir':__dirname+'/../errors/',
+	'rootDir':__dirname+'/../'
 };

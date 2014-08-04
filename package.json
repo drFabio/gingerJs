@@ -4,14 +4,16 @@
     "author":"Fabio Oliveira Costa <fabio@dexus.com.br>",
     "version": "0.0.1",
     "description": "A HMVC framework",
+    "devDependencies": {
+         "chai":"*"
+    },
     "dependencies": {
-        "chai":"*",
         "lodash":"*",
         "express":"*",
         "socket.io":"*",
 		"class.extend":"*",
         "async":"*",
-        "olive_oil":"*"
+        "olive_oil":"git://github.com/drFabio/OliveOil.git#master"
     },
     "scripts": {
         "start": "node app.js",

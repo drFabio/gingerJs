@@ -1,4 +1,3 @@
-var InternalError=require(__dirname+'/../errors/InternalError');
 module.exports={
 	_app:null,
 	_expressComponent:null,
