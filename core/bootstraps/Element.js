@@ -25,6 +25,7 @@ module.exports={
 	 		POJO=this._classFactory.getClassFileContents(name);
 	 		POJO=this._setDefaultParentOnPOJO(pojo,defaultParent);
 	 	}
+	 
 		this._classFactory.setClassFromPojo(appNamespace,POJO);
 		return true;
 	},

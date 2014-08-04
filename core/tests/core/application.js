@@ -43,6 +43,14 @@ describe('Application',function(){
 			});
 		});
 
+		describe('Error',function(){
+			
+			it('Should be able to overwritte errors',function(){
+				var error=ginger.getError('NotFound');
+				expect(error.iAmOverwritten).to.be.true;
+			});
+
+		});
 		after(function(done){
 			ginger.down(done);
 		});
@@ -53,19 +61,4 @@ describe('Controller',function(){
 		it('Should have a defaultModel if it exist');
 		it('Should create the avaiable actions');
 		it('Should have Crud Avaiable');
-});
-describe('Error',function(){
-	var ginger=new Ginger();
-	before(function(done){
-		ginger.up(done);
-
-	});
-
-	it('Should be able to overwritte errors',function(){
-		var error=ginger.getError('NotFound');
-		expect(error.iAmOverwritten).to.be.true;
-	});
-	after(function(done){
-		ginger.down(done);
-	});
 });
