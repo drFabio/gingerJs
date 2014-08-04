@@ -4,19 +4,22 @@ module.exports={
 	_defaulAppNamespace:'',
 	_configValue:null,
 	_isSingleton:true,
+	_defaultParent:null,
 	_isLazy:false,
 	setAppClass:function(name,path,parentNamespace){
 	    var engineName=this._defaultParentNamespace+'.'+name;
 	    var defaultParent=null;
-		var componentNamespace=this._buildNamespace(parentNamespace,this._defaulAppNamespace+'.'+name);
+		var appNamespace=this._buildNamespace(parentNamespace,this._defaulAppNamespace+'.'+name);
 	 	if(this._classFactory.classFileExists(engineName)){
 			if(!this._classFactory.isClassSet(engineName)){
 	    		this.setEngineClass(name);
 	    	}
+	    	console.log(engineName);
 	 		defaultParent=engineName;
 	 	}
+
 		var POJO=this._getPojo(path,defaultParent);
-		this._classFactory.setClassFromPojo(componentNamespace,POJO);
+		this._classFactory.setClassFromPojo(appNamespace,POJO);
 		return true;
 	},
 	setEngineClass:function(name){
@@ -25,7 +28,7 @@ module.exports={
 			return false;
 		}
 		var pojo=this._classFactory.getClassFileContents(engineName);
-		pojo=this._setDefaultParentOnPOJO(pojo);
+		pojo=this._setDefaultParentOnPOJO(pojo,this._defaultParent);
 		this._classFactory.setClassFromPojo(engineName,pojo);
 		return true;
 	},

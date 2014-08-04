@@ -34,7 +34,7 @@ describe('Application',function(){
 			expect(ginger.hasModel('sum/multiplication/index')).to.be.true;
 
 		});
-		it('Should overwrite a gateway without needing to config',function(){
+		it.only('Should overwrite a gateway without needing to config',function(){
 			expect(ginger.getGateway('HTTP').iAmOverwritten).to.be.true;
 		});
 		it('Should be able to overwride a component',function(){

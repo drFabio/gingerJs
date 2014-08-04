@@ -119,7 +119,7 @@ module.exports={
 	 */
 	_addGateway:function(path,name,cb) {
 		
-		this._gatewayFactory.setAppGatewayClass(name,path);
+		this._gatewayFactory.setAppClass(name,path);
 		cb();
 	},
 	_addNamespace:function(moduleName,parentModules,path) {

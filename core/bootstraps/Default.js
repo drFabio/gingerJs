@@ -21,7 +21,7 @@ module.exports={
 	},
 	_buildNamespace:function(parentNamespace,currentDirectory){
 		var ret;
-		if(parentNamespace===''){
+		if(parentNamespace==='' || typeof(parentNamespace)=='undefined'){
 			ret=currentDirectory;
 		}
 		else{

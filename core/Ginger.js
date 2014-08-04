@@ -141,7 +141,7 @@ Ginger.prototype._setDefaultNamespaces = function() {
 Ginger.prototype._setGatewaysClasses = function() {
     var gatewayFactory=this.getBootstrap('GatewayFactory');
     for (var name in this._config.gateways) {
-        gatewayFactory.setEngineGateway(name);
+        gatewayFactory.setEngineClass(name);
     }
 };
 
@@ -426,7 +426,7 @@ Ginger.prototype._startGateways = function (cb) {
                     }
 
                 }
-                gatewayFactory.createGateway(name, params,createGatewayCb);
+                gatewayFactory.create(name, params,createGatewayCb);
             }
         }
         //Looping trough each gateway to create it assynchronously
