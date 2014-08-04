@@ -3,9 +3,8 @@ module.exports={
 	_defaultParentNamespace:'ginger.errors',
 	_defaulAppNamespace:'errors',
 	_configValue:'errors',
-	_isLazy:true,
+	_defaultParent:'ginger.gateways.errors.Default'
 	_isSingleton:false,
-	_defaultParent:'ginger.gateways.Errors'
 
 
 }

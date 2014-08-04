@@ -14,14 +14,21 @@ module.exports={
 			if(!this._classFactory.isClassSet(engineName)){
 	    		this.setEngineClass(name);
 	    	}
-	    	console.log(engineName);
 	 		defaultParent=engineName;
 	 	}
+	 	var POJO;
+	 	if(path){
 
-		var POJO=this._getPojo(path,defaultParent);
+			POJO=this._getPojo(path,defaultParent);
+	 	}
+	 	else{
+	 		POJO=this._classFactory.getClassFileContents(name);
+	 		POJO=this._setDefaultParentOnPOJO(pojo,defaultParent);
+	 	}
 		this._classFactory.setClassFromPojo(appNamespace,POJO);
 		return true;
 	},
+
 	setEngineClass:function(name){
 		var engineName=this._defaultParentNamespace+'.'+name;
 		if(!this._classFactory.classFileExists(engineName)){
@@ -52,8 +59,13 @@ module.exports={
 	    var appName=this._defaulAppNamespace+'.'+name;
 	    var engineName=this._defaultParentNamespace+'.'+name;
 	    //First let's check if the namespace of compoennts is set
-	    if(this._classFactory.isClassSet(appName)){
-	       return  this._getObject(appName,params,cb);
+	    if(this._classFactory.classFileExists(appName)){
+	        if(this._classFactory.isClassSet(appName)){
+	    	   return  this._getObject(appName,params,cb);
+	   		}else{
+	   			this.setAppClass(appName);
+	   			return  this._getObject(appName,params,cb);
+	   		}
 	    }
 	    else if(this._classFactory.classFileExists(engineName)){
 	    	if(!this._classFactory.isClassSet(engineName)){

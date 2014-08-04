@@ -20,7 +20,6 @@ function Ginger() {
      * Components are helpers for the application, like logs,errors, socketIo etc
      */
     this._componentsNameMap = {};
-    this._componentFactory=null;
     /**
      * Bootstrapers are used to launch the application, they are factories for the application startup
      * @type {Object}
@@ -145,9 +144,7 @@ Ginger.prototype._setGatewaysClasses = function() {
     }
 };
 
-Ginger.prototype._mapClasses = function() {
-    this._setGatewaysClasses();
-};
+
 /**
  * Starts the application
  * @param  {Mixed} config String of the config file or config data
@@ -159,8 +156,6 @@ Ginger.prototype.up = function (cb) {
     this._setupEngineConfig();
     this._setClassFactory();
     this._setDefaultNamespaces();
-    this._componentFactory=this.getBootstrap('ComponentFactory');
-    this._mapClasses();
  
     var self = this;
     var startAppCb = function (err) {
@@ -300,7 +295,7 @@ Ginger.prototype.setAppPath = function (path) {
  */
 Ginger.prototype.getComponent = function (name,cb,params) {
     var self=this;
-
+    var componentFactory=this.getBootstrap('ComponentFactory');
     //We already made it no need to do it again
     if (!this.isComponentLoaded(name)) {
         //The component is set it's not cancelled
@@ -321,7 +316,7 @@ Ginger.prototype.getComponent = function (name,cb,params) {
                     cb(null,self._componentsNameMap[name]);
                 }
             }
-            self._componentsNameMap[name]=self._componentFactory.create(name, params,cbCreateComponent);
+            self._componentsNameMap[name]=componentFactory.create(name, params,cbCreateComponent);
             isComponentLoaded=true;
             //Call the cb just if the componet is initialized also
             if(isComponentInitialized){
@@ -431,7 +426,7 @@ Ginger.prototype._startGateways = function (cb) {
         }
         //Looping trough each gateway to create it assynchronously
     for (var name in this._config.gateways) {
-        if (this.isGatewayLoaded(name)) {
+        if (this.isGatewayLoaded(name) || this.isGatewayCancelled(name)) {
             continue;
         }
         asyncFunctions.push(funcToCreateGateway(name, this._config.gateways[name]));
