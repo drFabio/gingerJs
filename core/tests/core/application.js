@@ -42,6 +42,9 @@ describe('Application',function(){
 		});
 	});
 });
+describe('Controller',function(){
+		it('Should be able to inherits the default controller');
+});
 describe('Error',function(){
 	var ginger=new Ginger();
 	before(function(done){

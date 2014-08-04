@@ -170,7 +170,6 @@ describe('Ginger',function(){
 
 	
 	describe('Controller',function(){
-		it('Should be able to inherits the default controller');
 		it('Should have a defaultModel if it exist');
 		it('Should create the avaiable actions');
 		it('Should have Crud Avaiable');
