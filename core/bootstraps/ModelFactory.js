@@ -1,5 +1,5 @@
 module.exports={
-	parent:'ginger.bootstraps.MVCBootstrap',
+	parent:'ginger.bootstraps.Default',
 	addToEngine:function(name,path,parentNamespace){
 		var	modelPOJO=this._getPojo(path,'ginger.mvc.AbstractModel');
 		var modelNamespace=this._buildNamespace(parentNamespace,'models.'+name);

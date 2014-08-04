@@ -321,7 +321,7 @@ Ginger.prototype.getComponent = function (name,cb,params) {
                     cb(null,self._componentsNameMap[name]);
                 }
             }
-            self._componentsNameMap[name]=self._componentFactory.createComponent(name, params,cbCreateComponent);
+            self._componentsNameMap[name]=self._componentFactory.create(name, params,cbCreateComponent);
             isComponentLoaded=true;
             //Call the cb just if the componet is initialized also
             if(isComponentInitialized){

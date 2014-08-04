@@ -1,5 +1,5 @@
 module.exports={
-	parent:'ginger.bootstraps.MVCBootstrap',
+	parent:'ginger.bootstraps.Default',
 	getActionsMap:function(controllerData){
 		var actionsMap={};
 		for(var x in controllerData){

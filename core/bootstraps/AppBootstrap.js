@@ -77,7 +77,7 @@ module.exports={
 		}
 	},
 	_addComponent:function(path,name,parentNamespace){
-		this._componentFactory.setAppComponentClass(name,path,parentNamespace);
+		this._componentFactory.setAppClass(name,path,parentNamespace);
 	},
 	_handleFile:function(fullPath,fileName,context,parentModules,cb) {
 		switch(context){

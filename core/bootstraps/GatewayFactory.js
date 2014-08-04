@@ -1,5 +1,5 @@
 module.exports={
-	parent:'ginger.bootstraps.MVCBootstrap',
+	parent:'ginger.bootstraps.Default',
 	_defaultParent:'ginger.gateways.AbstractGateway',
 	setAppGatewayClass:function(name,path){
 	    var gingerName='ginger.gateways.'+name;
