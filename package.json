@@ -18,7 +18,7 @@
     "scripts": {
         "start": "node app.js",
         "debug": "node debug app.js",
-        "test":"mocha  core/tests/core/engine.js"
+        "test":"mocha  core/tests/**/*.js"
     },
     "main": "app.js",
     "repository": {

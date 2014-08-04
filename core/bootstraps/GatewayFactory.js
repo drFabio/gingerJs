@@ -8,7 +8,14 @@ module.exports={
 	 		defaultParent=gingerName;
 	 	}
 		var gatewayPOJO=this._getPojo(path,defaultParent);
-		this._classFactory.setClassFromPojo('gateways.'+name,gatewayPOJO);
+		var appName='gateways.'+name;
+		this._classFactory.setClassFromPojo(appName,gatewayPOJO);
+	},
+	setEngineGateway:function(name){
+		var gingerName='ginger.gateways.'+name;
+		var pojo=this._classFactory.getClassFileContents(gingerName);
+		pojo=this._setDefaultParentOnPOJO(pojo,this._defaultParent);
+		this._classFactory.setClassFromPojo(gingerName,pojo);
 	},
 	createGateway:function(name,params,cb){
 	    var gatewayData;
@@ -18,26 +25,14 @@ module.exports={
 	    }
 	    var appName='gateways.'+name;
 	    var gingerName='ginger.gateways.'+name;
-	    if (!params) {
-	        //If the user cancelled the component
-	        //Trying to get params configuration if none is passed
-	        if (!!this._config.gateways && !!this._config.gateways[name]) {
-	            params = this._config.gateways[name];
-	        }
-	    }
+	    params=this.getParams(params);
+	  
 	    if(this._classFactory.isClassSet(appName)){
 	        this._classFactory.createObject(appName,this._engine,params,cb);
 	        return;
 	    }
-	    else if(this._classFactory.classFileExists(gingerName)){
-	       var pojo=this._classFactory.getClassFileContents(gingerName);
-	       pojo=this._setDefaultParentOnPOJO(pojo,this._defaultParent);
-	       this._classFactory.setClassFromPojo(gingerName,pojo);
-	       this._classFactory.createObject(gingerName,this._engine,params,cb);
-	       return;
+	    this._classFactory.createObject(gingerName,this._engine,params,cb);
 
-	    }
-	    cb(null,false);
 	   
 	    return;
   

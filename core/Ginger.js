@@ -137,9 +137,12 @@ Ginger.prototype._setDefaultNamespaces = function() {
     this._setNamespaceFromEngineConfig('ginger.gateways','gatewaysDir');
     this._setNamespaceFromEngineConfig('ginger.mvc','mvcDir');
     this._setNamespaceFromEngineConfig('ginger.errors','errorsDir');
-
-    
-
+};
+Ginger.prototype._setGatewaysClasses = function() {
+    var gatewayFactory=this.getBootstrap('GatewayFactory');
+    for (var name in this._config.gateways) {
+        gatewayFactory.setEngineGateway(name);
+    }
 };
 /**
  * Starts the application
@@ -152,6 +155,7 @@ Ginger.prototype.up = function (cb) {
     this._setupEngineConfig();
     this._setClassFactory();
     this._setDefaultNamespaces();
+    this._setGatewaysClasses();
 
     var self = this;
     var startAppCb = function (err) {
@@ -400,20 +404,19 @@ Ginger.prototype._launch = function (cb) {
  */
 Ginger.prototype._startGateways = function (cb) {
     var gatewayFactory=this.getBootstrap('GatewayFactory');
-    //Functions that we will use to initialize the gateways
     var asyncFunctions = [];
     var self = this;
     var funcToCreateGateway = function (name, params) {
             return function (asyncCb) {
-
                 var createGatewayCb = function (err, gatewayObj) {
                     if (err) {
                         asyncCb(err);
                         return;
                     }
                     if (gatewayObj) {
-                        self._gateways[name] = gatewayObj;
-                        self._gateways[name].buildRoutes(asyncCb);
+                        self.setGateway(name,gatewayObj);
+                        
+                        gatewayObj.buildRoutes(asyncCb);
                     } else {
                         asyncCb();
                     }
@@ -429,7 +432,7 @@ Ginger.prototype._startGateways = function (cb) {
         }
         asyncFunctions.push(funcToCreateGateway(name, this._config.gateways[name]));
     }
-    async.series(asyncFunctions, function (err, res) {
+    async.parallel(asyncFunctions, function (err, res) {
         cb(err);
     });
 };
