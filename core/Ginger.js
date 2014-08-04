@@ -144,6 +144,15 @@ Ginger.prototype._setGatewaysClasses = function() {
         gatewayFactory.setEngineGateway(name);
     }
 };
+Ginger.prototype._setComponentClasses = function(first_argument) {
+    for (var name in this._config.components) {
+        this._componentFactory.setEngineComponentClass(name);
+    }
+};
+Ginger.prototype._mapClasses = function() {
+    this._setGatewaysClasses();
+    this._setComponentClasses();
+};
 /**
  * Starts the application
  * @param  {Mixed} config String of the config file or config data
@@ -155,8 +164,9 @@ Ginger.prototype.up = function (cb) {
     this._setupEngineConfig();
     this._setClassFactory();
     this._setDefaultNamespaces();
-    this._setGatewaysClasses();
-
+    this._componentFactory=this.getBootstrap('ComponentFactory');
+    this._mapClasses();
+ 
     var self = this;
     var startAppCb = function (err) {
         if (err) {
@@ -191,7 +201,6 @@ Ginger.prototype._setNoNamespaceDirToAppRoot = function() {
 };
 
 Ginger.prototype._setupApp = function (cb) {
-    this._componentFactory=this.getBootstrap('ComponentFactory');
     //Trying to get the app params if any
     var appInit = this.getBootstrap('AppBootstrap');
     //There is no app path set one

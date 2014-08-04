@@ -11,6 +11,12 @@ module.exports={
 		var componentPOJO=this._getPojo(path,defaultParent);
 		this._classFactory.setClassFromPojo(componentNamespace,componentPOJO);
 	},
+	setEngineComponentClass:function(name){
+		var gingerName='ginger.components.'+name;
+		var pojo=this._classFactory.getClassFileContents(gingerName);
+		pojo=this._setDefaultParentOnPOJO(pojo);
+		this._classFactory.setClassFromPojo(gingerName,pojo);
+	},
 	createComponent : function (name, params,cb) {
 	    if(!params){
 	        var compValues=this._engine.getConfigValue('components');

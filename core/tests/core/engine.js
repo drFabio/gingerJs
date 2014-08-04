@@ -60,10 +60,10 @@ describe('Ginger',function(){
 		});
 		it('Should  run if prelaunch allows',function(done){
 			var ginger=new Ginger();
-			/*var preLaunch=function(ginger,cb){
+			var preLaunch=function(ginger,cb){
 				cb();
 			};
-			ginger.setPreLaunchFunction(preLaunch);*/
+			ginger.setPreLaunchFunction(preLaunch);
 			ginger.up(function(err){
 				expect(err).to.not.exist;
 				ginger.down(done);
@@ -148,9 +148,6 @@ describe('Ginger',function(){
 			ginger.down(done);
 		});
 	});
-	describe('gateway',function(){
-		it('Should give the same Reponse content independant of the gateway');
-	});
 	describe('Error',function(){
 		var ginger=new Ginger();
 		before(function(done){
@@ -168,11 +165,8 @@ describe('Ginger',function(){
 		});
 	});
 
-	
-	describe('Controller',function(){
-		it('Should have a defaultModel if it exist');
-		it('Should create the avaiable actions');
-		it('Should have Crud Avaiable');
-	});
 		
+	describe('gateway',function(){
+		it('Should give the same Reponse content independant of the gateway');
+	});
 });

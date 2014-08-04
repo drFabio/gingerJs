@@ -85,25 +85,25 @@ module.exports={
 	_handleFile:function(fullPath,fileName,context,parentModules,cb) {
 		switch(context){
 			case CONTEXT_CONTROLLER:
-				var name=this.parseControllerName(fileName);
+				var name=this.removeExtension(fileName);
 				this._addController(fullPath,name,parentModules);
 				cb();
 			break;
 			case CONTEXT_MODEL:
-				var name=this.parseModelName(fileName);
+				var name=this.removeExtension(fileName);
 				this._addModel(fullPath,name,parentModules);
 				cb();
 			break;
 			case CONTEXT_VIEW:
-				var name=this.parseViewName(fileName);
+				var name=this.removeExtension(fileName);
 				cb();
 			break;
 			case CONTEXT_GATEWAYS:
-				var name=this.parseGatewayName(fileName);
+				var name=this.removeExtension(fileName);
 				this._addGateway(fullPath,name,cb);
 			break;
 			case CONTEXT_COMPONENTS:
-				var name=this.parseComponentName(fileName);
+				var name=this.removeExtension(fileName);
 				this._addComponent(fullPath,name,parentModules);
 				cb();
 			break;
@@ -145,22 +145,6 @@ module.exports={
 	_addController:function(path,controllerName,parentModules) {
 		this._controllerFactory.addToEngine(controllerName,path,parentModules);
 	},
-	parseControllerName :function(name) {
-		return this.removeExtension(name);
-	},
-	parseModelName :function(name) {
-		return this.removeExtension(name);
-	},
-	parseViewName :function(name) {
-		return this.removeExtension(name);
-	},
-	parseGatewayName :function(name) {
-		return this.removeExtension(name);
-	},
-	parseComponentName :function(name) {
-		return this.removeExtension(name);
-	},
-
 
 	removeExtension:function(name) {
 		return name.replace(/\.js$/,'');
@@ -217,8 +201,7 @@ module.exports={
 					self._addNamespace(item,parentModules,path);
 					var newParentmodules=self._buildNamespace(parentModules,item);
 					self._moduleBootstrap.addToEngine(item,path,parentModules);
-					//It's a m
-					//odule for all intents all directories here are module names with module structure
+					//It's a module for all intents all directories here are module names with module structure
 					asyncFunctions=asyncFunctions.concat(self._walkDir(false,path,CONTEXT_MODULE_ROOT,newParentmodules));
 				}
 			}
@@ -262,6 +245,7 @@ module.exports={
 			return;
 		}
 		try{
+			this._engine.setConfig(this._path+'/config/app.js');
 			this._walkDir(cb,this._path,CONTEXT_ROOT);
 		}
 		catch(e){

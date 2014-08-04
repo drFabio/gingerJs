@@ -13,7 +13,9 @@ describe('Application',function(){
 			ginger.setAppPath(__dirname+'/../exampleApplication/');
 			ginger.up(done);
 		});
-		it('Should have the config by the application');
+		it('Should have the config by the application',function(){
+			expect(ginger.getConfig().name).to.equal("Example");
+		});
 		
 		it('Should have loaded all the modules',function(){
 			expect(ginger.hasModule('sum')).to.be.true;
@@ -35,7 +37,9 @@ describe('Application',function(){
 		it('Should overwrite a gateway without needing to config',function(){
 			expect(ginger.getGateway('HTTP').iAmOverwritten).to.be.true;
 		});
-		it('Should overwrite a component without needing to config');
+		it('Should be able to overwride a component',function(){
+			expect(ginger.getComponent('Log').iAmOverwritten).to.be.true;
+		});
 
 		after(function(done){
 			ginger.down(done);
@@ -44,6 +48,9 @@ describe('Application',function(){
 });
 describe('Controller',function(){
 		it('Should be able to inherits the default controller');
+		it('Should have a defaultModel if it exist');
+		it('Should create the avaiable actions');
+		it('Should have Crud Avaiable');
 });
 describe('Error',function(){
 	var ginger=new Ginger();

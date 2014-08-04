@@ -1,6 +1,6 @@
 
 module.exports={
-	'parent':'ginger.components.Log',
+	iAmOverwritten:true,
 	init:function(engine,params,cb) {
 		cb(null);
 
