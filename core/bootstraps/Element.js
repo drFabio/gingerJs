@@ -1,10 +1,10 @@
 module.exports={
 	parent:'ginger.bootstraps.Default',
-	_defaultParentNamespace:'ginger',
-	_defaulAppNamespace:'',
+	_defaultEngineNamespace:null,
+	_defaulAppNamespace:null,
 	_configValue:null,
 	_isSingleton:true,
-	_defaultParent:null,
+	_defaultEngineParent:null,
 	_defaultAppParent:null,
 	_isLazy:false,
 	_indexedByName:true,
@@ -27,9 +27,9 @@ module.exports={
 		var appNamespace=this._buildNamespace(this._defaulAppNamespace,name);
 
 	    if(this.hasDefaultParent()){
-			if(this._defaultParentNamespace){
+			if(this._defaultEngineNamespace){
 
-			    var engineName=this._defaultParentNamespace+'.'+name;
+			    var engineName=this._defaultEngineNamespace+'.'+name;
 			 	if(this._classFactory.classFileExists(engineName)){
 					if(!this._classFactory.isClassSet(engineName)){
 			    		this.setEngineClass(name);
@@ -71,20 +71,20 @@ module.exports={
 	 	}
 	},
 	hasDefaultParent:function(){
-		return !!this._defaultParentNamespace || !!this._defaultAppParent;
+		return !!this._defaultEngineNamespace || !!this._defaultAppParent;
 	},
 	hasElement:function(name){
 		name=name.toLowerCase();
 		return !!this._nameMap[name];
 	},
 	setEngineClass:function(name){
-		var engineName=this._defaultParentNamespace+'.'+name;
+		var engineName=this._defaultEngineNamespace+'.'+name;
 		if(!this._classFactory.classFileExists(engineName)){
 			return false;
 		}
 		var pojo=this._classFactory.getClassFileContents(engineName);
-		var defaultParent=this._defaultParent;
-		if(engineName==this._defaultParent){
+		var defaultParent=this._defaultEngineParent;
+		if(engineName==this._defaultEngineParent){
 			defaultParent=null;
 		}
 		pojo=this._setDefaultParentOnPOJO(pojo,defaultParent);
@@ -134,7 +134,7 @@ module.exports={
         }
         var engineName;
         if(this.hasDefaultParent){
-		    engineName=this._defaultParentNamespace+'.'+name;
+		    engineName=this._defaultEngineNamespace+'.'+name;
 			if(this._classFactory.classFileExists(engineName)){
 				return {name:engineName,isApp:false,isEngine:true};
 			}
