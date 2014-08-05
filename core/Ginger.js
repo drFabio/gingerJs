@@ -282,6 +282,7 @@ Ginger.prototype.setAppPath = function (path) {
  * @param  {String} name   The name of the component
  * @param  {object} params (Optional) if not given it will be used the one from the application config, if the application config doesn't implement it the abstract config will be used
  * @return {[type]}        [description]
+ * @todo  clean
  */
 Ginger.prototype.getComponent = function (name,cb,params) {
     var self=this;
@@ -422,7 +423,7 @@ Ginger.prototype._startGateways = function (cb) {
         }
         asyncFunctions.push(funcToCreateGateway(name, this._config.gateways[name]));
     }
-    async.parallel(asyncFunctions, function (err, res) {
+    async.series(asyncFunctions, function (err, res) {
         cb(err);
     });
 };
