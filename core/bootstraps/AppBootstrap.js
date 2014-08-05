@@ -129,26 +129,33 @@ module.exports={
 		this._gatewayFactory.setAppClass(name,path);
 		cb();
 	},
-	_addNamespace:function(moduleName,parentModules,path) {
-		var namespace=parentModules;
-		if(namespace===''){
-			namespace=moduleName;
+	_addNamespace:function(moduleName,parentModules,path,context) {
+		if(context==CONTEXT_CONTROLLER){
+			this._modelFactory.addNamespace(parentModules,path);
+			return;
+		}
+		else if(context==CONTEXT_MODEL){
+			this._controllerFactory.addNamespace(parentModules,path);
+			return;
 		}
 		else{
-			namespace+='.'+moduleName;
+			var namespace=parentModules;
+			if(namespace===''){
+				namespace=moduleName;
+			}
+			else{
+				namespace+='.'+moduleName;
+			}
+			this._classFactory.setNamespaceDir(namespace,path);
+			return;
+
 		}
-		this._classFactory.setNamespaceDir(namespace,path);
+
 	},
-	_addModel:function(path,modelName,parentModules) {
-		this._modelFactory.addToEngine(modelName,path,parentModules);
-		
+	_addModel:function(path,modelName,parentNamespace) {
+		this._modelFactory.setAppClass(modelName,path,parentNamespace);
 	},
-	/*
-	 * Adds a controller to the controller map
-	 * @param {[type]} controllerFile [description]
-	 * @param {[type]} controllerName [description]
-	 * @param {[type]} modules        [description]
-	 */
+
 	_addController:function(path,controllerName,parentModules) {
 		this._controllerFactory.addToEngine(controllerName,path,parentModules);
 	},
@@ -190,7 +197,8 @@ module.exports={
 					var childContext=self._getDirectoryContext(item);
 					//If it's not on a child context we don't handle it
 					if(childContext!==false){
-						self._addNamespace(item,parentModules,path);
+					
+						self._addNamespace(item,parentModules,path,childContext);
 						if(childContext===CONTEXT_COMPONENTS || childContext===CONTEXT_GATEWAYS){
 							//Just root handle components and gateways
 							if(context===CONTEXT_ROOT){
@@ -205,7 +213,7 @@ module.exports={
 				}
 				else if(context===CONTEXT_MODULE){
 					//It's a module lets put it on the map
-					self._addNamespace(item,parentModules,path);
+					self._addNamespace(item,parentModules,path,context);
 					var newParentmodules=self._buildNamespace(parentModules,item);
 					self._moduleBootstrap.addToEngine(item,path,parentModules);
 					//It's a module for all intents all directories here are module names with module structure

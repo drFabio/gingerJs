@@ -1,12 +1,17 @@
 module.exports={
-	parent:'ginger.bootstraps.Default',
+	parent:'ginger.bootstraps.Element',
+	_defaultParentNamespace:null,
+	_defaulAppNamespace:'controlles',
+	_configValue:null,
+	_defaultAppParent:'ginger.mvc.AbstractController',
+
 	getActionsMap:function(controllerData){
 		var actionsMap={};
 		for(var x in controllerData){
 
 			if(typeof(controllerData[x])==='function' && (plainName=this.getActionPlainName(x))!==false){
 			
-				actionsMap[plainName]=true;
+				actionsMap[plainName]=x;
 			}
 		}
 		return actionsMap;
@@ -18,13 +23,11 @@ module.exports={
 		}
 	},
 	addToEngine:function(name,path,parentNamespace){
-		var controllerPOJO=this._getPojo(path,'ginger.mvc.AbstractController');
-		var controllerNamespace=this._buildNamespace(parentNamespace,'controllers.'+name);
-		this._classFactory.setClassFromPojo(controllerNamespace,controllerPOJO);
-		var self=this;
 		var mapIndex=this.buildMapIndex(name,parentNamespace);
+		var controllerNamespace=this.setAppClass(name,path,parentNamespace);
+		var sanitizedUrl='/'+mapIndex;
+		var controllerPOJO= this._getPojo(path);
 		var controllerObject=this._classFactory.getSingletonObject(controllerNamespace,this._engine);
-		sanitizedUrl=mapIndex;
 		var actions=this.getActionsMap(controllerPOJO);
 		this._engine.setController(mapIndex,{
 			'modules':parentNamespace,

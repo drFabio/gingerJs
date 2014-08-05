@@ -11,6 +11,7 @@ module.exports={
 			}
 			self._expressComponent=express;
 			self._app=self._expressComponent.getApp();
+
 			self._expressComponent.listen(function(err){
 				cb(err,self);
 			});
@@ -23,19 +24,18 @@ module.exports={
 		if(prefix){
 			url='/'+prefix+url;
 		}
-		this._addRouteToApp(url,controllerData);
+		var actionFunction=controllerData.actions[action];
+		this._addRouteToApp(url,controllerData,actionFunction);
 		
 	},
 	end:function(cb){
 		this._expressComponent.end();
 		cb();
 	},
-	_addRouteToApp:function(url,controllerData){
+	_addRouteToApp:function(url,controllerData,actionFunction){
 		var controllerObject=controllerData['object'];
-		var controllerFunc=function(req,res){
-			controllerObject[action](req,res);
+		var controllerFunc=controllerObject[actionFunction];
 		
-		}
-		this._app.all(url,controllerFunc);
+		this._app.get(url,controllerFunc);
 	}
 }

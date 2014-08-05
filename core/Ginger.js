@@ -42,13 +42,7 @@ function Ginger() {
     this.controllerMap = {
 
     };
-    /**
-     * A map of models indexes and model classes
-     * @type {Object}
-     */
-    this.modelMap = {
 
-    };
     /**
      * Just a map of all modules that we have
      * @type {Object}
@@ -214,12 +208,8 @@ Ginger.prototype.loadAppFile = function (name) {
  * @return {[type]} [description]
  */
 Ginger.prototype.getModel = function (name) {
-    var ModelClass = this.modelMap[name];
-    if (!ModelClass) {
-        return null;
-    }
-    var ret = new ModelClass(this);
-    return ret;
+    var modelFactory=this.getBootstrap('ModelFactory');
+    return modelFactory.create(name);
 }
 /**
  * Get a view starting from the view directory
@@ -416,6 +406,7 @@ Ginger.prototype._startGateways = function (cb) {
                         self.setGateway(name,gatewayObj);
                         
                         gatewayObj.buildRoutes(asyncCb);
+
                     } else {
                         asyncCb();
                     }
@@ -448,22 +439,14 @@ Ginger.prototype.setGateway = function (name, gateway) {
 };
 
 /**
- * Sets the controller to the map
- * @param {[type]} name [description]
- * @param {[type]} data [description]
- */
-Ginger.prototype.setController = function (name, data) {
-    this.controllerMap[name] = data;
-}
-Ginger.prototype.setModel = function (name, data) {
-    this.modelMap[name] = data;
-}
-/**
  * Sets the module to the map
  * @type {[type]}
  */
 Ginger.prototype.setModule = function (name) {
     this.moduleMap[name] = true;
+};
+Ginger.prototype.setController = function(name,data) {
+    this.controllerMap[name]=data;
 };
 /**
  * Checks if we have a controller
@@ -471,7 +454,8 @@ Ginger.prototype.setModule = function (name) {
  * @return {Boolean}      [description]
  */
 Ginger.prototype.hasController = function (name) {
-    return !!this.controllerMap[name];
+    var controllerFactory=this.getBootstrap('ControllerFactory');
+    return controllerFactory.hasElement(name);
 }
 /**
  * Checks if we have a model
@@ -479,7 +463,8 @@ Ginger.prototype.hasController = function (name) {
  * @return {Boolean}      [description]
  */
 Ginger.prototype.hasModel = function (name) {
-    return !!this.modelMap[name];
+    var modelFactory=this.getBootstrap('ModelFactory');
+    return modelFactory.hasElement(name);
 }
 /**
  * Checks if we have a module
