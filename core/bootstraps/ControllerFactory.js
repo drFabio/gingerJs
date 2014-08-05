@@ -4,7 +4,7 @@ module.exports={
 	_defaulAppNamespace:'controlles',
 	_configValue:null,
 	_defaultAppParent:'ginger.mvc.AbstractController',
-
+	_debugController:true,
 	getActionsMap:function(controllerData){
 		var actionsMap={};
 		for(var x in controllerData){

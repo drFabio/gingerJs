@@ -6,7 +6,7 @@ var should = chai.should
 
 describe('Application',function(){
 	var ginger;
-	describe.only('up() \'by path\'',function(){
+	describe('up() \'by path\'',function(){
 		//Initializing the app by path first
 		before(function(done){
 			ginger=new Ginger();

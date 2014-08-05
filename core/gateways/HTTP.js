@@ -34,7 +34,7 @@ module.exports={
 	},
 	_addRouteToApp:function(url,controllerData,actionFunction){
 		var controllerObject=controllerData['object'];
-		var controllerFunc=controllerObject[actionFunction];
+		var controllerFunc=controllerObject[actionFunction].bind(controllerObject);
 		
 		this._app.get(url,controllerFunc);
 	}
