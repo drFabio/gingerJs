@@ -51,9 +51,7 @@ module.exports={
 	 		POJO=this._setDefaultParentOnPOJO(pojo,defaultParent);
 
 	 	}
-		if(this._debugController){
-			console.log(POJO);
-		}
+
 		this._classFactory.setClassFromPojo(appNamespace,POJO);
 	 	this._addToIndex(name,appNamespace,true);
 	 
@@ -154,11 +152,7 @@ module.exports={
 
 	create : function (name, var_args) {
 		var namespaceData=this._getNamespaceFromName(name);
-		if(!namespaceData){
-			console.log(this._nameMap);
-			process.exit(0);
-				throw new Error('The object '+name+' could not be found');
-		}
+	
 		var namespace=namespaceData.name;
 		//If is configurable the first argument is the parasm from the config
 		if(this.isConfigurable()){
