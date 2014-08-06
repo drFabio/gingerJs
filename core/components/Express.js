@@ -11,6 +11,9 @@ module.exports={
 		this._engine=engine;
 		this._params=params;
 		this._app = express();
+		var bodyParser = require('body-parser');
+		this._app.use(bodyParser.json());      
+		this._app.use(bodyParser.urlencoded({extended: true})); 
 		cb();
 	},
 	isRunning:function(){

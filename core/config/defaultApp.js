@@ -6,7 +6,8 @@ module.exports={
 	'components':{
 		'Express':{
 			'port':3000,
-			'host':'0.0.0.0'
+			'host':'0.0.0.0',
+			'startOrder':'beforeGateways'
 		},
 		'SocketIO':{
 			'port':3040

@@ -6,6 +6,7 @@ module.exports={
 		this._model=this._engine.getModel('sum.index');
 	},
 	indexAction:function(req,res){
-		req.send(this._model.sum(req.body.a,req.body.b));
+	
+		res.send(this._model.sum(req.query.a,req.query.b));
 	}
 };

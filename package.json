@@ -13,12 +13,13 @@
         "socket.io":"*",
 		"class.extend":"*",
         "async":"*",
-        "olive_oil":"git://github.com/drFabio/OliveOil.git#master"
+        "olive_oil":"git://github.com/drFabio/OliveOil.git#master",
+        "body-parser":"*"
     },
     "scripts": {
         "start": "node app.js",
         "debug": "node debug app.js",
-        "test":"mocha  --recursive core/tests/core"
+        "test":"mocha --timeout 30000  --recursive core/tests/core"
     },
     "main": "app.js",
     "repository": {

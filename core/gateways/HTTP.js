@@ -22,6 +22,7 @@ module.exports={
 	_initExpress:function(cb){
 		var self=this;
 		var expressCb=function(err,express){
+			console.log("EXPRESS CB");
 			if(err){
 				cb(err);
 			}
@@ -30,6 +31,12 @@ module.exports={
 			}
 			self._expressComponent=express;
 			self._app=self._expressComponent.getApp();
+			if(self._expressComponent.isRunning()){
+				cb(err);
+				return;
+			}
+			console.log("INDO P O LISTEN");
+
 			self._expressComponent.listen(function(err){
 				cb(err,self);
 			});

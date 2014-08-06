@@ -1,7 +1,16 @@
 var http=require('http');
+var querystring=require('querystring');
 module.exports = function(host, port) {
+	var executRequest=function(){
+
+	}
     return {
         "sendGet": function(url, data, cb) {
+        	var queryData=querystring.stringify(data);
+        	if(queryData){
+        		url+='?'+queryData;
+        	}
+        	console.log(url);
             var options = {
                 host: host,
                 port: port,
@@ -9,9 +18,8 @@ module.exports = function(host, port) {
                 method: 'GET'
             };
 
+
             var req = http.request(options, function(res) {
-               // console.log('STATUS: ' + res.statusCode);
-               // console.log('HEADERS: ' + JSON.stringify(res.headers));
                 var body='';
                 res.setEncoding('utf8');
 
@@ -19,7 +27,7 @@ module.exports = function(host, port) {
                 	body+=chunk;
                 });
 	            res.on('end', function () {
-					cb(null,{'body':body});			
+					cb(null,{'body':body,status:res.statusCode});			
 				});
             });
             req.on('error', function(e) {
@@ -28,6 +36,36 @@ module.exports = function(host, port) {
             req.end();
         },
         "sendPost": function(url, data, cb) {
+        	var queryData=querystring.stringify(data);
+        
+            var options = {
+                host: host,
+                port: port,
+                path: url,
+                method: 'POST',
+                headers: {
+					'Content-Type': 'application/x-www-form-urlencoded',
+					'Content-Length': queryData.length
+				}
+            };
+
+
+            var req = http.request(options, function(res) {
+                var body='';
+                res.setEncoding('utf8');
+
+                res.on('data', function(chunk) {
+                	body+=chunk;
+                });
+	            res.on('end', function () {
+					cb(null,{'body':body,status:res.statusCode});			
+				});
+            });
+            req.write(post_data);
+            req.on('error', function(e) {
+                cb(e);
+            });
+            req.end();
 
         }
     }

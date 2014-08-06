@@ -63,13 +63,15 @@ module.exports={
 		var asyncFunctions = [];
 		var self = this;
 		var funcToCreateGateway = function (name, params) {
+
 			return function (asyncCb) {
 				var gateway=self.create(name, params);
 				if(self.isGatewayCancelled(name)){
+				
 				    asyncCb();
 				}
 				else{
-
+					console.log("MANDANDO CRIAR "+name);
 				    gateway.start(asyncCb)
 				}
 			}
