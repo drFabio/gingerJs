@@ -60,8 +60,6 @@ module.exports={
 		    return false;
 	},
 	startGateways:function(cb){
-
-
 		var asyncFunctions = [];
 		var self = this;
 		var funcToCreateGateway = function (name, params) {
@@ -86,10 +84,6 @@ module.exports={
 		async.series(asyncFunctions, function (err, res) {
 			cb(err);
 		});
-
-
-
-
 	},
 
 }

@@ -68,8 +68,7 @@ function Ginger() {
  * @param  {Function} cb CallBack for completition
  */
 Ginger.prototype.down = function (cb) {
-    var gatewayFactory=this.getBootstrap('GatewayFactory');
-    gatewayFactory.finishAllGateways(cb);
+    this._gatewayFactory.finishAllGateways(cb);
 
 };
 
@@ -101,9 +100,8 @@ Ginger.prototype._setDefaultNamespaces = function() {
     this._setNamespaceFromEngineConfig('ginger.errors','errorsDir');
 };
 Ginger.prototype._setGatewaysClasses = function() {
-    var gatewayFactory=this.getBootstrap('GatewayFactory');
     for (var name in this._config.gateways) {
-        gatewayFactory.setEngineClass(name);
+        this._gatewayFactory.setEngineClass(name);
     }
 };
 
@@ -114,11 +112,11 @@ Ginger.prototype._setGatewaysClasses = function() {
  * @return {[type]}        [description]
  */
 Ginger.prototype.up = function (cb) {
-
     this._setConfigAsDefaultIfNoneSet();
     this._setupEngineConfig();
     this._setClassFactory();
     this._setDefaultNamespaces();
+    this._gatewayFactory=this.getBootstrap('GatewayFactory');
  
     var self = this;
     var startAppCb = function (err) {
@@ -314,8 +312,7 @@ Ginger.prototype.isComponentLoaded = function (name) {
     return !!this._componentsNameMap[name];
 }
 Ginger.prototype.isGatewayLoaded = function (name) {
-    var gatewayFactory=this.getBootstrap('GatewayFactory');
-    return gatewayFactory.isGatewayLoaded(name);
+    return this._gatewayFactory.isGatewayLoaded(name);
 }
 
 /**
@@ -336,8 +333,7 @@ Ginger.prototype._createBootstrap = function (name, params) {
     return ret;
 };
 Ginger.prototype.isGatewayCancelled =function (name) {
-    var gatewayFactory=this.getBootstrap('GatewayFactory');
-    return gatewayFactory.isGatewayCancelled(name);
+    return this._gatewayFactory.isGatewayCancelled(name);
 };
 Ginger.prototype.isComponentCancelled = function (name) {
     if (this._config.components && this._config.components[name] === false) {
@@ -353,8 +349,7 @@ Ginger.prototype.isComponentCancelled = function (name) {
  * @return {[type]} [description]
  */
 Ginger.prototype._launch = function (cb) {
-   var gatewayFactory=this.getBootstrap('GatewayFactory');
-   gatewayFactory.startGateways(cb);
+   this._gatewayFactory.startGateways(cb);
 }
 /**
  * Return the gateway given by the name
@@ -362,8 +357,7 @@ Ginger.prototype._launch = function (cb) {
  * @return {[type]}      [description]
  */
 Ginger.prototype.getGateway = function (name) {
-    var gatewayFactory=this.getBootstrap('GatewayFactory');
-    return gatewayFactory.getGateway(name);
+    return this._gatewayFactory.getGateway(name);
 };
 /**
  * Sets the module to the map

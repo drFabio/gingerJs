@@ -15,8 +15,8 @@ module.exports={
 			cb();
 		});
 	},
-	_buildUrl:function(name){
-		return url=name.replace('.','/');
+	_buildUrl:function(name,action){
+		return url=name.replace('.','/')+'/'+action;
 	},
 	_initExpress:function(cb){
 		var self=this;
@@ -43,20 +43,20 @@ module.exports={
 	},
 	_handleControllerAction:function(action,controllerObj,controllerData){
 		var prefix=this._params.prefix || '';
-		var url=this._buildUrl(controllerData.name);
+		var url=this._buildUrl(controllerData.name,action);
 		if(prefix){
 			url='/'+prefix+url;
 		}
-		var actionFunction=controllerData.actions[action];
 
-		this._addRouteToApp(url,controllerObj,actionFunction);
+		this._addRouteToApp(action,url,controllerObj,controllerData);
 		
 	},
 	end:function(cb){
 		this._expressComponent.end();
 		cb();
 	},
-	_addRouteToApp:function(url,controllerObj,actionFunction){
+	_addRouteToApp:function(action,url,controllerObj,controllerData){
+		var actionFunction=controllerData.actions[action];
 		var controllerFunc=controllerObj[actionFunction].bind(controllerObj);
 		this._app.get(url,controllerFunc);
 	}
