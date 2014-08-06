@@ -1,11 +1,24 @@
 module.exports={
 	message:null,
-	code:null,
+	code:'DEFAULT',
 	data:null,
+	
 	defaultMessage:'There was an error',
-	init:function(data,message,code){
-		this.message=message;
-		this.code=code;
-		this.data=data;
+	init:function(message,data,code){
+		if(message){
+
+			this.message=message;
+		}
+		else{
+			this.message=this.defaultMessage;
+		}
+		if(code){
+
+			this.code=code;
+		}
+		if(data){
+
+			this.data=data;
+		}
 	}
 }

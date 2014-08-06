@@ -7,6 +7,6 @@ module.exports={
 	},
 	indexAction:function(req,res){
 	
-		res.send(this._model.sum(req.query.a,req.query.b));
+		res.send(200,this._model.sum(req.query.a,req.query.b));
 	}
 };

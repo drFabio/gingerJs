@@ -1,4 +1,5 @@
 module.exports={
-	defaultMessage:'Resource not found'
+	defaultMessage:'Resource not found',
+	code:'NOT_FOUND'
 
 }

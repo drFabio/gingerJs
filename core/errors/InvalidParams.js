@@ -1,4 +1,4 @@
 module.exports={
-	defaultMessage:'Invalid params'
-
+	defaultMessage:'Invalid params',
+	code:'INVALID_PARAMS'
 }

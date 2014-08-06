@@ -1,4 +1,4 @@
 module.exports={
-	defaultMessage:'Invalid request'
-
+	defaultMessage:'Invalid request',
+	code:'INVALID_REQUEST'
 }

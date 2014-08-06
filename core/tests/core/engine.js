@@ -155,7 +155,7 @@ describe('Ginger',function(){
 
 		});
 		it('Should have the default errors',function(){
-			var errors=['Default','Internal','InvalidParams','InvalidRequest','NotFound','Validation'];
+			var errors=['Default','Internal','Parse','InvalidParams','InvalidRequest','NotFound','Validation'];
 			for(var x in errors){
 				expect(ginger.getError(errors[x])).not.empty;
 			}

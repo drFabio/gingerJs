@@ -5,8 +5,14 @@ var should = chai.should();
 describe('Gateway',function(){
 	describe('JSONRpc',function(){
 		it('Should proxy JSONRPC queries to controller/action and respond with the same id');
-		it('Should not allow JSONRPC queries',function(){
+		it('Should  allow JSONRPC queries',function(){
 
+		});
+		describe('Errors',function(){
+
+			it('Should respond to not found');
+
+			it('Should respond to invalid queries');
 		});
 	});
 });

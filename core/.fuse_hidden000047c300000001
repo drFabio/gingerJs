@@ -397,7 +397,7 @@ Ginger.prototype.getLib = function(name) {
 };
 Ginger.prototype.getError = function(name,message,data,code) {
    var errorFactory=this.getBootstrap('ErrorFactory');
-   return errorFactory.create(name,message,data,code);
+   return errorFactory.create(name,data,message,code);
    
 };
 module.exports = Ginger;

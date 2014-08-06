@@ -7,7 +7,7 @@ var port=3000;
 var Ginger=require(__dirname+'/../../../Ginger.js');
 
 var httpHelper=require(__dirname+'/../tools/http')(host,port);
-describe('Gateway',function(){
+describe.skip('Gateway',function(){
 	var ginger;
 	//Initializing the app by path first
 	before(function(done){
@@ -32,7 +32,7 @@ describe('Gateway',function(){
 				done();
 			});
 		});
-		it.skip('Should be able to pass params to the URL',function(done){
+		it('Should be able to pass params to the URL',function(done){
 			httpHelper.sendGet('/sum/index/index',{a:1,b:4},function(err,data){
 				expect(data.body).to.equal('5');
 				done(err);
