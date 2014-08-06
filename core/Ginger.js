@@ -314,7 +314,8 @@ Ginger.prototype.isComponentLoaded = function (name) {
     return !!this._componentsNameMap[name];
 }
 Ginger.prototype.isGatewayLoaded = function (name) {
-    return !!this._gateways[name];
+    var gatewayFactory=this.getBootstrap('GatewayFactory');
+    return gatewayFactory.isGatewayLoaded(name);
 }
 
 /**
@@ -335,10 +336,8 @@ Ginger.prototype._createBootstrap = function (name, params) {
     return ret;
 };
 Ginger.prototype.isGatewayCancelled =function (name) {
-    if (this._config.gateways && this._config.gateways[name] === false) {
-        return true;
-    }
-    return false;
+    var gatewayFactory=this.getBootstrap('GatewayFactory');
+    return gatewayFactory.isGatewayCancelled(name);
 };
 Ginger.prototype.isComponentCancelled = function (name) {
     if (this._config.components && this._config.components[name] === false) {
@@ -354,40 +353,9 @@ Ginger.prototype.isComponentCancelled = function (name) {
  * @return {[type]} [description]
  */
 Ginger.prototype._launch = function (cb) {
-    this._startGateways(cb);
+   var gatewayFactory=this.getBootstrap('GatewayFactory');
+   gatewayFactory.startGateways(cb);
 }
-/**
- * Loop trough all the gateways and start them
- * @param  {[type]} first_argument [description]
- * @return {[type]}                [description]
- */
-Ginger.prototype._startGateways = function (cb) {
-    var gatewayFactory=this.getBootstrap('GatewayFactory');
-    var asyncFunctions = [];
-    var self = this;
-    var funcToCreateGateway = function (name, params) {
-            return function (asyncCb) {
-                var gateway=gatewayFactory.create(name, params);
-                if(self.isGatewayCancelled(name)){
-                    asyncCb();
-                }
-                else{
-
-                    gateway.start(asyncCb)
-                }
-            }
-        }
-        //Looping trough each gateway to create it assynchronously
-    for (var name in this._config.gateways) {
-        if (this.isGatewayLoaded(name) || this.isGatewayCancelled(name)) {
-            continue;
-        }
-        asyncFunctions.push(funcToCreateGateway(name, this._config.gateways[name]));
-    }
-    async.series(asyncFunctions, function (err, res) {
-        cb(err);
-    });
-};
 /**
  * Return the gateway given by the name
  * @param  {String} name the name of the gateway
@@ -397,8 +365,6 @@ Ginger.prototype.getGateway = function (name) {
     var gatewayFactory=this.getBootstrap('GatewayFactory');
     return gatewayFactory.getGateway(name);
 };
-
-
 /**
  * Sets the module to the map
  * @type {[type]}
