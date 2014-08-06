@@ -155,11 +155,9 @@ module.exports={
 	_addModel:function(path,modelName,parentNamespace) {
 		this._modelFactory.setAppClass(modelName,path,parentNamespace);
 	},
-
 	_addController:function(path,controllerName,parentModules) {
 		this._controllerFactory.setAppClass(controllerName,path,parentModules);
 	},
-
 	removeExtension:function(name) {
 		return name.replace(/\.js$/,'');
 	},

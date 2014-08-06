@@ -11,12 +11,13 @@ module.exports={
 			if(err){
 				cb(err);
 			}
+
 			self.buildRoutes();
 			cb();
 		});
 	},
 	_buildUrl:function(name,action){
-		return url=name.replace('.','/')+'/'+action;
+		return '/'+name.replace(/\./g,'/')+'/'+action;
 	},
 	_initExpress:function(cb){
 		var self=this;

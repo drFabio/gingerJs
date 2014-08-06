@@ -73,6 +73,10 @@ describe('Application',function(){
 				it('Should create the avaiable actions');
 				it('Should have Crud Avaiable');
 		});
+			
+		describe('gateway',function(){
+			it('Should give the same Reponse content independant of the gateway');
+		});
 		after(function(done){
 			ginger.down(done);
 		});

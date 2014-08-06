@@ -2,6 +2,7 @@ module.exports={
 	parent:'ginger.bootstraps.Element',
 	_defaulAppNamespace:'controlles',
 	_defaultAppParent:'ginger.mvc.AbstractController',
+	_debugController:true,
 	getActionsMap:function(controllerData){
 		var actionsMap={};
 		for(var x in controllerData){
@@ -22,6 +23,7 @@ module.exports={
 	_buildIndexData:function(name,namespace,POJO,isApp,isEngine){
 		var data=this._super(name,namespace,POJO,isApp,isEngine);
 		data.actions=this.getActionsMap(POJO);
+	
 		return data;
 	},
 	getActionPlainName:function(name){

@@ -165,8 +165,5 @@ describe('Ginger',function(){
 		});
 	});
 
-		
-	describe('gateway',function(){
-		it('Should give the same Reponse content independant of the gateway');
-	});
+	
 });

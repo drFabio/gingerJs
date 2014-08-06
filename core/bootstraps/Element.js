@@ -26,6 +26,7 @@ module.exports={
 		this._classFactory.setNamespaceDir(namespace,path);
 	},
 	setAppClass:function(name,path,parentNamespace,fullNamespace){
+
 	    var defaultParent=null;
 	    name=this._buildNamespace(parentNamespace,name);
 		var appNamespace=this._buildNamespace(this._defaulAppNamespace,name);
@@ -73,6 +74,7 @@ module.exports={
 				name=name.toLowerCase();
 	 			this._nameMap[name]=this._buildIndexData(name,namespace,POJO,isApp,isEngine);
 			}
+		
 	 	}
 	},
 	hasDefaultParent:function(){

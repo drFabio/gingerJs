@@ -26,6 +26,7 @@ module.exports={
 	},
 	buildRoutes:function(cb) {
 		var controllerList=this._controllerFactory._getNameMap();
+
 		for(var index in controllerList){
 			this._handleControllerRoutes(controllerList[index]);
 		}
