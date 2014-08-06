@@ -157,7 +157,7 @@ module.exports={
 	},
 
 	_addController:function(path,controllerName,parentModules) {
-		this._controllerFactory.addToEngine(controllerName,path,parentModules);
+		this._controllerFactory.setAppClass(controllerName,path,parentModules);
 	},
 
 	removeExtension:function(name) {

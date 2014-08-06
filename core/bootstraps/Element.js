@@ -49,24 +49,25 @@ module.exports={
 	 	else{
 	 		POJO=this._classFactory.getClassFileContents(fullNamespace);
 	 		POJO=this._setDefaultParentOnPOJO(pojo,defaultParent);
-
 	 	}
 
-		this._classFactory.setClassFromPojo(appNamespace,POJO);
-	 	this._addToIndex(name,appNamespace,true);
+	 	this._addToIndex(name,appNamespace,POJO,true);
 	 
 		return appNamespace;
 	},
-	_buildIndexData:function(name,namespace,isApp,isEngine){
-		return {name:namespace,isApp:!!isApp,isEngine:!!isEngine};
+	_buildIndexData:function(name,namespace,POJO,isApp,isEngine){
+		return {namespace:namespace,isApp:!!isApp,isEngine:!!isEngine,pojo:POJO,name:name};
 	},
-	_addToIndex:function(name,namespace,isApp,isEngine){
+	_setClassOnNamespace:function(namespace,POJO){
+
+		this._classFactory.setClassFromPojo(namespace,POJO);
+	},
+	_addToIndex:function(name,namespace,POJO,isApp,isEngine){
+		this._setClassOnNamespace(namespace,POJO);
 		if(this._indexedByName){
 			if(isApp || !this.hasElement(name)){
-
 				name=name.toLowerCase();
-	 			this._nameMap[name]=this._buildIndexData(name,namespace,isApp,isEngine);
-				
+	 			this._nameMap[name]=this._buildIndexData(name,namespace,POJO,isApp,isEngine);
 			}
 	 	}
 	},
@@ -82,14 +83,13 @@ module.exports={
 		if(!this._classFactory.classFileExists(engineName)){
 			return false;
 		}
-		var pojo=this._classFactory.getClassFileContents(engineName);
+		var POJO=this._classFactory.getClassFileContents(engineName);
 		var defaultParent=this._defaultEngineParent;
 		if(engineName==this._defaultEngineParent){
 			defaultParent=null;
 		}
-		pojo=this._setDefaultParentOnPOJO(pojo,defaultParent);
-		this._addToIndex(name,engineName,false,true);
-		this._classFactory.setClassFromPojo(engineName,pojo);
+		POJO=this._setDefaultParentOnPOJO(POJO,defaultParent);
+		this._addToIndex(name,engineName,POJO,false,true);
 		return engineName;
 	},
 	_getParams:function(name,params){
@@ -119,29 +119,32 @@ module.exports={
 	isConfigurable:function(){
 		return !! this._configValue;
 	},
-	_getNameMap:function(name){
+	_getNameMap:function(){
+		return this._nameMap;
+	},
+	_getElementByName:function(name){
 		name=name.toLowerCase();
 		return this._nameMap[name];
 
 	},
 	_getNamespaceFromName:function(name){
 		if(this._indexedByName && this.hasElement(name)){
-			return this._getNameMap(name);
+			return this._getElementByName(name);
 		}
 	    var appName=this._defaulAppNamespace+'.'+name;
         if(this._classFactory.classFileExists(appName)){
-        	return {name:appName,isApp:true,isEngine:false};
+        	return {name:name,namespace:appName,isApp:true,isEngine:false};
         }
         var engineName;
         if(this.hasDefaultParent){
 		    engineName=this._defaultEngineNamespace+'.'+name;
 			if(this._classFactory.classFileExists(engineName)){
-				return {name:engineName,isApp:false,isEngine:true};
+				return {name:name,namespace:engineName,isApp:false,isEngine:true};
 			}
         	
         }
 		if(this._classFactory.classFileExists(name)){
-			return {name:name,isApp:false,isEngine:false};
+			return {name:name,namespace:name,isApp:false,isEngine:false};
 		}
 		var errorMsg='The object '+name+' could not be found searched in , '+appName;
 		if(this.hasDefaultParent()){
@@ -152,15 +155,12 @@ module.exports={
 
 	create : function (name, var_args) {
 		var namespaceData=this._getNamespaceFromName(name);
-	
-		var namespace=namespaceData.name;
+		var namespace=namespaceData.namespace;
 		//If is configurable the first argument is the parasm from the config
 		if(this.isConfigurable()){
 	    	var params=this._getParams(name,arguments[1]);
 	    	arguments[1]=params;
 		}
-		
-
 	    if(this._classFactory.classFileExists(namespace)){
 	        if(!this._classFactory.isClassSet(namespace)){
 	        	if(namespaceData.isApp){
@@ -175,10 +175,7 @@ module.exports={
 	    }
 	   
 	    else{
-		    if(this._debugGateway){
-
-				console.log(name+" é falso");
-			}
+		
 	        return false;
 	    }
 

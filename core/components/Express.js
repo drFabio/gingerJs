@@ -11,7 +11,7 @@ module.exports={
 		this._engine=engine;
 		this._params=params;
 		this._app = express();
-		cb(null);
+		cb();
 	},
 	isRunning:function(){
 		return this._isRunning;

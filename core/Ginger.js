@@ -34,15 +34,6 @@ function Ginger() {
      * @type {Object}
      */
     this._config = {};
-
-    /**
-     * A map of controller indexes to controller data and objects, all controllers are treated as singleTons
-     * @type {Object}
-     */
-    this.controllerMap = {
-
-    };
-
     /**
      * Just a map of all modules that we have
      * @type {Object}
@@ -405,10 +396,10 @@ Ginger.prototype._startGateways = function (cb) {
                     }
                     if (gatewayObj) {
                         self.setGateway(name,gatewayObj);
-                        
                         gatewayObj.buildRoutes(asyncCb);
 
                     } else {
+
                         asyncCb();
                     }
 
@@ -445,9 +436,6 @@ Ginger.prototype.setGateway = function (name, gateway) {
  */
 Ginger.prototype.setModule = function (name) {
     this.moduleMap[name] = true;
-};
-Ginger.prototype.setController = function(name,data) {
-    this.controllerMap[name]=data;
 };
 /**
  * Checks if we have a controller

@@ -6,6 +6,9 @@ module.exports={
 		this._configParams(engine,params);
 		this._initExpress(cb);
 	},
+	_buildUrl:function(name){
+		return url=name.replace('.','/');
+	},
 	_initExpress:function(cb){
 		var self=this;
 		var expressCb=function(err,express){
@@ -17,32 +20,35 @@ module.exports={
 			}
 			self._expressComponent=express;
 			self._app=self._expressComponent.getApp();
-
-		
 			self._expressComponent.listen(function(err){
 				cb(err,self);
 			});
 		}
 		this._engine.getComponent('Express',expressCb);
 	},
-	_buildRoute:function(controllerIndex,action,controllerData){
+	_handleControllerRoutes:function(controllerData){
+		var controllerObj=this._createController(controllerData);
+		for(var x in controllerData.actions){
+			this._handleControllerAction(x,controllerObj,controllerData);
+		}
+	},
+	_handleControllerAction:function(action,controllerObj,controllerData){
 		var prefix=this._params.prefix || '';
-		var url=controllerData.url+'/'+action;
+		var url=this._buildUrl(controllerData.name);
 		if(prefix){
 			url='/'+prefix+url;
 		}
 		var actionFunction=controllerData.actions[action];
-		this._addRouteToApp(url,controllerData,actionFunction);
+
+		this._addRouteToApp(url,controllerObj,actionFunction);
 		
 	},
 	end:function(cb){
 		this._expressComponent.end();
 		cb();
 	},
-	_addRouteToApp:function(url,controllerData,actionFunction){
-		var controllerObject=controllerData['object'];
-		var controllerFunc=controllerObject[actionFunction].bind(controllerObject);
-		
+	_addRouteToApp:function(url,controllerObj,actionFunction){
+		var controllerFunc=controllerObj[actionFunction].bind(controllerObj);
 		this._app.get(url,controllerFunc);
 	}
 }

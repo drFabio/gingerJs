@@ -5,17 +5,6 @@ module.exports={
 		this._classFactory=this._engine.libs.classFactory;
 		
 	},
-	buildMapIndex:function(name,parentNamespace){
-		var saneName=this.sanitizeName(name);
-		var mapIndex;
-		if(parentNamespace){
-			mapIndex= parentNamespace.replace('.','/')+'/'+saneName;
-		}
-		else{
-			mapIndex=saneName;
-		}	
-		return mapIndex;
-	},
 	sanitizeName:function(name){
 		return  name.substring(0, 1).toLowerCase() + name.substring(1);
 	},

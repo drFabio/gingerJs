@@ -19,20 +19,10 @@ module.exports={
 			this._params.actionSuffix='Action';
 		}
 	},
-	addToEngine:function(name,path,parentNamespace){
-		var mapIndex=this.buildMapIndex(name,parentNamespace);
-		var controllerNamespace=this.setAppClass(name,path,parentNamespace);
-		var sanitizedUrl='/'+mapIndex;
-		var controllerPOJO= this._getPojo(path);
-		var controllerObject=this._classFactory.getSingletonObject(controllerNamespace,this._engine);
-		var actions=this.getActionsMap(controllerPOJO);
-		this._engine.setController(mapIndex,{
-			'modules':parentNamespace,
-			'object':controllerObject,
-			'actions':actions,
-			'name':name,
-			'url':sanitizedUrl
-		});
+	_buildIndexData:function(name,namespace,POJO,isApp,isEngine){
+		var data=this._super(name,namespace,POJO,isApp,isEngine);
+		data.actions=this.getActionsMap(POJO);
+		return data;
 	},
 	getActionPlainName:function(name){
 		var suffix=this._params.actionSuffix;
