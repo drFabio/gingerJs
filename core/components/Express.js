@@ -22,11 +22,9 @@ module.exports={
 	},
 	listen:function(cb,port,host) {
 		if(this.isRunning()){
-			console.log("ESTAVA RODNADO");
 			cb();
 			return;
 		}
-		console.log("STARTUBBB");
 		var self=this;
 		port=port || this._params.port;
 		host=host || this._params.host;
@@ -43,9 +41,7 @@ module.exports={
 		return this._app;
 	},
 	end:function(){
-		console.log("END");
 		if(this._isRunning && !this._isClosed){
-			console.log("REALLY END");
 			this._isClosed=true;
 			this._isRunning=false;
 			this.server.close();

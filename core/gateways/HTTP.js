@@ -31,7 +31,6 @@ module.exports={
 			self._expressComponent=express;
 			self._app=self._expressComponent.getApp();
 			if(self._expressComponent.isRunning()){
-				console.log("TAVA RODNADO AE");
 				cb(err);
 				return;
 			}
@@ -40,7 +39,6 @@ module.exports={
 				cb(err,self);
 			});
 		}
-		console.log("INIT EXPRESS");
 		this._engine.getComponent('Express',expressCb);
 	},
 	_handleControllerRoutes:function(controllerData){

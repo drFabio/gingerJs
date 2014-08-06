@@ -11,7 +11,6 @@ describe('Gateway JsonRPC',function(){
 		before(function(done){
 			ginger=new Ginger();
 			ginger.setAppPath(__dirname+'/../../exampleApplication/');
-			console.log("UP DO JSON RPC");
 			ginger.up(done);
 		});
 
