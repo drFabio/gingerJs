@@ -2,7 +2,7 @@ module.exports={
 	message:null,
 	code:'DEFAULT',
 	data:null,
-	
+	isError:true,
 	defaultMessage:'There was an error',
 	
 	init:function(message,data,code){

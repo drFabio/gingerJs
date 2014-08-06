@@ -17,7 +17,6 @@ module.exports = function(host, port) {
                 method: 'GET'
             };
 
-
             var req = http.request(options, function(res) {
                 var body='';
                 res.setEncoding('utf8');
@@ -60,7 +59,7 @@ module.exports = function(host, port) {
 					cb(null,{'body':body,status:res.statusCode});			
 				});
             });
-            req.write(post_data);
+            req.write(queryData);
             req.on('error', function(e) {
                 cb(e);
             });

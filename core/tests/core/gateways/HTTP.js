@@ -6,8 +6,8 @@ var host='localhost';
 var port=3000;
 var Ginger=require(__dirname+'/../../../Ginger.js');
 
-var httpHelper=require(__dirname+'/../tools/http')(host,port);
-describe.skip('Gateways HTTP ',function(){
+describe('Gateways HTTP ',function(){
+	var httpHelper=require(__dirname+'/../../tools/http')(host,port);
 	var ginger;
 	//Initializing the app by path first
 	before(function(done){

@@ -350,7 +350,7 @@ Ginger.prototype.isComponentCancelled = function (name) {
  * @return {[type]} [description]
  */
 Ginger.prototype._launch = function (cb) {
-   this._gatewayFactory.startGateways(cb);
+       this._gatewayFactory.startGateways(cb);
 }
 /**
  * Return the gateway given by the name
