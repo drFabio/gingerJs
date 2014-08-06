@@ -17,14 +17,12 @@ describe('engine',function(){
 				expect(ginger._config).not.to.be.empty;
 		describe('gateway',function(){
 			it('Should have the default gateways',function(){
-					var gateway=ginger.getGateway('HTTP');
-					expect(gateway).to.exist;
-					gateway=ginger.getGateway('JSONRPC');
-					expect(gateway).to.exist;
-					gateway=ginger.getGateway('SocketIO');
-					expect(gateway).to.exist;
-					
-
+				var gateway=ginger.getGateway('HTTP');
+				expect(gateway).to.exist;
+				gateway=ginger.getGateway('JSONRPC');
+				expect(gateway).to.exist;
+				gateway=ginger.getGateway('SocketIO');
+				expect(gateway).to.exist;
 			});
 		});
 		});
