@@ -5,7 +5,7 @@ var ERRORS_MAP={
     'NOT_FOUND':'-32601',
     'INVALID_PARAMS':'-32602',
     'INTERNAL':'-32603',
-    'Server error':'-32000'//-32000 to -32099 default implementations errors 
+    'SERVER_ERROR':'-32000'//-32000 to -32099 default implementations errors 
 };  
 module.exports = {
     parent: 'ginger.gateways.HTTP',
@@ -14,7 +14,6 @@ module.exports = {
     },
     _buildRoute: function(controllerName, action, controllerData) {},
     _sendError:function(req,res,error){
-        console.log(error);
         var code=ERRORS_MAP[error.code];
         message=error.message;
         var data=error.data;
@@ -28,9 +27,7 @@ module.exports = {
 
     _validJsonMiddleWare: function(controllerData) {
         var self = this;
-        console.log("AQUIII");
         return function(req, res, next) {
-            console.log('No validation middleware');
             if (_.isEmpty(req.body) && !_.isEmpty(req.query)) {
                 req.body = req.query;
             }

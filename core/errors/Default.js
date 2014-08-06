@@ -4,6 +4,7 @@ module.exports={
 	data:null,
 	
 	defaultMessage:'There was an error',
+	
 	init:function(message,data,code){
 		if(message){
 

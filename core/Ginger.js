@@ -163,6 +163,7 @@ Ginger.prototype._setupApp = function (cb) {
     try {
         appInit.buildApp(cb);
     } catch (err) {
+        throw err;
         cb(err);
     }
 }

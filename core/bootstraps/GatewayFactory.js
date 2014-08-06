@@ -6,6 +6,7 @@ module.exports={
 	_configValue:'gateways',
 	_defaultEngineParent:'ginger.gateways.AbstractGateway',
 	_objectList:{},
+	_debugGateway:true,
 	init : function(engine,params) {
 		this._super(engine,params);
 		this._gatewayConfig=this._engine._config.gateways;
@@ -71,11 +72,11 @@ module.exports={
 				    asyncCb();
 				}
 				else{
-					console.log("MANDANDO CRIAR "+name);
 				    gateway.start(asyncCb)
 				}
 			}
 		}
+
 		//Looping trough each gateway to create it assynchronously
 		for (var name in this._gatewayConfig ) {
 			if (this.isGatewayLoaded(name) || this.isGatewayCancelled(name)) {

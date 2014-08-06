@@ -10,7 +10,6 @@ module.exports = function(host, port) {
         	if(queryData){
         		url+='?'+queryData;
         	}
-        	console.log(url);
             var options = {
                 host: host,
                 port: port,

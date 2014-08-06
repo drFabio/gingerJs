@@ -71,6 +71,7 @@ module.exports={
 		this._setClassOnNamespace(namespace,POJO);
 		if(this._indexedByName){
 			if(isApp || !this.hasElement(name)){
+					 
 				name=name.toLowerCase();
 	 			this._nameMap[name]=this._buildIndexData(name,namespace,POJO,isApp,isEngine);
 			}

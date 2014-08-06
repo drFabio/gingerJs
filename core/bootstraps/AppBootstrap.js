@@ -125,7 +125,6 @@ module.exports={
 	 * @param {[type]} name [description]
 	 */
 	_addGateway:function(path,name,cb) {
-		
 		this._gatewayFactory.setAppClass(name,path);
 		cb();
 	},

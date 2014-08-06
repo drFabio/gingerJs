@@ -6,15 +6,15 @@ var should = chai.should();var ginger=new Ginger();
 var fakeRes={
 
 };
-before(function(done){
-	ginger.up(done);
-
-});
 describe("HTTPResponseHandler",function(){
+	before(function(done){
+		ginger.up(done);
+
+	});
 	it('Should convert GET and POST to the same vars',function(){
 
 	});
-});
-after(function(done){
-	ginger.down(done);
+	after(function(done){
+		ginger.down(done);
+	});
 });

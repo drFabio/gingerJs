@@ -7,7 +7,7 @@ var expect=chai.expect;
 var Ginger=require(__dirname+'/../../Ginger.js');
 var should = chai.should();
 
-describe('Ginger',function(){
+describe('engine',function(){
 	describe('vanilla setup',function(){
 		var ginger=new Ginger();
 		it('Should go up smoothly',function(done){
@@ -158,6 +158,9 @@ describe('Ginger',function(){
 			var errors=['Default','Internal','Parse','InvalidParams','InvalidRequest','NotFound','Validation'];
 			for(var x in errors){
 				expect(ginger.getError(errors[x])).not.empty;
+				expect(ginger.getError(errors[x]).code).not.empty;
+				expect(ginger.getError(errors[x]).message).not.empty;
+
 			}
 		});
 		after(function(done){

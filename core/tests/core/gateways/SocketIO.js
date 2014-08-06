@@ -1,7 +1,7 @@
 var chai=require('chai');
 var expect=chai.expect;
 var should = chai.should();
-describe('Gateway',function(){
+describe('Gateway SocketIO',function(){
 	describe('SocketIO',function(){
 		it('Should proxy SocketIO queries to controller/action and respond to the same query');
 		it('Should send a view as JSONRPC');
