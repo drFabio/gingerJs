@@ -7,6 +7,10 @@ module.exports={
 	_defaultEngineParent:null,
 	_defaultAppParent:null,
 	_isLazy:false,
+	/**
+	 * Whether if this behaves as a name index to the app element OR the framework element as fallback
+	 * @type {Boolean}
+	 */
 	_indexedByName:true,
 	init : function(engine,params) {
 		this._super(engine,params);
@@ -122,14 +126,14 @@ module.exports={
 	_getNameMap:function(){
 		return this._nameMap;
 	},
-	_getElementByName:function(name){
+	getElementByName:function(name){
 		name=name.toLowerCase();
 		return this._nameMap[name];
 
 	},
 	_getNamespaceFromName:function(name){
 		if(this._indexedByName && this.hasElement(name)){
-			return this._getElementByName(name);
+			return this.getElementByName(name);
 		}
 	    var appName=this._defaulAppNamespace+'.'+name;
         if(this._classFactory.classFileExists(appName)){
@@ -171,11 +175,10 @@ module.exports={
 	        	}
 	   		}
    			arguments[0]=namespace;
-   			return  this._getObject.apply(this,arguments);
+   			return this._getObject.apply(this,arguments);
 	    }
-	   
 	    else{
-		
+			
 	        return false;
 	    }
 

@@ -107,8 +107,8 @@ describe('Ginger',function(){
 
 			describe('#gateway',function(){
 				it('Should be able to remove a gateway by setting it to false',function(){
-					var gateway=ginger.getGateway('HTTP');
-					expect(gateway).to.not.exist;
+					var gateway=ginger.isGatewayCancelled('HTTP');
+					expect(gateway).to.be.true;
 				});
 			});
 

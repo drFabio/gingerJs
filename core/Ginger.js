@@ -68,31 +68,9 @@ function Ginger() {
  * @param  {Function} cb CallBack for completition
  */
 Ginger.prototype.down = function (cb) {
-    var keys = Object.keys(this._gateways);
-    var self = this;
+    var gatewayFactory=this.getBootstrap('GatewayFactory');
+    gatewayFactory.finishAllGateways(cb);
 
-    var endCb = function (err) {
-        if (err) {
-            cb(err);
-            return;
-        }
-        endNextGateway();
-
-    }
-    var endNextGateway = function () {
-        var k = keys.shift();
-        if (!k) {
-            cb();
-            return;
-        }
-        try {
-            self._gateways[k].end(endCb);
-        } catch (err) {
-            endCb(err);
-        }
-
-    }
-    endNextGateway();
 };
 
 Ginger.getDefaultConfig = function () {
@@ -389,22 +367,14 @@ Ginger.prototype._startGateways = function (cb) {
     var self = this;
     var funcToCreateGateway = function (name, params) {
             return function (asyncCb) {
-                var createGatewayCb = function (err, gatewayObj) {
-                    if (err) {
-                        asyncCb(err);
-                        return;
-                    }
-                    if (gatewayObj) {
-                        self.setGateway(name,gatewayObj);
-                        gatewayObj.buildRoutes(asyncCb);
-
-                    } else {
-
-                        asyncCb();
-                    }
-
+                var gateway=gatewayFactory.create(name, params);
+                if(self.isGatewayCancelled(name)){
+                    asyncCb();
                 }
-                gatewayFactory.create(name, params,createGatewayCb);
+                else{
+
+                    gateway.start(asyncCb)
+                }
             }
         }
         //Looping trough each gateway to create it assynchronously
@@ -424,11 +394,10 @@ Ginger.prototype._startGateways = function (cb) {
  * @return {[type]}      [description]
  */
 Ginger.prototype.getGateway = function (name) {
-    return this._gateways[name];
+    var gatewayFactory=this.getBootstrap('GatewayFactory');
+    return gatewayFactory.getGateway(name);
 };
-Ginger.prototype.setGateway = function (name, gateway) {
-    this._gateways[name] = gateway;
-};
+
 
 /**
  * Sets the module to the map

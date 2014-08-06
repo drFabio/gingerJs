@@ -4,7 +4,16 @@ module.exports={
 	
 	init: function(engine,params,cb) {
 		this._configParams(engine,params);
-		this._initExpress(cb);
+	},
+	start:function(cb){
+		var self=this;
+		this._initExpress(function(err){
+			if(err){
+				cb(err);
+			}
+			self.buildRoutes();
+			cb();
+		});
 	},
 	_buildUrl:function(name){
 		return url=name.replace('.','/');

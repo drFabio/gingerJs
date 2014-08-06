@@ -2,10 +2,13 @@ module.exports={
 	_engine:null,
 	_controllerFactory:null,
 	_params:null,
-	init: function(engine,params,cb) {
+	init: function(engine,params) {
 		this._configParams(engine,params);
-		cb(null,this);
 
+	},
+	start:function(cb){
+		this.buildRoutes();
+		cb();
 	},
 	_configParams:function(engine,params){
 		this._controllerFactory=engine.getBootstrap('ControllerFactory');
@@ -26,6 +29,5 @@ module.exports={
 		for(var index in controllerList){
 			this._handleControllerRoutes(controllerList[index]);
 		}
-		cb();
 	}
 }
