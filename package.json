@@ -14,7 +14,8 @@
 		"class.extend":"*",
         "async":"*",
         "olive_oil":"git://github.com/drFabio/OliveOil.git#master",
-        "body-parser":"*"
+        "body-parser":"*",
+        "mongoose":"*"
     },
     "scripts": {
         "start": "node app.js",

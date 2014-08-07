@@ -22,18 +22,6 @@ describe('Application',function(){
 			expect(ginger.hasModule('sum.multiplication')).to.be.true;
 		});
 		
-		it('Should have loaded all controllers',function(){
-			expect(ginger.hasController('hello')).to.be.true;
-			expect(ginger.hasController('sum.index')).to.be.true;
-			expect(ginger.hasController('sum.multiplication.index')).to.be.true;
-
-		});
-		it('Should have loaded all models',function(){
-			expect(ginger.hasModel('hello')).to.be.true;
-			expect(ginger.hasModel('sum.index')).to.be.true;
-			expect(ginger.hasModel('sum.multiplication.index')).to.be.true;
-
-		});
 		it('Should overwrite a gateway without needing to config',function(){
 			expect(ginger.getGateway('HTTP').iAmOverwritten).to.be.true;
 		});
@@ -52,6 +40,12 @@ describe('Application',function(){
 
 		});
 		describe('Model',function(){
+			it('Should have loaded all models',function(){
+				expect(ginger.hasModel('hello')).to.be.true;
+				expect(ginger.hasModel('sum.index')).to.be.true;
+				expect(ginger.hasModel('sum.multiplication.index')).to.be.true;
+
+			});
 			it('Should be able to get a model by name',function(){
 				var model=ginger.getModel('Hello');
 				expect(model).to.be.an('object');
@@ -72,8 +66,20 @@ describe('Application',function(){
 				it('Should have a defaultModel if it exist');
 				it('Should create the avaiable actions');
 				it('Should have Crud Avaiable');
+			it('Should have loaded all controllers',function(){
+				expect(ginger.hasController('hello')).to.be.true;
+				expect(ginger.hasController('sum.index')).to.be.true;
+				expect(ginger.hasController('sum.multiplication.index')).to.be.true;
+
+			});
 		});
-			
+		describe.only('Schema',function(){
+			it('Should have loaded all schemas',function(){
+				expect(ginger.hasSchema('posts')).to.be.true;
+				expect(ginger.hasSchema('sum.sum')).to.be.true;
+
+			});
+		});
 		describe('gateway',function(){
 			it('Should give the same Reponse content independant of the gateway');
 		});

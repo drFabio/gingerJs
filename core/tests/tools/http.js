@@ -47,7 +47,6 @@ module.exports = function(host, port) {
 				}
             };
 
-
             var req = http.request(options, function(res) {
                 var body='';
                 res.setEncoding('utf8');

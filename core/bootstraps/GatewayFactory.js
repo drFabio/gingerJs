@@ -1,13 +1,13 @@
 var async=require('async');
 module.exports={
 	parent:'ginger.bootstraps.Element',
+	_defaultEngineNamespace:'ginger.gateways',
+	_defaulAppNamespace:'gateways',
+	_configValue:'gateways',
+	_defaultEngineParent:'ginger.gateways.AbstractGateway',
+	_debugGateway:true,
 	init : function(engine,params) {
-		this._defaultEngineNamespace='ginger.gateways';
-		this._defaulAppNamespace='gateways';
-		this._configValue='gateways';
-		this._defaultEngineParent='ginger.gateways.AbstractGateway';
 		this._objectList={};
-		this._debugGateway=true;
 		this._super(engine,params);
 		this._gatewayConfig=this._engine._config.gateways;
 	},

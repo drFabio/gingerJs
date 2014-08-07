@@ -9,6 +9,8 @@ var CONTEXT_COMPONENTS=6;
 var CONTEXT_GATEWAYS=7;
 var CONTEXT_ROOT=8;
 var CONTEXT_ERROR=9;
+var CONTEXT_SCHEMA=10;
+
 module.exports={
 	_classFactory:null,
 	_controllerFactory:null,
@@ -45,6 +47,8 @@ module.exports={
 		this._gatewayFactory=engine.getBootstrap('GatewayFactory');
 		this._componentFactory=engine.getBootstrap('ComponentFactory');
 		this._errorFactory=engine.getBootstrap('ErrorFactory');
+		this._schemaFactory=engine.getBootstrap('SchemaFactory');
+
 		if(this._params['path']){
 			this.setApplicationPath(this._params['path']);
 		}
@@ -72,6 +76,8 @@ module.exports={
 				return CONTEXT_GATEWAYS;
 			case 'errors':
 				return CONTEXT_ERROR;
+			case 'schemas':
+				return CONTEXT_SCHEMA;
 			default:
 				return false;
 		}
@@ -80,40 +86,42 @@ module.exports={
 		this._componentFactory.setAppClass(name,path,parentNamespace);
 	},
 	_handleFile:function(fullPath,fileName,context,parentModules,cb) {
+		var name=this.removeExtension(fileName);
 		switch(context){
 			case CONTEXT_CONTROLLER:
-				var name=this.removeExtension(fileName);
 				this._addController(fullPath,name,parentModules);
 				cb();
 			break;
 			case CONTEXT_MODEL:
-				var name=this.removeExtension(fileName);
 				this._addModel(fullPath,name,parentModules);
 				cb();
 			break;
 			case CONTEXT_VIEW:
-				var name=this.removeExtension(fileName);
 				cb();
 			break;
 			case CONTEXT_GATEWAYS:
-				var name=this.removeExtension(fileName);
 				this._addGateway(fullPath,name,cb);
 			break;
 			case CONTEXT_COMPONENTS:
-				var name=this.removeExtension(fileName);
 				this._addComponent(fullPath,name,parentModules);
 				cb();
 			break;
 			case CONTEXT_ERROR:
-				var name=this.removeExtension(fileName);
 				this._addError(fullPath,name,parentModules);
-
+				cb();
+			break;
+			case CONTEXT_SCHEMA:
+				this._addSchema(fullPath,name,parentModules);
 				cb();
 			break;
 			default:
 				cb();
 			break;
 		}
+	},
+	_addSchema:function(path,name,parentNamespace){
+		this._schemaFactory.setAppClass(name,path,parentNamespace);
+
 	},
 	_addError:function(path,name,parentNamespace){
 		this._errorFactory.setAppClass(name,path,parentNamespace);
@@ -188,10 +196,10 @@ module.exports={
 			path=dir+'/'+item;
 			var stat=fs.statSync(path);
 			if( stat.isDirectory()){
-				//We just care about directories on modules and on root
-				if(context===CONTEXT_MODULE_ROOT || context===CONTEXT_ROOT){
+				var childContext=self._getDirectoryContext(item);
+				//We just care about directories on modules ,root and models
+				if(context===CONTEXT_MODULE_ROOT || context===CONTEXT_ROOT ){
 
-					var childContext=self._getDirectoryContext(item);
 					//If it's not on a child context we don't handle it
 					if(childContext!==false){
 					
@@ -207,6 +215,9 @@ module.exports={
 							asyncFunctions=asyncFunctions.concat(self._walkDir(false,path,childContext,parentModules));
 						}
 					}
+				}
+				else if(context===CONTEXT_MODEL){
+					asyncFunctions=asyncFunctions.concat(self._walkDir(false,path,childContext,parentModules));
 				}
 				else if(context===CONTEXT_MODULE){
 					//It's a module lets put it on the map

@@ -1,6 +1,6 @@
 module.exports={
 	parent:'ginger.bootstraps.Element',
-	_defaulAppNamespace:'controlles',
+	_defaulAppNamespace:'controllers',
 	_defaultAppParent:'ginger.mvc.AbstractController',
 	_debugController:true,
 	getActionsMap:function(controllerData){

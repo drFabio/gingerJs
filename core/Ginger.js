@@ -11,7 +11,7 @@ var libs = {
     util: util,
     fs: fs,
     _: _,
-    };
+};
 /**
  * The application main Ginger
  */
@@ -377,7 +377,6 @@ Ginger.prototype.hasController = function (name) {
     return controllerFactory.hasElement(name);
 }
 /**
- * Checks if we have a model
  * @param  {String}  name index of the model
  * @return {Boolean}      [description]
  */
@@ -385,8 +384,11 @@ Ginger.prototype.hasModel = function (name) {
     var modelFactory=this.getBootstrap('ModelFactory');
     return modelFactory.hasElement(name);
 }
+Ginger.prototype.hasSchema = function(name) {
+    var schemaFactory=this.getBootstrap('SchemaFactory');
+    return schemaFactory.hasElement(name);
+};
 /**
- * Checks if we have a module
  * @param  {String}  name index of the module
  * @return {Boolean}      [description]
  */

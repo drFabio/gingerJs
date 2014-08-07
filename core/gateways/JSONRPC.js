@@ -50,6 +50,7 @@ module.exports = {
             var method = req.body.method;
             var id = req.body.id;
             if (typeof(id) == 'undefined') {
+
                 var err=self._engine.getError('InvalidRequest','Missing id');
                 self._sendError(req,res,err,id);
                 return;
@@ -59,7 +60,6 @@ module.exports = {
                 self._sendError(req,res,err,id);
                 return;
             }
-  
             if (!controllerData.actions[method]) {
                 var err=self._engine.getError('NotFound',method + ' not found');
                 self._sendError(req,res,err,id);
