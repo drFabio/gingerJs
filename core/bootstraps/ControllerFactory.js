@@ -14,6 +14,16 @@ module.exports={
 		}
 		return actionsMap;
 	},
+	handleAutoSchemaCrud:function(schemaNames){
+		schemaNames.forEach(function(s){
+			if(this.hasElement(s)){
+				this.changeObjectParent(s,this._defaultCRUDParent);
+			}
+			else{
+				this.setEmptyAppClass(s,this._defaultCRUDParent);
+			}
+		},this);
+	},
 	init : function(engine,params) {
 		this._super(engine,params);
 		if(!this._params.actionSuffix){

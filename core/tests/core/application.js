@@ -73,7 +73,7 @@ describe('Application',function(){
 
 			});
 		});
-		describe.only('Schema',function(){
+		describe('Schema',function(){
 			it('Should have loaded all schemas',function(){
 				expect(ginger.hasSchema('posts')).to.be.true;
 				expect(ginger.hasSchema('sum.sum')).to.be.true;

@@ -1,5 +1,16 @@
 module.exports={
 	parent:'ginger.bootstraps.Element',
 	_defaulAppNamespace:'models',
-	_defaultAppParent:'ginger.mvc.AbstractModel'
+	_defaultAppParent:'ginger.mvc.AbstractModel',
+	_defaultCRUDParent:'ginger.mvc.AbstractCRUDModel',
+	handleAutoSchemaCrud:function(schemaNames){
+		schemaNames.forEach(function(s){
+			if(this.hasElement(s)){
+				this.changeObjectParent(s,this._defaultCRUDParent);
+			}
+			else{
+				this.setEmptyAppClass(s,this._defaultCRUDParent);
+			}
+		},this);
+	}
 }

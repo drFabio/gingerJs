@@ -10,6 +10,7 @@ var CONTEXT_GATEWAYS=7;
 var CONTEXT_ROOT=8;
 var CONTEXT_ERROR=9;
 var CONTEXT_SCHEMA=10;
+var _=require('lodash');
 
 module.exports={
 	_classFactory:null,
@@ -261,6 +262,21 @@ module.exports={
 	_appHasConfigFile:function() {
 		return  fs.existsSync(this._path+'/config/app.js');
 	},
+	_finishedWalkingDir:function(cb){
+		var self=this;
+		return function(err){
+			if(err){
+				cb(err);
+				return;
+			}
+			var autoCrudSchemas=self._schemaFactory.getAutoCrudSchemas();
+			if(_.isEmpty(autoCrudSchemas)){
+				this._controllerFactory.handleAutoSchemaCrud(autoCrudSchemas);
+				this._modelFactory.handleAutoSchemaCrud(autoCrudSchemas);
+			}
+			cb();
+		}
+	},
 	buildApp:function(cb) {
 		if(!this._appHasConfigFile()){
 			//There isn't an app here
@@ -269,7 +285,7 @@ module.exports={
 		}
 		try{
 			this._engine.setConfig(this._path+'/config/app.js');
-			this._walkDir(cb,this._path,CONTEXT_ROOT);
+			this._walkDir(this._finishedWalkingDir(cb),this._path,CONTEXT_ROOT);
 		}
 		catch(e){
 			cb(e);

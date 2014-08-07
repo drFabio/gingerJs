@@ -25,11 +25,22 @@ module.exports={
 		}
 		this._classFactory.setNamespaceDir(namespace,path);
 	},
+	setEmptyAppClass:function(name,parent){
+		if(!parent){
+			parent=this._defaultAppParent;
+		}
+		var pojo={
+			parent:parent
+		}
+		var appNamespace=this._buildNamespace(this._defaulAppNamespace,name);
+		this._addToIndex(name,appNamespace,POJO,true);
+		return appNamespace;
+
+	},
 	setAppClass:function(name,path,parentNamespace,fullNamespace){
 
 	    var defaultParent=null;
 	    name=this._buildNamespace(parentNamespace,name);
-		var appNamespace=this._buildNamespace(this._defaulAppNamespace,name);
 
 	    if(this.hasDefaultParent()){
 			if(this._defaultEngineNamespace){
@@ -53,9 +64,10 @@ module.exports={
 	 	}
 	 	else{
 	 		POJO=this._classFactory.getClassFileContents(fullNamespace);
-	 		POJO=this._setDefaultParentOnPOJO(pojo,defaultParent);
+	 		POJO=this._setDefaultParentOnPOJO(POJO,defaultParent);
 	 	}
 
+		var appNamespace=this._buildNamespace(this._defaulAppNamespace,name);
 	 	this._addToIndex(name,appNamespace,POJO,true);
 	 
 		return appNamespace;
@@ -65,7 +77,7 @@ module.exports={
 	},
 	_setClassOnNamespace:function(namespace,POJO){
 
-		this._classFactory.setClassFromPojo(namespace,POJO);
+		this._classFactory.setClassPojo(namespace,POJO);
 	},
 	_addToIndex:function(name,namespace,POJO,isApp,isEngine){
 		this._setClassOnNamespace(namespace,POJO);
@@ -108,6 +120,22 @@ module.exports={
 	    }
 	    return params;
 	},
+	changeObjectParent:function(name,newParent){
+		var element=this.getElementByName(name);
+		var namespace=element.namespace;
+		var pojo=this._classFactory.getClassPojo(namespace);
+		if(typeof(pojo)!='Object'){
+			throw new Error(name+' was not found!');
+		}
+		pojo.parent=newParent;
+		element.pojo=pojo;
+		this._overwrideElementData(name,element);
+		this._classFactory.setClassPojo(namespace,pojo,true);
+	},
+	_overwrideElementData:function(name,data){
+		var name=name.toLowerCase();
+		this._nameMap[name]=data;
+	},
 	_getObject:function(name,var_args){
 
 		var newArgs=[];
@@ -134,7 +162,7 @@ module.exports={
 		return this._nameMap[name];
 
 	},
-	_getNamespaceFromName:function(name){
+	_getNamespaceDataFromName:function(name){
 		if(this._indexedByName && this.hasElement(name)){
 			return this.getElementByName(name);
 		}
@@ -161,7 +189,7 @@ module.exports={
 	},
 
 	create : function (name, var_args) {
-		var namespaceData=this._getNamespaceFromName(name);
+		var namespaceData=this._getNamespaceDataFromName(name);
 		var namespace=namespaceData.namespace;
 		//If is configurable the first argument is the parasm from the config
 		if(this.isConfigurable()){
