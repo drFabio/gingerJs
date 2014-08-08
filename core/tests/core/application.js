@@ -62,10 +62,25 @@ describe('Application',function(){
 			});
 		});
 		describe('Controller',function(){
-				it('Should be able to inherits the default controller');
-				it('Should have a defaultModel if it exist');
-				it('Should create the avaiable actions');
-				it('Should have Crud Avaiable');
+				it('Should be able to inherits the default controller',function(){
+					var type=typeof(ginger.getController('Hello').getActions);
+					expect(type).to.equal('function');
+				});
+				it('Should have a defaultModel if a model with the same name  exists',function(){
+					var controller=ginger.getController('hello');
+					expect(controller).to.exist;
+					var model=controller.getModel();
+					expect(model).to.exist;
+					expect(model.sayHello()).to.equal('Hello');
+
+				});
+				it('Should create the avaiable actions',function(){
+					var controller=ginger.getController('hello');
+					var type=typeof(ginger.getController('Hello').helloAction);
+					expect(type).to.equal('function');
+
+
+				});
 			it('Should have loaded all controllers',function(){
 				expect(ginger.hasController('hello')).to.be.true;
 				expect(ginger.hasController('sum.index')).to.be.true;
@@ -83,10 +98,13 @@ describe('Application',function(){
 				expect(ginger.hasModel('posts')).to.be.true;
 			});
 			it('Should have created non existend controllers for automatic cruds',function(){
+				var controllerFactory=ginger.getBootstrap('ControllerFactory');
+
 				expect(ginger.hasController('posts')).to.be.true;
 			});
 			it('Should have promoted existent controllers to CRUD controllers',function(){
-				var el=ginger.getBootstrap('ControllerFactory').getElementByName('sum.Sum');
+				var controllerFactory=ginger.getBootstrap('ControllerFactory');
+				var el=controllerFactory.getElementByName('sum.Sum');
 				expect(el.pojo.parent).to.equal('ginger.mvc.AbstractCRUDController');
 
 			});

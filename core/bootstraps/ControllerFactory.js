@@ -9,7 +9,6 @@ module.exports={
 		var actionsMap={};
 		for(var x in controllerData){
 			if(typeof(controllerData[x])==='function' && (plainName=this.getActionPlainName(x))!==false){
-			
 				actionsMap[plainName]=x;
 			}
 		}
@@ -32,8 +31,8 @@ module.exports={
 		}
 	},
 	_buildIndexData:function(name,namespace,POJO,isApp,isEngine){
-		if(!POJO.model){
-			POJO.model=namespace;
+		if(!POJO.modelName){
+			POJO.modelName=name;
 		}	
 		var data=this._super(name,namespace,POJO,isApp,isEngine);
 		data.actions=this.getActionsMap(POJO);
