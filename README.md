@@ -11,3 +11,5 @@ TODO List
 #Change all components to a common ancestors
 #Make components and gateways hierachicals
 #Eliminate dupplication of JSONRPC and HTTP Gateways
+#Make the database interface independant
+#Make components just optionaly singleton

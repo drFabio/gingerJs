@@ -38,7 +38,7 @@ module.exports={
 	    }
 	   return name.substr(0,pos);
 	},
-	hasAction:function(plainName){
+	actionExists:function(plainName){
 		return !!this._actions[plainName];
 	}
 };

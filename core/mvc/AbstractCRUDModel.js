@@ -4,5 +4,14 @@ module.exports= {
 		this._super(engine);
 		this._dataBase=engine.getComponent('DataBase');
 
+	},
+	create:function(){
+
+	},
+	update:function(){
+
+	},
+	destroy:function(){
+
 	}
 };

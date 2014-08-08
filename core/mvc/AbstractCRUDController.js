@@ -1,15 +1,16 @@
 module.exports= {
 	parent:'ginger.mvc.AbstractController',
-	createAction:function(){
+
+	createAction:function(req,res){
 
 	},
-	updateAction:function(){
+	updateAction:function(req,res){
 
 	},
-	recoverAction:function(){
+	readAction:function(req,res){
 		
 	},
-	deleteAction:function(){
+	destroyAction:function(req,res){
 		
 	}
 	

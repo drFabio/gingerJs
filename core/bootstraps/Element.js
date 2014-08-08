@@ -135,10 +135,21 @@ module.exports={
 		return false;
 
 	},
+
+	mergeObjectPojo:function(name,pojo){
+		var element=this.getElementByName(name);
+		var namespace=element.namespace;
+		var originalPojo=this._classFactory.getClassPojo(namespace)
+		pojo=_.extend(originalPojo, pojo) 
+		element.pojo=pojo;
+		this._overwrideElementData(name,element);
+		this._classFactory.setClassPojo(namespace,pojo,true);
+		return true;
+	},
 	changeObjectParent:function(name,newParent){
 		var element=this.getElementByName(name);
 		var namespace=element.namespace;
-		var pojo=this._classFactory.getClassPojo(namespace);
+		var pojo=this._classFactory.getClassPojo(namespace)
 		if(_.isEmpty(pojo)){
 			throw new Error(name+' was not found!,searched on the '+namespace+'  namespace');
 		}

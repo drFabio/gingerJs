@@ -25,6 +25,7 @@ module.exports={
 	},
 	create:function(name,params){
 		if(this.isCancelled(name)){
+			console.log("COMPOENENTE "+name+" ESTA CANCELADO");
 			return false;
 		}
 		if(this.isLoaded(name)){

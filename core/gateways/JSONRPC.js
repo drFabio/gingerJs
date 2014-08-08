@@ -60,7 +60,7 @@ module.exports = {
                 self._sendError(req,res,err,id);
                 return;
             }
-            if (!controllerObj.hasAction(method)) {
+            if (!controllerObj.actionExists(method)) {
                 var err=self._engine.getError('NotFound',method + ' not found');
                 self._sendError(req,res,err,id);
                 return;

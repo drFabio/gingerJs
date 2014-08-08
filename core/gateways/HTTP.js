@@ -54,11 +54,19 @@ module.exports={
 	},
 	end:function(cb){
 		this._expressComponent.end();
+		/**
+		 * @todo  make the components handle it's lifecycle by themselves!
+		 */
+		var db=this._engine.getComponent('DataBase');
+		if(db){
+			db.end();
+		}
 		cb();
 	},
 	_addRouteToApp:function(action,url,controllerObj,controllerData){
 		var actionFunction=controllerObj.getActionFunctionByName(action);
-		var controllerFunc=controllerObj[actionFunction].bind(controllerObj);
-		this._app.get(url,controllerFunc);
+		this._app.get(url,function(req,res){
+			controllerObj[actionFunction](req,res);
+		});
 	}
 }
