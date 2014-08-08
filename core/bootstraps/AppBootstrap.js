@@ -270,9 +270,9 @@ module.exports={
 				return;
 			}
 			var autoCrudSchemas=self._schemaFactory.getAutoCrudSchemas();
-			if(_.isEmpty(autoCrudSchemas)){
-				this._controllerFactory.handleAutoSchemaCrud(autoCrudSchemas);
-				this._modelFactory.handleAutoSchemaCrud(autoCrudSchemas);
+			if(!_.isEmpty(autoCrudSchemas)){
+				self._controllerFactory.handleAutoSchemaCrud(autoCrudSchemas);
+				self._modelFactory.handleAutoSchemaCrud(autoCrudSchemas);
 			}
 			cb();
 		}

@@ -15,16 +15,16 @@ describe('engine',function(){
 		});
 		it('should have a default config',function(){
 				expect(ginger._config).not.to.be.empty;
-		describe('gateway',function(){
-			it('Should have the default gateways',function(){
-				var gateway=ginger.getGateway('HTTP');
-				expect(gateway).to.exist;
-				gateway=ginger.getGateway('JSONRPC');
-				expect(gateway).to.exist;
-				gateway=ginger.getGateway('SocketIO');
-				expect(gateway).to.exist;
-			});
-		});
+				describe('gateway',function(){
+					it('Should have the default gateways',function(){
+						var gateway=ginger.getGateway('HTTP');
+						expect(gateway).to.exist;
+						gateway=ginger.getGateway('JSONRPC');
+						expect(gateway).to.exist;
+						gateway=ginger.getGateway('SocketIO');
+						expect(gateway).to.exist;
+					});
+				});
 		});
 		describe('component',function(){
 			it('Should Have the default componets',function(done){

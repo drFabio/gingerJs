@@ -79,6 +79,23 @@ describe('Application',function(){
 				expect(ginger.hasSchema('sum.sum')).to.be.true;
 
 			});
+			it('Should have created non existend models for automatic cruds',function(){
+				expect(ginger.hasModel('posts')).to.be.true;
+			});
+			it('Should have created non existend controllers for automatic cruds',function(){
+				expect(ginger.hasController('posts')).to.be.true;
+			});
+			it('Should have promoted existent controllers to CRUD controllers',function(){
+				var el=ginger.getBootstrap('ControllerFactory').getElementByName('sum.Sum');
+				expect(el.pojo.parent).to.equal('ginger.mvc.AbstractCRUDController');
+
+			});
+			it('Should have promoted existent models to CRUD models',function(){
+				var el=ginger.getBootstrap('ModelFactory').getElementByName('sum.Sum');
+				expect(el.pojo.parent).to.equal('ginger.mvc.AbstractCRUDModel');
+
+			});
+
 		});
 		describe('gateway',function(){
 			it('Should give the same Reponse content independant of the gateway');

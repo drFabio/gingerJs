@@ -1,4 +1,4 @@
 module.exports= {
-	parent:'ginger.mvc.AbstractCRUDModel',
+	parent:'ginger.mvc.AbstractCRUDModel'
 	
 };

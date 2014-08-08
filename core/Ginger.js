@@ -376,6 +376,10 @@ Ginger.prototype.hasController = function (name) {
     var controllerFactory=this.getBootstrap('ControllerFactory');
     return controllerFactory.hasElement(name);
 }
+Ginger.prototype.getController = function(name) {
+    var controllerFactory=this.getBootstrap('ControllerFactory');
+    return controllerFactory.create(name);
+};
 /**
  * @param  {String}  name index of the model
  * @return {Boolean}      [description]

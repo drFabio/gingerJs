@@ -2,11 +2,12 @@ module.exports={
 	parent:'ginger.bootstraps.Element',
 	_defaulAppNamespace:'controllers',
 	_defaultAppParent:'ginger.mvc.AbstractController',
+	_defaultCRUDParent:'ginger.mvc.AbstractCRUDController',
+
 	_debugController:true,
 	getActionsMap:function(controllerData){
 		var actionsMap={};
 		for(var x in controllerData){
-
 			if(typeof(controllerData[x])==='function' && (plainName=this.getActionPlainName(x))!==false){
 			
 				actionsMap[plainName]=x;
@@ -31,9 +32,11 @@ module.exports={
 		}
 	},
 	_buildIndexData:function(name,namespace,POJO,isApp,isEngine){
+		if(!POJO.model){
+			POJO.model=namespace;
+		}	
 		var data=this._super(name,namespace,POJO,isApp,isEngine);
 		data.actions=this.getActionsMap(POJO);
-	
 		return data;
 	},
 	getActionPlainName:function(name){
