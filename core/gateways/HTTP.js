@@ -21,25 +21,20 @@ module.exports={
 	},
 	_initExpress:function(cb){
 		var self=this;
-		var expressCb=function(err,express){
-			if(err){
-				cb(err);
-			}
-			if(!express){
-				throw new Error('The express component is required to run the HTTP gateway');
-			}
-			self._expressComponent=express;
-			self._app=self._expressComponent.getApp();
-			if(self._expressComponent.isRunning()){
-				cb(err);
-				return;
-			}
-
-			self._expressComponent.listen(function(err){
-				cb(err,self);
-			});
+		var express=this._engine.getComponent('Express');
+		if(!express){
+			throw new Error('The express component is required to run the HTTP gateway');
 		}
-		this._engine.getComponent('Express',expressCb);
+		self._expressComponent=express;
+		self._app=self._expressComponent.getApp();
+		if(self._expressComponent.isRunning()){
+			cb();
+			return;
+		}
+		self._expressComponent.listen(function(err){
+			cb(err,self);
+		});
+		
 	},
 	_handleControllerRoutes:function(controllerData){
 		var controllerObj=this._createController(controllerData);

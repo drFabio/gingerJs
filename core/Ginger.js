@@ -3,7 +3,6 @@ var util = require('util');
 var fs = require('fs');
 var _ = require('lodash');
 /**
- * Mover component para component factory
  * @type {Object}
  */
 var libs = {
@@ -16,10 +15,6 @@ var libs = {
  * The application main Ginger
  */
 function Ginger() {
-    /**
-     * Components are helpers for the application, like logs,errors, socketIo etc
-     */
-    this._componentsNameMap = {};
     /**
      * Bootstrapers are used to launch the application, they are factories for the application startup
      * @type {Object}
@@ -68,7 +63,7 @@ function Ginger() {
  * @param  {Function} cb CallBack for completition
  */
 Ginger.prototype.down = function (cb) {
-    this._gatewayFactory.finishAllGateways(cb);
+   this._gatewayFactory.finishAllGateways(cb);
 
 };
 
@@ -117,7 +112,7 @@ Ginger.prototype.up = function (cb) {
     this._setClassFactory();
     this._setDefaultNamespaces();
     this._gatewayFactory=this.getBootstrap('GatewayFactory');
- 
+    this._componentFactory=this.getBootstrap('ComponentFactory');
     var self = this;
     var startAppCb = function (err) {
         if (err) {
@@ -252,39 +247,8 @@ Ginger.prototype.setAppPath = function (path) {
  * @return {[type]}        [description]
  * @todo  clean
  */
-Ginger.prototype.getComponent = function (name,cb,params) {
-    var self=this;
-    var componentFactory=this.getBootstrap('ComponentFactory');
-    //We already made it no need to do it again
-    if (!this.isComponentLoaded(name)) {
-        //The component is set it's not cancelled
-        if (this.isComponentCancelled(name)) {
-            self._componentsNameMap[name] = false;
-            cb(null,self._componentsNameMap[name]);
-        } else {
-            var isComponentLoaded;
-            var isComponentInitialized;
-            var cbCreateComponent=function(err){
-                if(err){
-                    cb(err);
-                    return;
-                }
-                isComponentInitialized=true;
-                //Call the cb just if the component is already loaded also
-                if(isComponentLoaded){
-                    cb(null,self._componentsNameMap[name]);
-                }
-            }
-            self._componentsNameMap[name]=componentFactory.create(name, params,cbCreateComponent);
-            isComponentLoaded=true;
-            //Call the cb just if the componet is initialized also
-            if(isComponentInitialized){
-                 cb(null,self._componentsNameMap[name]);
-            }
-        }
-        return;
-    }
-    cb(null,this._componentsNameMap[name]);
+Ginger.prototype.getComponent = function (name,params) {
+  return  this._componentFactory.create(name,params);
 }
 Ginger.prototype.getBootstrap = function (name, params) {
     var fullName='ginger.bootstraps.'+name;
@@ -301,7 +265,7 @@ Ginger.prototype.getBootstrap = function (name, params) {
  * @param {[type]} component [description]
  */
 Ginger.prototype.setComponent = function (name, component) {
-    this._componentsNameMap[name] = component;
+   return this._componentFactory.setElement(name,component);
 };
 
 /**
@@ -310,7 +274,7 @@ Ginger.prototype.setComponent = function (name, component) {
  * @return {[type]}      [description]
  */
 Ginger.prototype.isComponentLoaded = function (name) {
-    return !!this._componentsNameMap[name];
+   return this._componentFactory.isLoaded(name);
 }
 Ginger.prototype.isGatewayLoaded = function (name) {
     return this._gatewayFactory.isGatewayLoaded(name);
@@ -337,10 +301,7 @@ Ginger.prototype.isGatewayCancelled =function (name) {
     return this._gatewayFactory.isGatewayCancelled(name);
 };
 Ginger.prototype.isComponentCancelled = function (name) {
-    if (this._config.components && this._config.components[name] === false) {
-        return true;
-    }
-    return false;
+   return this._componentFactory.isCancelled(name);
 };
 
 
@@ -360,13 +321,7 @@ Ginger.prototype._launch = function (cb) {
 Ginger.prototype.getGateway = function (name) {
     return this._gatewayFactory.getGateway(name);
 };
-/**
- * Sets the module to the map
- * @type {[type]}
- */
-Ginger.prototype.setModule = function (name) {
-    this.moduleMap[name] = true;
-};
+
 /**
  * Checks if we have a controller
  * @param  {String}  name index of the controller
@@ -375,7 +330,7 @@ Ginger.prototype.setModule = function (name) {
 Ginger.prototype.hasController = function (name) {
     var controllerFactory=this.getBootstrap('ControllerFactory');
     return controllerFactory.hasElement(name);
-}
+};
 Ginger.prototype.getController = function(name) {
     var controllerFactory=this.getBootstrap('ControllerFactory');
     return controllerFactory.create(name);
@@ -397,7 +352,8 @@ Ginger.prototype.hasSchema = function(name) {
  * @return {Boolean}      [description]
  */
 Ginger.prototype.hasModule = function (name) {
-    return !!this.moduleMap[name];
+    var moduleFactory=this.getBootstrap('ModuleBootstrap');
+    return moduleFactory.hasElement(name);
 }
 Ginger.prototype.getLib = function(name) {
     return this.libs[name];

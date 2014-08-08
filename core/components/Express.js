@@ -1,7 +1,7 @@
 var express = require('express');
 var http=require('http');
 module.exports={
-	init:function(engine,params,cb) {
+	init:function(engine,params) {
 		this._express=null;
 		this._app=null;
 		this._params=null;
@@ -15,7 +15,6 @@ module.exports={
 		var bodyParser = require('body-parser');
 		this._app.use(bodyParser.json());      
 		this._app.use(bodyParser.urlencoded({extended: true})); 
-		cb();
 	},
 	isRunning:function(){
 		return this._isRunning;

@@ -1,5 +1,5 @@
 module.exports={
-	init: function(engine,params,cb) {
+	init: function(engine,params) {
 		cb(null);
 	}
 }

@@ -17,7 +17,7 @@ describe('Application',function(){
 			expect(ginger.getConfig().name).to.equal("Example");
 		});
 		
-		it.skip('Should have loaded all the modules',function(){
+		it('Should have loaded all the modules',function(){
 			expect(ginger.hasModule('sum')).to.be.true;
 			expect(ginger.hasModule('sum.multiplication')).to.be.true;
 		});

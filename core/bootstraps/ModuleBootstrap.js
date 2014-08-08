@@ -1,23 +1,23 @@
 module.exports={
+
 	/**
 	 * @todo clean clode
 	 * @type {String}
 	 */
 	parent:'ginger.bootstraps.Default',
-	addToEngine:function(name,path,parentNamespace){
-		var mapIndex=this.buildMapIndex(name,parentNamespace);
-		this._engine.setModule(mapIndex);
+	init : function(engine,params) {
+		this._super(engine,params);
+		this._moduleIndex={};
+		this._classFactory=this._engine.libs.classFactory;
 	},
-	buildMapIndex:function(name,parentNamespace){
-		var saneName=this.sanitizeName(name);
-		var mapIndex;
-		if(parentNamespace){
-			mapIndex= parentNamespace.replace('.','/')+'/'+saneName;
-		}
-		else{
-			mapIndex=saneName;
-		}	
-		return mapIndex;
+	addToEngine:function(name,path,parentNamespace){
+		name=name.toLowerCase();
+		var mapIndex=this._buildNamespace(parentNamespace,name);
+		this._moduleIndex[mapIndex]=true;
+	},
+	hasElement:function(name){
+		name=name.toLowerCase();
+		return !!this._moduleIndex[name];
 	}
 
 }
