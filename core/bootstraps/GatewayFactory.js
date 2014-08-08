@@ -22,34 +22,6 @@ module.exports={
 		name=name.toLowerCase();
 		return this._objectList[name];
 	},
-
-	finishAllGateways:function(cb){
-	    var keys = Object.keys(this._objectList);
-	    var self = this;
-
-	    var endCb = function (err) {
-	        if (err) {
-	            cb(err);
-	            return;
-	        }
-	        endNextGateway();
-
-	    }
-	    var endNextGateway = function () {
-	        var k = keys.shift();
-	        if (!k) {
-	            cb();
-	            return;
-	        }
-	        try {
-	            self._objectList[k].end(endCb);
-	        } catch (err) {
-	            endCb(err);
-	        }
-
-	    }
-	    endNextGateway();
-	},
 	isGatewayLoaded:function(name){
 		name=name.toLowerCase();
 		return !!this._objectList[name];

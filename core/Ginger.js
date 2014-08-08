@@ -15,6 +15,7 @@ var libs = {
  * The application main Ginger
  */
 function Ginger() {
+    this._closeQueue=[];
     /**
      * Bootstrapers are used to launch the application, they are factories for the application startup
      * @type {Object}
@@ -63,7 +64,7 @@ function Ginger() {
  * @param  {Function} cb CallBack for completition
  */
 Ginger.prototype.down = function (cb) {
-   this._gatewayFactory.finishAllGateways(cb);
+    async.series(this._closeQueue,cb);
 
 };
 
@@ -99,7 +100,9 @@ Ginger.prototype._setGatewaysClasses = function() {
         this._gatewayFactory.setEngineClass(name);
     }
 };
-
+Ginger.prototype.addFunctionToCloseQueue = function(functionToClose) {
+    this._closeQueue.push(functionToClose);
+};
 
 /**
  * Starts the application

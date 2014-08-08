@@ -31,10 +31,19 @@ module.exports={
 			if(!err){
 				self._isRunning=true;
 			}
+			self._addFunctionToClose();
 			cb(err);
 
 			
 		});
+	},
+	_addFunctionToClose:function(){
+	 	var self=this;
+	 	var func=function(cb){
+	 		self.end();
+	 		cb();
+	 	}
+		this._engine.addFunctionToCloseQueue(func);
 	},
 	getApp:function(){
 		return this._app;
@@ -44,6 +53,7 @@ module.exports={
 			this._isClosed=true;
 			this._isRunning=false;
 			this.server.close();
+			return;
 		}
 		
 	}
