@@ -14,7 +14,7 @@ module.exports={
 		},
 		'DataBase':{
 			'mongo':{
-				'uri':'mongodb://localhost/ginger'
+				'uri':'mongodb://localhost:27017/ginger'
 			}
 		},
 		'Session':{

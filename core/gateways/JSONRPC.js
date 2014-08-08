@@ -35,7 +35,7 @@ module.exports = {
     /**
      * @TODO Move to a especif middlewar place?s
      */
-    _validJsonMiddleWare: function(controllerData) {
+    _validJsonMiddleWare: function(controllerObj) {
         var self = this;
         return function(req, res, next) {
             if (_.isEmpty(req.body) && !_.isEmpty(req.query)) {
@@ -60,7 +60,7 @@ module.exports = {
                 self._sendError(req,res,err,id);
                 return;
             }
-            if (!controllerData.actions[method]) {
+            if (!controllerObj.hasAction(method)) {
                 var err=self._engine.getError('NotFound',method + ' not found');
                 self._sendError(req,res,err,id);
                 return;
@@ -117,8 +117,8 @@ module.exports = {
         return JSON.stringify(resp);
     },
     _addRouteToApp: function(action, url, controllerObj, controllerData) {
-        var actionFunction = controllerData.actions[action];
-        var controllerFunc = controllerObj[actionFunction].bind(controllerObj);
-        this._app.post(url, this._validJsonMiddleWare(controllerData), controllerFunc);
+       var actionFunction=controllerObj.getActionFunctionByName(action);
+        var controllerFunc=controllerObj[actionFunction].bind(controllerObj);
+        this._app.post(url, this._validJsonMiddleWare(controllerObj), controllerFunc);
     }
 }

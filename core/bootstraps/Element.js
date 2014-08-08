@@ -36,6 +36,7 @@ module.exports={
 
 		var appNamespace=this._buildNamespace(this._defaulAppNamespace,name);
 		this._addToIndex(name,appNamespace,POJO,true);
+	
 		return appNamespace;
 
 	},

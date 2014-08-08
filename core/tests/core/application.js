@@ -97,7 +97,7 @@ describe('Application',function(){
 			it('Should have created non existend models for automatic cruds',function(){
 				expect(ginger.hasModel('posts')).to.be.true;
 			});
-			it('Should have created non existend controllers for automatic cruds',function(){
+			it('Should have created non existent controllers for automatic cruds',function(){
 				var controllerFactory=ginger.getBootstrap('ControllerFactory');
 
 				expect(ginger.hasController('posts')).to.be.true;

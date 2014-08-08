@@ -5,15 +5,6 @@ module.exports={
 	_defaultCRUDParent:'ginger.mvc.AbstractCRUDController',
 
 	_debugController:true,
-	getActionsMap:function(controllerData){
-		var actionsMap={};
-		for(var x in controllerData){
-			if(typeof(controllerData[x])==='function' && (plainName=this.getActionPlainName(x))!==false){
-				actionsMap[plainName]=x;
-			}
-		}
-		return actionsMap;
-	},
 	handleAutoSchemaCrud:function(schemaNames){
 		schemaNames.forEach(function(s){
 			if(this.hasElement(s)){
@@ -35,15 +26,6 @@ module.exports={
 			POJO.modelName=name;
 		}	
 		var data=this._super(name,namespace,POJO,isApp,isEngine);
-		data.actions=this.getActionsMap(POJO);
 		return data;
-	},
-	getActionPlainName:function(name){
-		var suffix=this._params.actionSuffix;
-		var pos=name.indexOf(suffix, name.length - suffix.length);
-	    if( pos == -1){
-	    	return false;
-	    }
-	   return name.substr(0,pos);
 	}
 }

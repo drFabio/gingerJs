@@ -38,7 +38,8 @@ module.exports={
 	},
 	_handleControllerRoutes:function(controllerData){
 		var controllerObj=this._createController(controllerData);
-		for(var x in controllerData.actions){
+		var actions=controllerObj.getActions();
+		for(var x in actions){
 			this._handleControllerAction(x,controllerObj,controllerData);
 		}
 	},
@@ -48,7 +49,6 @@ module.exports={
 		if(prefix){
 			url='/'+prefix+url;
 		}
-
 		this._addRouteToApp(action,url,controllerObj,controllerData);
 		
 	},
@@ -57,7 +57,7 @@ module.exports={
 		cb();
 	},
 	_addRouteToApp:function(action,url,controllerObj,controllerData){
-		var actionFunction=controllerData.actions[action];
+		var actionFunction=controllerObj.getActionFunctionByName(action);
 		var controllerFunc=controllerObj[actionFunction].bind(controllerObj);
 		this._app.get(url,controllerFunc);
 	}
