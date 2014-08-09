@@ -24,10 +24,16 @@ module.exports={
 		}
 
 	},
+	getSchemaClass:function(schemaName){
+		return this._schemaFactory.create(schemaName);
+	},
+	update:function(schemaName,data,searchData,cb){
+		var Schema=this.getSchemaClass(schemaName);
 
+		Schema.findOneAndUpdate(searchData,data,cb)
+	},
 	create:function(schemaName,data,cb){
-
-		var Schema=this._schemaFactory.create(schemaName);
+		var Schema=this.getSchemaClass(schemaName);
 		var schemaObj=new Schema(data);
 		schemaObj.save(function(err){
 			cb(err,schemaObj);

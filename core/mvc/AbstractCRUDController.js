@@ -16,7 +16,20 @@ module.exports= {
 		});
 	},
 	updateAction:function(req,res){
+		var search=req.query.search;
+		console.log(search);
+		var data=req.query.data;
+		this._model.update(data,search,function(err,data){
+			var response;
+			if(err){
+				response=JSON.stringify(err);
 
+			}
+			else{
+				response=JSON.stringify(data);
+			}
+			res.status(200).send(response);
+		});
 	},
 	readAction:function(req,res){
 		
