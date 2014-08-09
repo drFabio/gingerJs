@@ -5,31 +5,33 @@ module.exports={
 	init: function(engine,params) {
 		this._engine=engine;
 		this._params=params;
-		console.log('CHamei DB');
+		this._schemaFactory=engine.getBootstrap('SchemaFactory');
 		if(!this._isConnected){
 			this._isConnected=true;
 			this._isClosed=false;
 			mongoose.connect(this._params['mongo'].uri);
-			console.log('Conectei db');
 			this._addFunctionToClose();
 
 			// CONNECTION EVENTS
 			// When successfully connected
 			mongoose.connection.on('connected', function () {
-			  console.log('Mongoose default connection open to ');
 			});
 
 			// If the connection throws an error
 			mongoose.connection.on('error',function (err) {
 				throw err;
 			});
-
 		}
 
 	},
 
-	create:function(data,cb){
+	create:function(schemaName,data,cb){
 
+		var Schema=this._schemaFactory.create(schemaName);
+		var schemaObj=new Schema(data);
+		schemaObj.save(function(err){
+			cb(err,schemaObj);
+		});
 	},
 	_addFunctionToClose:function(){
 	 	var self=this;
@@ -40,17 +42,13 @@ module.exports={
 		this._engine.addFunctionToCloseQueue(func);
 	},
 	end:function(){
-		console.log("CHAMEI FINAL DE DB");
 		if(this._isConnected && !this._isClosed){
 
 			this._isConnected=false;
 
 			mongoose.connection.close();
 			this._isClosed=true;
-			console.log("FECHEI DB");
 		}
-		else{
-			console.log("N CONSEGUI FECHAR DB!s");
-		}
+	
 	}
 }

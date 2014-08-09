@@ -9,14 +9,39 @@ module.exports={
 	init : function(engine,params) {
 		this._super(engine,params);
 		this._autoCruds={};
+		this._schemaMap={};
+
 	},
-	_getObject:function(name){	
-		return this._classFactory.createObject(name,Schema);
+
+	_getPojo:function(path,defaultParent){
+		var pojo=require(path)(Schema);
+		return pojo;
+	},
+	create:function(name){	
+		return this._schemaMap[name.toLowerCase()];
+	},
+	_addModelToSchema:function(name,model){
+		name=name.toLowerCase();
+		if(!this._schemaMap[name]){
+			this._schemaMap[name]=mongoose.model(name,model);
+			this._addClearSchemaFunction(name);
+		}
+	},
+	_addClearSchemaFunction:function(name){
+		var self=this;
+		var func=function(cb){
+			delete mongoose.models[name];
+			delete mongoose.modelSchemas[name];
+			self._schemaMap[name]=null;
+			cb();
+		}
+		this._engine.addFunctionToCloseQueue(func);
 	},
 	_addToIndex:function(name,namespace,POJO,isApp,isEngine){
 		if(this._isSchemaAutoCrud(POJO)){
 			this._autoCruds[name]=true;
 		}
+		this._addModelToSchema(name,POJO);
 		this._super(name,namespace,POJO,isApp,isEngine);
 	},
 	/**
