@@ -1,26 +1,40 @@
 {
-    "name": "GingerJS",
-    "private": true,
-    "version": "0.0.0",
+    "name": "gingerjs",
+    "private": false,
+    "author":"Fabio Oliveira Costa <fabio@dexus.com.br>",
+    "version": "0.0.1",
     "description": "A HMVC framework",
+    "devDependencies": {
+         "chai":"*"
+     },
     "dependencies": {
-        "chai":"*",
         "lodash":"*",
         "express":"*",
         "socket.io":"*",
 		"class.extend":"*",
-        "async":"*"
+        "async":"*",
+        "olive_oil":"git://github.com/drFabio/OliveOil.git#master",
+        "body-parser":"*",
+        "mongoose":"*"
     },
     "scripts": {
         "start": "node app.js",
         "debug": "node debug app.js",
-        "test":"mocha  core/tests/core/engine.js"
+        "test":"mocha --timeout 30000  --recursive core/tests/core"
     },
     "main": "app.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/drFabio/gingerJs"
     },
+    "keywords":[
+        "HMVC",
+        "Framework",
+        "I18N"
+    ],
     "author": "Fabio Oliveira Costa <fabio@dexus.com.br>",
-    "license": ""
+    "license": "",
+    "engines": {
+        "node": ">=0.10.22"
+    }
 }

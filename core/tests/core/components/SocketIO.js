@@ -1,7 +1,7 @@
 var chai=require('chai');
 var expect=chai.expect;
 var should = chai.should();
-descrin('Component',function(){
+describe('Component',function(){
 	describe('SocketIO',function(){
 		it('Should connect clients');
 		it('Should disconnect client');

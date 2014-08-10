@@ -1,0 +1,37 @@
+/**
+ * This is the abstract configuration for  Ginger you can overwrite it by AssinINg a config to yur engine
+ */
+module.exports={
+	//Components configurations
+	'components':{
+		'Express':{
+			'port':3000,
+			'host':'0.0.0.0',
+			'startOrder':'beforeGateways'
+		},
+		'SocketIO':{
+			'port':3040
+		},
+		'DataBase':{
+			'mongo':{
+				'uri':'mongodb://localhost:27017/ginger'
+			}
+		},
+		'Session':{
+			'secret':'Change_this!'
+		},
+		'Log':{}
+	},
+	'gateways':{
+		'HTTP':{},
+		'JSONRPC':{'prefix':'JSONRPC'},
+		'SocketIO':{}
+	},
+	'errors':[
+		'NotFound',
+		'Validate',
+		'InvalidParams',
+		'InvalidRequest',
+		'InternalError'
+	]
+};
