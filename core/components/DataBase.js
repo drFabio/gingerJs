@@ -39,6 +39,14 @@ module.exports={
 			cb(err,schemaObj);
 		});
 	},
+	read:function(schemaName,searchData,cb){
+		var Schema=this.getSchemaClass(schemaName);
+		Schema.find(searchData,cb);
+	},
+	destroy:function(schemaName,searchData,cb){
+		var Schema=this.getSchemaClass(schemaName);
+		Schema.remove(searchData,cb);
+	},
 	_addFunctionToClose:function(){
 	 	var self=this;
 	 	var func=function(cb){

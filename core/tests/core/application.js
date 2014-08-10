@@ -90,17 +90,17 @@ describe('Application',function(){
 		});
 		describe('Schema',function(){
 			it('Should have loaded all schemas',function(){
-				expect(ginger.hasSchema('posts')).to.be.true;
+				expect(ginger.hasSchema('login')).to.be.true;
 				expect(ginger.hasSchema('sum.sum')).to.be.true;
 
 			});
 			it('Should have created non existend models for automatic cruds',function(){
-				expect(ginger.hasModel('posts')).to.be.true;
+				expect(ginger.hasModel('login')).to.be.true;
 			});
 			it('Should have created non existent controllers for automatic cruds',function(){
 				var controllerFactory=ginger.getBootstrap('ControllerFactory');
 
-				expect(ginger.hasController('posts')).to.be.true;
+				expect(ginger.hasController('login')).to.be.true;
 			});
 			it('Should have promoted existent controllers to CRUD controllers',function(){
 				var controllerFactory=ginger.getBootstrap('ControllerFactory');
