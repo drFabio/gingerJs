@@ -116,6 +116,11 @@ Ginger.prototype.up = function (cb) {
     this._setDefaultNamespaces();
     this._gatewayFactory=this.getBootstrap('GatewayFactory');
     this._componentFactory=this.getBootstrap('ComponentFactory');
+    this._errorFactory=this.getBootstrap('ErrorFactory');
+    this._controllerFactory=this.getBootstrap('ControllerFactory');
+    this._modelFactory=this.getBootstrap('ModelFactory');
+    this._schemaFactory=this.getBootstrap('SchemaFactory');
+
     var self = this;
     var startAppCb = function (err) {
         if (err) {
@@ -331,24 +336,23 @@ Ginger.prototype.getGateway = function (name) {
  * @return {Boolean}      [description]
  */
 Ginger.prototype.hasController = function (name) {
-    var controllerFactory=this.getBootstrap('ControllerFactory');
-    return controllerFactory.hasElement(name);
+    return this._controllerFactory.hasElement(name);
 };
 Ginger.prototype.getController = function(name) {
-    var controllerFactory=this.getBootstrap('ControllerFactory');
-    return controllerFactory.create(name);
+    return this._controllerFactory.create(name);
 };
 /**
  * @param  {String}  name index of the model
  * @return {Boolean}      [description]
  */
 Ginger.prototype.hasModel = function (name) {
-    var modelFactory=this.getBootstrap('ModelFactory');
-    return modelFactory.hasElement(name);
+    return this._modelFactory.hasElement(name);
 }
 Ginger.prototype.hasSchema = function(name) {
-    var schemaFactory=this.getBootstrap('SchemaFactory');
-    return schemaFactory.hasElement(name);
+    return this._schemaFactory.hasElement(name);
+};
+Ginger.prototype.getSchema = function(name) {
+  return this._schemaFactory.getElement(name);
 };
 /**
  * @param  {String}  name index of the module
@@ -362,8 +366,7 @@ Ginger.prototype.getLib = function(name) {
     return this.libs[name];
 };
 Ginger.prototype.getError = function(name,message,data,code) {
-   var errorFactory=this.getBootstrap('ErrorFactory');
-   return errorFactory.create(name,message,data,code);
+   return this._errorFactory.create(name,message,data,code);
    
 };
 module.exports = Ginger;
