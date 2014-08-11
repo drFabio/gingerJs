@@ -2,6 +2,8 @@ module.exports={
 	parent:'ginger.bootstraps.Element',
 	_defaultEngineNamespace:'ginger.components',
 	_defaulAppNamespace:'components',
+	_defaultEngineParent:'ginger.components.Default',
+
 	_configValue:'components',
 	init : function(engine,params) {
 		this._objectList={};

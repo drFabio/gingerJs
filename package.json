@@ -15,7 +15,9 @@
         "async":"*",
         "olive_oil":"git://github.com/drFabio/OliveOil.git#master",
         "body-parser":"*",
-        "mongoose":"*"
+        "mongoose":"*",
+        "cookie-parser":"*",
+        "express-session":"*"
     },
     "scripts": {
         "start": "node app.js",

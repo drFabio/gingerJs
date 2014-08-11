@@ -1,6 +1,7 @@
 module.exports={
 	_app:null,
 	_expressComponent:null,
+	_sessionComponent:null,
 	
 	init: function(engine,params,cb) {
 		this._configParams(engine,params);
@@ -31,6 +32,7 @@ module.exports={
 			cb();
 			return;
 		}
+		self._sessionComponent=this._engine.getComponent('Session');
 		self._expressComponent.listen(function(err){
 			cb(err,self);
 		});

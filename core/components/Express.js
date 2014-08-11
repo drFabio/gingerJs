@@ -2,15 +2,10 @@ var express = require('express');
 var http=require('http');
 module.exports={
 	init:function(engine,params) {
-		this._express=null;
-		this._app=null;
-		this._params=null;
+		this._super(engine,params);
 		this.server=null;
 		this._isRunning=false;
 		this._isClosed=false;
-
-		this._engine=engine;
-		this._params=params;
 		this._app = express();
 		var bodyParser = require('body-parser');
 		this._app.use(bodyParser.json());      

@@ -18,7 +18,9 @@ module.exports={
 			}
 		},
 		'Session':{
-			'secret':'Change_this!'
+			'secret':'Change_this!',
+			'saveUninitialized':true,
+			'resave':true
 		},
 		'Log':{}
 	},
