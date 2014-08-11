@@ -22,7 +22,7 @@
         "debug": "node debug app.js",
         "test":"mocha --timeout 30000  --recursive core/tests/core"
     },
-    "main": "app.js",
+    "main": "index.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/drFabio/gingerJs"

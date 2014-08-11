@@ -1,7 +1,7 @@
 gingerJs
 ========
 
-A HMVC,I18N ready,fully configurable and overwritable Node JS framework
+A HMVC,fully configurable and overwritable Node JS framework
 
 Still in Development
 TODO List
@@ -13,3 +13,4 @@ TODO List
 #Eliminate dupplication of JSONRPC and HTTP Gateways
 #Make the database interface independant
 #Make components just optionaly singleton
+#Make scaffolding

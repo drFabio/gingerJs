@@ -1,0 +1,1 @@
+module.exports=require(__dirname+'/core/Ginger.js');
