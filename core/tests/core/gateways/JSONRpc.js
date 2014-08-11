@@ -31,7 +31,7 @@ describe('Gateway JsonRPC',function(){
 				expect(statusCode).to.equal(200);
 				done(err);
 			});
-;
+
 		});
 	
 		it('Should send a view as JSONRPC');

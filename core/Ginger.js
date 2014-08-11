@@ -80,21 +80,33 @@ Ginger.prototype._setConfigAsDefaultIfNoneSet = function() {
         this._config = Ginger.getDefaultConfig();
     }
 };
-Ginger.prototype._setNamespaceFromEngineConfig = function(name,configValue) {
-    this.libs.classFactory.setNamespaceDir(name,this.getEngineConfigValue(configValue));
+Ginger.prototype._getNamespaceFunctionFromEngineConfig = function(name,configValue) {
+    var self=this;
+    var classFactory=this.libs.classFactory;
+    var dir=this.getEngineConfigValue(configValue);
+    return function(asyncCb){
+        classFactory.setRecursiveNamespaceDir(name,dir,asyncCb);
+    }
 };
 Ginger.prototype._setClassFactory = function(first_argument) {
     var OliveOil=require('olive_oil')();
     var oliveOil=new OliveOil(null);
     this.libs.classFactory=oliveOil;
 };
-Ginger.prototype._setDefaultNamespaces = function() {
-    this._setNamespaceFromEngineConfig('ginger','rootDir');
-    this._setNamespaceFromEngineConfig('ginger.bootstraps','bootstrapsDir');
-    this._setNamespaceFromEngineConfig('ginger.components','componentsDir');
-    this._setNamespaceFromEngineConfig('ginger.gateways','gatewaysDir');
-    this._setNamespaceFromEngineConfig('ginger.mvc','mvcDir');
-    this._setNamespaceFromEngineConfig('ginger.errors','errorsDir');
+Ginger.prototype._setDefaultNamespaces = function(cb) {
+    this.libs.classFactory.setNamespaceDir('ginger',this.getEngineConfigValue('rootDir'));
+    var namespaceMap=  {
+    'ginger.bootstraps':'bootstrapsDir',
+    'ginger.components':'componentsDir',
+    'ginger.gateways':'gatewaysDir',
+    'ginger.mvc':'mvcDir',
+    'ginger.errors':'errorsDir'};
+    var namespaceFunctions=[];
+    var self=this;
+    for(var x in namespaceMap){
+        namespaceFunctions.push(self._getNamespaceFunctionFromEngineConfig(x,namespaceMap[x]));
+    }
+    async.series(namespaceFunctions,cb);
 };
 Ginger.prototype._setGatewaysClasses = function() {
     for (var name in this._config.gateways) {
@@ -107,7 +119,14 @@ Ginger.prototype.addFunctionToLaunchQueue = function(functionToUp) {
 Ginger.prototype.addFunctionToCloseQueue = function(functionToClose) {
     this._closeQueue.push(functionToClose);
 };
-
+Ginger.prototype._getFactories = function() {
+    this._gatewayFactory=this.getBootstrap('GatewayFactory');
+    this._componentFactory=this.getBootstrap('ComponentFactory');
+    this._errorFactory=this.getBootstrap('ErrorFactory');
+    this._controllerFactory=this.getBootstrap('ControllerFactory');
+    this._modelFactory=this.getBootstrap('ModelFactory');
+    this._schemaFactory=this.getBootstrap('SchemaFactory');
+};
 /**
  * Starts the application
  * @param  {Mixed} config String of the config file or config data
@@ -117,15 +136,7 @@ Ginger.prototype.up = function (cb) {
     this._setConfigAsDefaultIfNoneSet();
     this._setupEngineConfig();
     this._setClassFactory();
-    this._setDefaultNamespaces();
-    this._gatewayFactory=this.getBootstrap('GatewayFactory');
-    this._componentFactory=this.getBootstrap('ComponentFactory');
-    this._errorFactory=this.getBootstrap('ErrorFactory');
-    this._controllerFactory=this.getBootstrap('ControllerFactory');
-    this._modelFactory=this.getBootstrap('ModelFactory');
-    this._schemaFactory=this.getBootstrap('SchemaFactory');
-
-    var self = this;
+    var self=this;
     var startAppCb = function (err) {
         if (err) {
             cb(err);
@@ -148,8 +159,16 @@ Ginger.prototype.up = function (cb) {
                 self._launch(cb);
             }
         }
-    }
-    this._setupApp(startAppCb);
+    };
+    var setNamespacesCb=function(err){
+        if(err){
+            cb(err);
+            return;
+        }
+        self._getFactories();
+        self._setupApp(startAppCb);
+    };
+    this._setDefaultNamespaces(setNamespacesCb);
 };
 Ginger.prototype.setPreLaunchFunction = function (prelaunchFunction) {
     this._preLaunchFunction = prelaunchFunction;

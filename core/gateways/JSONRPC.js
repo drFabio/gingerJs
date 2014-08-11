@@ -12,6 +12,7 @@ module.exports = {
     _buildUrl: function(name, action) {
         return '/' + name.replace(/\./g, '/');
     },
+    _defaultMiddlewares:['ValidJSONRPC'],
     _buildRoute: function(controllerName, action, controllerData) {},
     _buildError:function(error,id){
       var code=ERRORS_MAP[error.code];
@@ -70,6 +71,10 @@ module.exports = {
             next();
         }
     },
+    _getRouterHandlerComponent:function(){
+        return this._engine.getComponent('JSONRPCRouteHandler');
+
+    },
     _getSendProxy:function(res,id){
         var self=this;
         var oldSend=res.send;
@@ -102,6 +107,9 @@ module.exports = {
             res.setHeader('Content-Type', 'application/json');
             oldSend.call(res,response);
         }
+    },
+    _getHTTPVerb:function(routeVerb){
+        return 'post';
     },
     buildResponse:function(id,error,result){
         var resp;

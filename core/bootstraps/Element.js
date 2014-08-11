@@ -107,6 +107,12 @@ module.exports={
 		if(!this._classFactory.classFileExists(engineName)){
 			throw new Error("The class "+engineName+" does not exist");
 		}
+		/**
+		 * @todo  use isClassCreatable 
+		 */
+		if(this._classFactory.isClassPojoSet(engineName)){
+			return engineName;
+		}
 		var POJO=this._classFactory.getClassFileContents(engineName);
 		var defaultParent=this._defaultEngineParent;
 		if(engineName==this._defaultEngineParent){
