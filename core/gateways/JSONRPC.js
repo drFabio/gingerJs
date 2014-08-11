@@ -26,8 +26,7 @@ module.exports = {
     _buildResult:function(result,id){
         return {id:id,result:result,"version":"2.0"};
     },
-    _sendError:function(req,res,error,id,id){
-
+    _sendError:function(req,res,error,id){
         var response= this._buildError(error,id);
         res.setHeader('Content-Type', 'application/json');
         res.status(200).send(JSON.stringify(response));

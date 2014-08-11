@@ -274,6 +274,10 @@ module.exports={
 				self._controllerFactory.handleAutoSchemaCrud(autoCrudSchemas);
 				self._modelFactory.handleAutoSchemaCrud(autoCrudSchemas);
 			}
+			var requiredCompenents=self._gatewayFactory.getGatewaysRequiredComponents();
+			if(!_.isEmpty(requiredCompenents)){
+				self._componentFactory.initializeComponents(requiredCompenents);
+			}
 			cb();
 		}
 	},

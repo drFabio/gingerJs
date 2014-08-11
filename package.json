@@ -5,7 +5,8 @@
     "version": "0.0.1",
     "description": "A HMVC framework",
     "devDependencies": {
-         "chai":"*"
+         "chai":"*",
+         "pow-mongodb-fixtures":"*"
      },
     "dependencies": {
         "lodash":"*",
@@ -17,7 +18,9 @@
         "body-parser":"*",
         "mongoose":"*",
         "cookie-parser":"*",
-        "express-session":"*"
+        "express-session":"*",
+        "passport":"*",
+        "passport-local":"*"
     },
     "scripts": {
         "start": "node app.js",

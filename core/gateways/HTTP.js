@@ -1,26 +1,23 @@
 module.exports={
 	_app:null,
 	_expressComponent:null,
-	_sessionComponent:null,
 	
 	init: function(engine,params,cb) {
 		this._configParams(engine,params);
 	},
+	_sendError:function(req,res,error){
+
+	},
 	start:function(cb){
 		var self=this;
-		this._initExpress(function(err){
-			if(err){
-				cb(err);
-			}
-
-			self.buildRoutes();
-			cb();
-		});
+		this._initExpress();
+		self.buildRoutes();
+		cb();
 	},
 	_buildUrl:function(name,action){
 		return '/'+name.replace(/\./g,'/')+'/'+action;
 	},
-	_initExpress:function(cb){
+	_initExpress:function(){
 		var self=this;
 		var express=this._engine.getComponent('Express');
 		if(!express){
@@ -28,15 +25,7 @@ module.exports={
 		}
 		self._expressComponent=express;
 		self._app=self._expressComponent.getApp();
-		if(self._expressComponent.isRunning()){
-			cb();
-			return;
-		}
-		self._sessionComponent=this._engine.getComponent('Session');
-		self._expressComponent.listen(function(err){
-			cb(err,self);
-		});
-		
+
 	},
 	_handleControllerRoutes:function(controllerData){
 		var controllerObj=this._createController(controllerData);

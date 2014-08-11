@@ -32,6 +32,25 @@ module.exports={
 		    }
 		    return false;
 	},
+	getGatewaysRequiredComponents:function(){
+		var config;
+		var self=this;
+		var required=[];
+		for(var name in this._gatewayConfig){
+			if(this.isGatewayCancelled(name)){
+				continue;
+			}
+			config=this._gatewayConfig[name];
+			if(!config.components){
+				continue;
+			}
+			config.components.forEach(function(c){
+				required.push(c);
+			});
+
+		}
+		return required;
+	},
 	startGateways:function(cb){
 		var asyncFunctions = [];
 		var self = this;

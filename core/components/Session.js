@@ -1,4 +1,3 @@
-var express = require('express');
 module.exports={
 	init:function(engine,params) {
 		this._super(engine,params);
@@ -8,7 +7,6 @@ module.exports={
 		var cookieParser = require('cookie-parser');
 		var session = require('express-session')
 		app.use(cookieParser());
-
 		app.use(session(self._params));	
 	}
 }

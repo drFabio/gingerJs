@@ -7,6 +7,7 @@ module.exports={
 	_configValue:'components',
 	init : function(engine,params) {
 		this._objectList={};
+		this._initializedMap={};
 		this._super(engine,params);
 		var config=this._engine._config.components;
 		this._config={}
@@ -37,5 +38,29 @@ module.exports={
 		name=name.toLowerCase();
 		this._objectList[name]=component;
 		return component;
+	},
+	isComponentInitialized:function(name){
+		name=name.toLowerCase();
+		return !!this._initializedMap[name];
+	},
+	initializeComponents:function(names){
+		var self=this;
+		names.forEach(function(n){
+			self.initialize(n);
+		});
+	},
+	initialize:function(name,params){
+		if(this.isComponentInitialized(name)){
+			return true;
+		}
+		var component=this.create(name,params);
+		if(!component ){
+			return false;
+		}
+		name=name.toLowerCase();
+		var func=component.up.bind(component);
+		this._engine.addFunctionToLaunchQueue(func);
+		this._initializedMap[name]=true;
+		return true;
 	}
 }

@@ -14,7 +14,11 @@ module.exports={
 	isRunning:function(){
 		return this._isRunning;
 	},
+	up:function(cb){
+		this.listen(cb);
+	},
 	listen:function(cb,port,host) {
+
 		if(this.isRunning()){
 			cb();
 			return;

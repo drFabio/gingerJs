@@ -1,0 +1,83 @@
+
+> gingerjs@0.0.1 test /home/vagrant/app/gingerjs
+> mocha --timeout 30000  --recursive core/tests/core
+
+
+[0m[0m
+[0m  Application[0m
+[0m    up() 'by path'[0m
+NO UP
+    [31m  1) "before all" hook[0m
+
+[0m  Component Authentication[0m
+  [36m  - Should not be aple to login with the wrong password[0m
+  [36m  - Should be able to login with the right password[0m
+  [36m  - Should show a error if there isn	 an authentication modle[0m
+  [36m  - Should be able to logout[0m
+
+[0m  Component[0m
+[0m    JSONRpc[0m
+    [36m  - Should be able to validate JSONRPC requests[0m
+    [36m  - Should be able to send  JSONRPC error[0m
+    [36m  - Should be able to send  JSONRPC response[0m
+
+[0m  Component[0m
+[0m    SocketIO[0m
+    [36m  - Should connect clients[0m
+    [36m  - Should disconnect client[0m
+    [36m  - Should be able to broadcast to multiple users[0m
+    [36m  - Should allow the authorization and session usage[0m
+
+[0m  engine[0m
+[0m    vanilla setup[0m
+NO UP
+CHAMANDO LAUNCH!
+todas launch functions feitas
+    [31m  2) Should go up smoothly[0m
+    [32m  ✓[0m[90m should have a default config [0m
+    [32m  ✓[0m[90m Should go down smoothly [0m
+[0m      component[0m
+      [32m  ✓[0m[90m Should Have the default componets [0m[31m(1997ms)[0m
+[0m    preLaunch[0m
+NO UP
+    [32m  ✓[0m[90m Should not run if preLaunch throws an error [0m
+NO UP
+CHAMANDO LAUNCH!
+todas launch functions feitas
+    [31m  3) Should  run if prelaunch allows[0m
+[0m    #config[0m
+[0m      #custom[0m
+NO UP
+CHAMANDO LAUNCH!
+todas launch functions feitas
+      [31m  4) "before all" hook[0m
+[0m    component[0m
+NO UP
+CHAMANDO LAUNCH!
+todas launch functions feitas
+    [31m  5) "before all" hook[0m
+[0m    Error[0m
+NO UP
+CHAMANDO LAUNCH!
+todas launch functions feitas
+    [31m  6) "before all" hook[0m
+
+[0m  Gateways HTTP [0m
+NO UP
+  [31m  7) "before all" hook[0m
+
+[0m  Gateway JsonRPC[0m
+NO UP
+  [31m  8) "before all" hook[0m
+
+[0m  Gateway SocketIO[0m
+[0m    SocketIO[0m
+    [36m  - Should proxy SocketIO queries to controller/action and respond to the same query[0m
+
+[0m  gateway[0m
+  [31m  9) Should have the default gateways[0m
+
+
+[92m [0m[32m 4 passing[0m[90m (5s)[0m
+[36m [0m[36m 12 pending[0m
+

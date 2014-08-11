@@ -16,6 +16,7 @@ var libs = {
  */
 function Ginger() {
     this._closeQueue=[];
+    this._launchQueue=[];
     /**
      * Bootstrapers are used to launch the application, they are factories for the application startup
      * @type {Object}
@@ -100,6 +101,9 @@ Ginger.prototype._setGatewaysClasses = function() {
         this._gatewayFactory.setEngineClass(name);
     }
 };
+Ginger.prototype.addFunctionToLaunchQueue = function(functionToUp) {
+    this._launchQueue.push(functionToUp);
+};
 Ginger.prototype.addFunctionToCloseQueue = function(functionToClose) {
     this._closeQueue.push(functionToClose);
 };
@@ -163,8 +167,11 @@ Ginger.prototype._setupApp = function (cb) {
     }
     this._setNoNamespaceDirToAppRoot();
     appInit.setApplicationPath(this._appPath);
-    try {
+    try {  
+
         appInit.buildApp(cb);
+
+
     } catch (err) {
         throw err;
         cb(err);
@@ -319,7 +326,15 @@ Ginger.prototype.isComponentCancelled = function (name) {
  * @return {[type]} [description]
  */
 Ginger.prototype._launch = function (cb) {
-       this._gatewayFactory.startGateways(cb);
+    var self=this;
+    var startGateways=function(err){
+        if(err){
+            return cb(err);
+        }
+       self._gatewayFactory.startGateways(cb);
+    }
+    async.series(this._launchQueue,startGateways);
+
 }
 /**
  * Return the gateway given by the name
@@ -327,6 +342,7 @@ Ginger.prototype._launch = function (cb) {
  * @return {[type]}      [description]
  */
 Ginger.prototype.getGateway = function (name) {
+
     return this._gatewayFactory.getGateway(name);
 };
 

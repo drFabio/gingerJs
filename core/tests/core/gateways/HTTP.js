@@ -13,7 +13,17 @@ describe('Gateways HTTP ',function(){
 	before(function(done){
 		ginger=new Ginger();
 		ginger.setAppPath(__dirname+'/../../exampleApplication/');
-		ginger.up(done);
+		var cb=function(err){
+			if(err){
+				done(err);
+				return;
+			}
+			var fixtures = require('pow-mongodb-fixtures').connect('gingerTests');
+			fixtures.clear(function(err) {
+				done(err);
+			});
+		}
+		ginger.up(cb);
 	});
 	describe('HTTP',function(){
 		it('Should send an html response on success',function(done){
@@ -37,8 +47,23 @@ describe('Gateways HTTP ',function(){
 				expect(data.body).to.equal('5');
 				done(err);
 			});
-		})		
+		});
+
 	});
+	describe('CRUD',function(){
+		
+		it.skip('Should created routes for schemas without controller',function(done){
+			var data={'data[email]':'email@email.com',
+					'data[active]':true,
+					'data[name]':'mr someone',
+					'data[password]':'12345'};
+			httpHelper.sendGet('/login/create',data,function(err,data){
+				console.log('Data body');
+				console.log(data);
+				done(err);
+			});
+		});
+	}),
 	after(function(done){
 		ginger.down(done);
 	});

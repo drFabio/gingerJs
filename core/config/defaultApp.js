@@ -17,6 +17,9 @@ module.exports={
 				'uri':'mongodb://localhost:27017/ginger'
 			}
 		},
+		'Authentication':{
+			'model':'authentication'
+		},
 		'Session':{
 			'secret':'Change_this!',
 			'saveUninitialized':true,
@@ -25,8 +28,13 @@ module.exports={
 		'Log':{}
 	},
 	'gateways':{
-		'HTTP':{},
-		'JSONRPC':{'prefix':'JSONRPC'},
+		'HTTP':{
+			'components':['Express','Session','Authentication']
+		},
+		'JSONRPC':{
+			'prefix':'JSONRPC',
+			'components':['Express','Session','Authentication']
+		},
 		'SocketIO':{}
 	},
 	'errors':[
