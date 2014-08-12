@@ -5,6 +5,7 @@ var ERRORS_MAP={
     'NOT_FOUND':'-32601',
     'INVALID_PARAMS':'-32602',
     'INTERNAL':'-32603',
+    'FORBIDDEN':'-32001',
     'SERVER_ERROR':'-32000'//-32000 to -32099 default implementations errors 
 };  
 module.exports = {
@@ -37,7 +38,7 @@ module.exports = {
     _getSendProxy:function(res,id){
         var self=this;
         var oldSend=res.send;
-
+        
         return function(body){
             var statusCode=200;
             if (2 == arguments.length) {

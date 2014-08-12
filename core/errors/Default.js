@@ -6,6 +6,7 @@ module.exports={
 	defaultMessage:'There was an error',
 	
 	init:function(message,data,code){
+		
 		if(message){
 
 			this.message=message;

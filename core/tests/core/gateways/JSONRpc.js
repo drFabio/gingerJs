@@ -71,8 +71,27 @@ describe.only('Gateway JsonRPC',function(){
 
 
 			});
+			it('Should respond to error -32001 on Forbidden',function(done){
+				var postData={'method':'hello',"id":"1234"};
+				httpHelper.sendPost('/JSONRPC/restricted',postData,function(err,data){
+					if(err){
+						done(err);
+						return;
+					}
+					var response=JSON.parse(data.body);
+					expect(response.error).to.exist
+					expect(response.error.code).to.equal('-32001');
+					expect(statusCode).to.equal(200);
+					done(err);
+				});
+
+
+			});
+
 			it('Should respond to error -32602 on Invalid Params');
 			it('Should respond to error -32603 on Internal error');
+
+
 		});
 		after(function(done){
 			ginger.down(done);
