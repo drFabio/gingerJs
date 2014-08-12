@@ -6,7 +6,7 @@ var host='localhost';
 var port=3000;
 var Ginger=require(__dirname+'/../../../Ginger');
 
-describe('Gateway JsonRPC',function(){
+describe.only('Gateway JsonRPC',function(){
 	var httpHelper=require(__dirname+'/../../tools/http')(host,port);
 		before(function(done){
 			ginger=new Ginger();
