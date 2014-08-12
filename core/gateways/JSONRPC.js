@@ -13,6 +13,9 @@ module.exports = {
     _buildRoute: function(controllerName, action, controllerData) {},
     _buildError:function(error,id){
       var code=ERRORS_MAP[error.code];
+      if(!code){
+        code=ERRORS_MAP['SERVER_ERROR'];
+      }
         message=error.message;
         var data=error.data;
         if(!error.data){
@@ -53,10 +56,11 @@ module.exports = {
             var response;
             var result;
             var error;
+    
             /**
              * @todo find better way to identify error
              */
-            if(body.isError===true){
+            if(body.name=='ValidationError' || body.isError===true ){
                 error=body;
             }
             else{

@@ -36,6 +36,7 @@ module.exports={
 		var Schema=this.getSchemaClass(schemaName);
 		var schemaObj=new Schema(data);
 		schemaObj.save(function(err){
+			
 			cb(err,schemaObj);
 		});
 	},

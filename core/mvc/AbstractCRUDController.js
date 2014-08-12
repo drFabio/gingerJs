@@ -6,8 +6,8 @@ module.exports= {
 		this._model.create(data,function(err,data){
 			var response;
 			if(err){
-				response=JSON.stringify(err);
-
+				res.status(200).send(err);
+				return;
 			}
 			else{
 				response=JSON.stringify(data);
@@ -21,8 +21,8 @@ module.exports= {
 		this._model.update(data,search,function(err,data){
 			var response;
 			if(err){
-				response=JSON.stringify(err);
-
+				res.status(200).send(err);
+				return;
 			}
 			else{
 				response=JSON.stringify(data);
@@ -35,7 +35,8 @@ module.exports= {
 		this._model.read(search,function(err,data){
 			var response;
 			if(err){
-				response=JSON.stringify(err);
+				res.status(200).send(err);
+				return;
 
 			}
 			else{
@@ -50,8 +51,8 @@ module.exports= {
 		this._model.destroy(search,function(err,data){
 			var response;
 			if(err){
-				response=JSON.stringify(err);
-
+				res.status(200).send(err);
+				return;
 			}
 			else{
 				response=JSON.stringify(data);
