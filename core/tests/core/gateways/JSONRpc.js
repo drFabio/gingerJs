@@ -6,7 +6,7 @@ var host='localhost';
 var port=3000;
 var Ginger=require(__dirname+'/../../../Ginger');
 
-describe.only('Gateway JsonRPC',function(){
+describe('Gateway JsonRPC',function(){
 	var httpHelper=require(__dirname+'/../../tools/http')(host,port);
 		before(function(done){
 			ginger=new Ginger();
@@ -79,6 +79,7 @@ describe.only('Gateway JsonRPC',function(){
 						return;
 					}
 					var response=JSON.parse(data.body);
+					var statusCode=data.status;
 					expect(response.error).to.exist
 					expect(response.error.code).to.equal('-32001');
 					expect(statusCode).to.equal(200);

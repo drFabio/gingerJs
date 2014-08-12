@@ -1,6 +1,6 @@
 module.exports={
 	getRouteData:function(controller,action){
-		if(controller=='Restricted'){
+		if(controller=='restricted' && action !='login' && action !='logout'){
 			return {
 				middlewares:['EnsureAuthenticated']
 			}	
