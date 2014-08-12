@@ -37,6 +37,7 @@ module.exports= {
             }
             //Remove the json params an make the body as the parasm
             req.body = req.body.params;
+            req.query=req.body;
             res.send=gateway._getSendProxy(res,id);
             next();
         }
