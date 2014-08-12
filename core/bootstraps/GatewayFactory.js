@@ -5,6 +5,8 @@ module.exports={
 	_defaulAppNamespace:'gateways',
 	_configValue:'gateways',
 	_defaultEngineParent:'ginger.gateways.AbstractGateway',
+
+	_defaultAppParent:'ginger.gateways.AbstractGateway',
 	_debugGateway:true,
 	init : function(engine,params) {
 		this._objectList={};

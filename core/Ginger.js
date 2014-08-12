@@ -126,6 +126,9 @@ Ginger.prototype._getFactories = function() {
     this._controllerFactory=this.getBootstrap('ControllerFactory');
     this._modelFactory=this.getBootstrap('ModelFactory');
     this._schemaFactory=this.getBootstrap('SchemaFactory');
+    this._routerHandlerFactory=this.getBootstrap('RouterHandlerFactory');
+
+    
 };
 /**
  * Starts the application
@@ -284,6 +287,10 @@ Ginger.prototype.setAppPath = function (path) {
 Ginger.prototype.getComponent = function (name,params) {
   return  this._componentFactory.create(name,params);
 }
+Ginger.prototype.getRouterHandler = function(name,params) {
+  return  this._routerHandlerFactory.create(name,params);
+
+};
 Ginger.prototype.getBootstrap = function (name, params) {
     var fullName='ginger.bootstraps.'+name;
     if (!this.libs.classFactory.isObjectSet(fullName)) {

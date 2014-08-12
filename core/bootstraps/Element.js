@@ -122,6 +122,7 @@ module.exports={
 		this._addToIndex(name,engineName,POJO,false,true);
 		return engineName;
 	},
+
 	_getParams:function(name,params){
 		 if(!params && this._configValue){
 			var values=this._engine.getConfigValue(this._configValue);
@@ -210,7 +211,7 @@ module.exports={
 			return {name:name,namespace:appName,isApp:true,isEngine:false};
 		}
 		var engineName;
-		if(this.hasDefaultParent){
+		if(this.hasDefaultParent()){
 			engineName=this._defaultEngineNamespace+'.'+name;
 			if(this._classFactory.classFileExists(engineName)){
 				return {name:name,namespace:engineName,isApp:false,isEngine:true};

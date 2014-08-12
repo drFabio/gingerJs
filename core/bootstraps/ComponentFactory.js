@@ -3,7 +3,7 @@ module.exports={
 	_defaultEngineNamespace:'ginger.components',
 	_defaulAppNamespace:'components',
 	_defaultEngineParent:'ginger.components.Default',
-
+	_defaultAppParent:'ginger.components.Default',
 	_configValue:'components',
 	init : function(engine,params) {
 		this._objectList={};
@@ -20,7 +20,7 @@ module.exports={
 		return !!this._objectList[name];
 	},
 	isCancelled:function(name){
-	name=name.toLowerCase();
+		name=name.toLowerCase();
 	   if(this._config && this._config[name] === false) {
 	        return true;
 	    }

@@ -4,7 +4,6 @@ module.exports={
 	_controllerFactory:null,
 	_params:null,
 	_name:null,
-    _defaultMiddlewares:[],
 
 	init: function(engine,params) {
 		this._configParams(engine,params);
@@ -17,7 +16,7 @@ module.exports={
 
 	},
 	_getRouterHandlerComponent:function(){
-		return this._engine.getComponent('RouterHandler');
+		return this._engine.getRouterHandler('Default');
 
 	},
 	_configParams:function(engine,params){
@@ -58,11 +57,14 @@ module.exports={
 		}
 		return 'get';
 	},	
+	_getDefaultMiddlewares:function(){
+		return [];
+	},
 	_addRouteToApp:function(action,url,controllerObj,controllerData){
 		var actionFunction=controllerObj.getActionFunctionByName(action);
 		var routeData=this._routerHandlerComponent.getRouteData(controllerData.name,action);
 		var verb=this._getHTTPVerb(routeData.verb);
-		var middlewares=this._defaultMiddlewares;
+		var middlewares=this._getDefaultMiddlewares();
 		if(routeData.middlewares){
 			middlewares=middlewares.concat(routeData.middlewares);
 		} 
@@ -73,12 +75,15 @@ module.exports={
 			
 		}
 		else{
-			var args=middlewares;
-			args.unshift(url);
+			var args=[url];
+			middlewares.forEach(function(m){
+				var middleware=this._engine.getComponent('middleware.'+m);
+				args.push(middleware.getMiddleware(controllerObj,this));
+			},this);
 			args.push(function(req,res){
 				controllerObj[actionFunction](req,res);
 			});
-			this._app[ver].apply(this._app,args);
+			this._app[verb].apply(this._app,args);
 		}
 	},
 	_initExpress:function(){

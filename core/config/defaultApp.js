@@ -29,11 +29,11 @@ module.exports={
 	},
 	'gateways':{
 		'HTTP':{
-			'components':['Express','Session','Authentication','RouterHandler']
+			'components':['Express','Session','Authentication']
 		},
 		'JSONRPC':{
 			'prefix':'JSONRPC',
-			'components':['Express','Session','Authentication','RouterHandler']
+			'components':['Express','Session','Authentication']
 		},
 		'SocketIO':{}
 	},

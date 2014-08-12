@@ -9,10 +9,6 @@ var ERRORS_MAP={
 };  
 module.exports = {
     parent: 'ginger.gateways.HTTP',
-    _buildUrl: function(name, action) {
-        return '/' + name.replace(/\./g, '/');
-    },
-    _defaultMiddlewares:['ValidJSONRPC'],
     _buildRoute: function(controllerName, action, controllerData) {},
     _buildError:function(error,id){
       var code=ERRORS_MAP[error.code];
@@ -27,53 +23,16 @@ module.exports = {
     _buildResult:function(result,id){
         return {id:id,result:result,"version":"2.0"};
     },
+    _getDefaultMiddlewares:function(){
+        return ['ValidJSONRPC'];
+    },
     _sendError:function(req,res,error,id){
         var response= this._buildError(error,id);
         res.setHeader('Content-Type', 'application/json');
         res.status(200).send(JSON.stringify(response));
     },
-    /**
-     * @TODO Move to a especif middlewar place?s
-     */
-    _validJsonMiddleWare: function(controllerObj) {
-        var self = this;
-        return function(req, res, next) {
-            if (_.isEmpty(req.body) && !_.isEmpty(req.query)) {
-                req.body = req.query;
-            }
-            if (!req.body) {
-                var err=self._engine.getError('InvalidRequest','Missing parameters');
-                self._sendError(req,res,err,id);
-                return;
-            }
-
-            var method = req.body.method;
-            var id = req.body.id;
-            if (typeof(id) == 'undefined') {
-
-                var err=self._engine.getError('InvalidRequest','Missing id');
-                self._sendError(req,res,err,id);
-                return;
-            }
-            if (!method) {
-                var err=self._engine.getError('InvalidRequest','Missing method');
-                self._sendError(req,res,err,id);
-                return;
-            }
-            if (!controllerObj.actionExists(method)) {
-                var err=self._engine.getError('NotFound',method + ' not found');
-                self._sendError(req,res,err,id);
-                return;
-            }
-            //Remove the json params an make the body as the parasm
-            req.body = req.body.params;
-            res.send=self._getSendProxy(res,id);
-            next();
-        }
-    },
     _getRouterHandlerComponent:function(){
-        return this._engine.getComponent('JSONRPCRouteHandler');
-
+        return this._engine.getRouterHandler('JSONRPC');
     },
     _getSendProxy:function(res,id){
         var self=this;
@@ -122,10 +81,5 @@ module.exports = {
           resp=this._buildResult(result,id);
         }
         return JSON.stringify(resp);
-    },
-    _addRouteToApp: function(action, url, controllerObj, controllerData) {
-       var actionFunction=controllerObj.getActionFunctionByName(action);
-        var controllerFunc=controllerObj[actionFunction].bind(controllerObj);
-        this._app.post(url, this._validJsonMiddleWare(controllerObj), controllerFunc);
     }
 }

@@ -1,3 +1,4 @@
+var _=require('lodash');
 module.exports= {
 
  	getMiddleware: function(controllerObj,gateway) {
