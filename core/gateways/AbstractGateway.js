@@ -65,25 +65,28 @@ module.exports={
 		var routeData=this._routerHandlerComponent.getRouteData(controllerData.name,action);
 		var verb=this._getHTTPVerb(routeData.verb);
 		var middlewares=this._getDefaultMiddlewares();
+		var controllerFunction=controllerObj[actionFunction].bind(controllerObj);
 		if(routeData.middlewares){
 			middlewares=middlewares.concat(routeData.middlewares);
 		} 
-		if(middlewares.length==0){
-			this._app[verb](url,function(req,res){
-				controllerObj[actionFunction](req,res);
+		if(middlewares.length==0){	
+			this._app[verb](url,function(req,res){	
+			controllerFunction(req,res);
 			});
 			
 		}
 		else{
-			var args=[url];
+			var argsToAdd=[url];
 			middlewares.forEach(function(m){
 				var middleware=this._engine.getComponent('middleware.'+m);
-				args.push(middleware.getMiddleware(controllerObj,this));
+				argsToAdd.push(middleware.getMiddleware(controllerObj,this));
 			},this);
-			args.push(function(req,res){
-				controllerObj[actionFunction](req,res);
+
+			argsToAdd.push(function(req,res){
+
+				controllerFunction(req,res);
 			});
-			this._app[verb].apply(this._app,args);
+			this._app[verb].apply(this._app,argsToAdd);
 		}
 	},
 	_initExpress:function(){

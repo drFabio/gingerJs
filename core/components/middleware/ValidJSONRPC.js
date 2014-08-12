@@ -1,8 +1,8 @@
 var _=require('lodash');
 module.exports= {
 
- 	getMiddleware: function(controllerObj,gateway) {
- 		var self=this;
+    getMiddleware: function(controllerObj,gateway) {
+        var self=this;
         return function(req, res, next) {
             if (_.isEmpty(req.body) && !_.isEmpty(req.query)) {
                 req.body = req.query;
@@ -15,6 +15,10 @@ module.exports= {
 
             var method = req.body.method;
             var id = req.body.id;
+            req.JSONRPC={
+                method:method,
+                id:id
+            };
             if (typeof(id) == 'undefined') {
 
                 var err=self._engine.getError('InvalidRequest','Missing id');

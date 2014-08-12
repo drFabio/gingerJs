@@ -82,5 +82,34 @@ module.exports = {
           resp=this._buildResult(result,id);
         }
         return JSON.stringify(resp);
+    },
+    _addRouteToApp:function(action,url,controllerObj,controllerData){
+        var routeData=this._routerHandlerComponent.getRouteData(controllerData.name);
+        var verb=this._getHTTPVerb(routeData.verb);
+        var middlewares=this._getDefaultMiddlewares();
+        if(routeData.middlewares){
+            middlewares=middlewares.concat(routeData.middlewares);
+        } 
+        if(middlewares.length==0){  
+            this._app[verb](url,function(req,res){  
+            controllerFunction(req,res);
+            });
+            
+        }
+        else{
+            var argsToAdd=[url];
+            middlewares.forEach(function(m){
+                var middleware=this._engine.getComponent('middleware.'+m);
+                argsToAdd.push(middleware.getMiddleware(controllerObj,this));
+            },this);
+
+            argsToAdd.push(function(req,res){
+
+                var actionFunction=controllerObj.getActionFunctionByName(req.JSONRPC.method);
+                var controllerFunction=controllerObj[actionFunction].bind(controllerObj);
+                controllerFunction(req,res);
+            });
+            this._app[verb].apply(this._app,argsToAdd);
+        }
     }
 }
