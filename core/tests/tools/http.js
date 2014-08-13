@@ -1,6 +1,12 @@
 var http=require('http');
 var querystring=require('querystring');
+var request=require('request');
+request = request.defaults({jar: true})
 module.exports = function(host, port) {
+	var baseURL='http://'+host;
+	if(port){
+		baseURL+=':'+port;
+	}
 	var executRequest=function(){
 
 	}
@@ -10,59 +16,58 @@ module.exports = function(host, port) {
         	if(queryData){
         		url+='?'+queryData;
         	}
-            var options = {
-                host: host,
-                port: port,
-                path: url,
-                method: 'GET'
-            };
+        	url=baseURL+url;
+           
 
-            var req = http.request(options, function(res) {
-                var body='';
-                res.setEncoding('utf8');
 
-                res.on('data', function(chunk) {
-                	body+=chunk;
-                });
-	            res.on('end', function () {
-					cb(null,{'body':body,status:res.statusCode});			
-				});
+            var req = request.get(url, function(err,data) {
+            	if(err){
+            
+            		cb(err);
+            		return;
+            	}
+				cb(null,{'body':data.body,status:data.statusCode});			
             });
-            req.on('error', function(e) {
-                cb(e);
-            });
-            req.end();
+           
         },
-        "sendPost": function(url, data, cb) {
-        	var queryData=querystring.stringify(data);
-        
-            var options = {
-                host: host,
-                port: port,
-                path: url,
-                method: 'POST',
-                headers: {
-					'Content-Type': 'application/x-www-form-urlencoded',
-					'Content-Length': queryData.length
-				}
-            };
+        "sendJSONRpc":function(url,method,id,data,cb){
+             var postData={
+                    'method':method,
+                    'id':id
+                    
+                };
+                for(var x in data){
+                    postData['params'+x]=data[x];
+                }
+				url=baseURL+url;
+				var r=request.post({uri:url,json:true}, function(err,httpResponse,body) {
+					if(err){
+						cb(err);
+						return;
+					}
 
-            var req = http.request(options, function(res) {
-                var body='';
-                res.setEncoding('utf8');
+					if(body.error){
+               			cb(body.error);
+	               		return;
+	               	}
+	               	cb(null,body.result);
 
-                res.on('data', function(chunk) {
-                	body+=chunk;
-                });
-	            res.on('end', function () {
-					cb(null,{'body':body,status:res.statusCode});			
+
 				});
+				r.form(postData);
+        },
+        "sendPost": function(url, postData, cb) {
+
+	     	url=baseURL+url;
+         	var r=request.post(url, function(err,httpResponse,body) {
+				if(err){
+					cb(err);
+					return;
+				}
+				cb(null,{'body':body,status:httpResponse.statusCode});			
+         	
             });
-            req.write(queryData);
-            req.on('error', function(e) {
-                cb(e);
-            });
-            req.end();
+            r.form(postData);
 
         }
     }

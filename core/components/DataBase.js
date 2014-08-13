@@ -9,7 +9,9 @@ module.exports={
 		if(!this._isConnected){
 			this._isConnected=true;
 			this._isClosed=false;
-			mongoose.connect(this._params['mongo'].uri);
+			var mongoConfig=this._params['mongo'];
+			var uri=this._buildConection(mongoConfig.url,mongoConfig.port,mongoConfig.base);
+			mongoose.connect(uri);
 			this._addFunctionToClose();
 
 			// CONNECTION EVENTS
@@ -24,6 +26,10 @@ module.exports={
 		}
 
 	},
+	_buildConection:function(url,port,base){
+		return url+':'+port+'/'+base;
+
+	},
 	getSchemaClass:function(schemaName){
 		return this._schemaFactory.create(schemaName);
 	},
@@ -36,6 +42,7 @@ module.exports={
 		var Schema=this.getSchemaClass(schemaName);
 		var schemaObj=new Schema(data);
 		schemaObj.save(function(err){
+			
 			cb(err,schemaObj);
 		});
 	},

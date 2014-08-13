@@ -5,6 +5,8 @@ module.exports={
 	_defaulAppNamespace:'gateways',
 	_configValue:'gateways',
 	_defaultEngineParent:'ginger.gateways.AbstractGateway',
+
+	_defaultAppParent:'ginger.gateways.AbstractGateway',
 	_debugGateway:true,
 	init : function(engine,params) {
 		this._objectList={};
@@ -31,6 +33,25 @@ module.exports={
 		        return true;
 		    }
 		    return false;
+	},
+	getGatewaysRequiredComponents:function(){
+		var config;
+		var self=this;
+		var required=[];
+		for(var name in this._gatewayConfig){
+			if(this.isGatewayCancelled(name)){
+				continue;
+			}
+			config=this._gatewayConfig[name];
+			if(!config.components){
+				continue;
+			}
+			config.components.forEach(function(c){
+				required.push(c);
+			});
+
+		}
+		return required;
 	},
 	startGateways:function(cb){
 		var asyncFunctions = [];

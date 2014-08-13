@@ -63,7 +63,10 @@ module.exports={
 	 * @return {[type]}         [description]
 	 */
 	_getDirectoryContext:function(dirName,currentContext){
+		if(currentContext==CONTEXT_COMPONENTS){
 
+			return CONTEXT_COMPONENTS;
+		}
 		dirName=dirName.toLowerCase();
 		switch(dirName){
 			case 'modules':
@@ -84,7 +87,6 @@ module.exports={
 				if(currentContext==CONTEXT_COMPONENTS){
 					return CONTEXT_ROUTER;
 				}
-				return false;
 			case 'schemas':
 				if(currentContext==CONTEXT_MODEL){
 					return CONTEXT_SCHEMA;
@@ -136,6 +138,7 @@ module.exports={
 		}
 	},
 	_addRouterHandler:function(path,name,parentNamespace){
+		console.log("ADD O ROUTER HANDLER "+name);
 		this._routerHandlerFactory.setAppClass(name,path,parentNamespace);
 	},
 	_addSchema:function(path,name,parentNamespace){
@@ -230,13 +233,12 @@ module.exports={
 							}
 						}
 						else{
-						
 							//This is a directory we care change the context and keep looping
 							asyncFunctions=asyncFunctions.concat(self._walkDir(false,path,childContext,parentModules));
 						}
 					}
 				}
-				else if(context===CONTEXT_MODEL || childContext===CONTEXT_COMPONENTS || childContext==CONTEXT_ROUTER){
+				else if(context===CONTEXT_MODEL || childContext===CONTEXT_COMPONENTS){
 					asyncFunctions=asyncFunctions.concat(self._walkDir(false,path,childContext,parentModules));
 				}
 				else if(context===CONTEXT_MODULE){

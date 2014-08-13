@@ -2,10 +2,14 @@
     "name": "gingerjs",
     "private": false,
     "author":"Fabio Oliveira Costa <fabio@dexus.com.br>",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A HMVC framework",
     "devDependencies": {
-         "chai":"*"
+         "chai":"*",
+         "pow-mongodb-fixtures":"*",
+         "request":"*",
+         "tough-cookie":"*"
+
      },
     "dependencies": {
         "lodash":"*",
@@ -15,14 +19,18 @@
         "async":"*",
         "olive_oil":"git://github.com/drFabio/OliveOil.git#master",
         "body-parser":"*",
-        "mongoose":"*"
+        "mongoose":"*",
+        "cookie-parser":"*",
+        "express-session":"*",
+        "passport":"*",
+        "passport-local":"*"
     },
     "scripts": {
         "start": "node app.js",
         "debug": "node debug app.js",
         "test":"mocha --timeout 30000  --recursive core/tests/core"
     },
-    "main": "app.js",
+    "main": "index.js",
     "repository": {
         "type": "git",
         "url": "https://github.com/drFabio/gingerJs"

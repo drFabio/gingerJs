@@ -1,3 +1,10 @@
 module.exports={
-	"name":"Example"
+	"name":"Example",
+	'components':{
+	'DataBase':{
+			'mongo':{
+				'uri':'mongodb://localhost:27017/gingerTests'
+			}
+		}
+	}
 }

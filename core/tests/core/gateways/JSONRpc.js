@@ -31,7 +31,7 @@ describe('Gateway JsonRPC',function(){
 				expect(statusCode).to.equal(200);
 				done(err);
 			});
-;
+
 		});
 	
 		it('Should send a view as JSONRPC');
@@ -71,8 +71,64 @@ describe('Gateway JsonRPC',function(){
 
 
 			});
+			it('Should respond to error -32001 on Forbidden',function(done){
+				var postData={'method':'hello',"id":"1234"};
+				httpHelper.sendPost('/JSONRPC/restricted',postData,function(err,data){
+					if(err){
+						done(err);
+						return;
+					}
+					var response=JSON.parse(data.body);
+					var statusCode=data.status;
+					expect(response.error).to.exist
+					expect(response.error.code).to.equal('-32001');
+					expect(statusCode).to.equal(200);
+					done(err);
+				});
+
+
+			});
+
 			it('Should respond to error -32602 on Invalid Params');
 			it('Should respond to error -32603 on Internal error');
+
+
+		});
+		describe('Login',function(){
+			it('Should not be able to login with the wrong password',function(done){
+				var data={
+					'[user]':'notTheRightUser',
+					'[password]':'irrelevant'
+				};
+				var cb=function(err,data){
+					expect(err).to.exist;
+					expect(err.code).to.equal('-32001');
+					done();
+				}
+				httpHelper.sendJSONRpc('/JSONRPC/authentication','login',1234,data,cb);
+			});
+			it('Should be able to login with the right password',function(done){
+				var data={
+					'[user]':'foo',
+					'[password]':'bar'
+				};
+				var cb=function(err,data){
+					expect(err).to.not.exist;
+					expect(data.name).to.equal('johnson');
+
+					expect(data.email).to.equal('johnson@johnson.com');
+					done();
+				}
+				httpHelper.sendJSONRpc('/JSONRPC/authentication','login',1234,data,cb);
+			});
+			it('Should be able to logout',function(done){
+				var cb=function(err,data){
+					expect(err).to.not.exist;
+					expect(data).to.equal('success');
+					done();
+				}
+				httpHelper.sendJSONRpc('/JSONRPC/authentication','logout',1234,{},cb);
+			});
 		});
 		after(function(done){
 			ginger.down(done);

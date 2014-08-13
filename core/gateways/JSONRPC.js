@@ -2,19 +2,21 @@ var _=require('lodash');
 var ERRORS_MAP={
     'PARSE_ERROR':'-32700',
     'INVALID_REQUEST':'-32600',
-    'NOT_FOUND':'-32601',
+    'NOT_FOUND':'-32001',
     'INVALID_PARAMS':'-32602',
     'INTERNAL':'-32603',
+    'FORBIDDEN':'-32001',
+    'METHOD_NOT_FOUND':'-32601',
     'SERVER_ERROR':'-32000'//-32000 to -32099 default implementations errors 
 };  
 module.exports = {
     parent: 'ginger.gateways.HTTP',
-    _buildUrl: function(name, action) {
-        return '/' + name.replace(/\./g, '/');
-    },
     _buildRoute: function(controllerName, action, controllerData) {},
     _buildError:function(error,id){
       var code=ERRORS_MAP[error.code];
+      if(!code){
+        code=ERRORS_MAP['SERVER_ERROR'];
+      }
         message=error.message;
         var data=error.data;
         if(!error.data){
@@ -26,55 +28,21 @@ module.exports = {
     _buildResult:function(result,id){
         return {id:id,result:result,"version":"2.0"};
     },
-    _sendError:function(req,res,error,id,id){
-
+    _getDefaultMiddlewares:function(){
+        return ['ValidJSONRPC'];
+    },
+    _sendError:function(req,res,error,id){
         var response= this._buildError(error,id);
         res.setHeader('Content-Type', 'application/json');
         res.status(200).send(JSON.stringify(response));
     },
-    /**
-     * @TODO Move to a especif middlewar place?s
-     */
-    _validJsonMiddleWare: function(controllerObj) {
-        var self = this;
-        return function(req, res, next) {
-            if (_.isEmpty(req.body) && !_.isEmpty(req.query)) {
-                req.body = req.query;
-            }
-            if (!req.body) {
-                var err=self._engine.getError('InvalidRequest','Missing parameters');
-                self._sendError(req,res,err,id);
-                return;
-            }
-
-            var method = req.body.method;
-            var id = req.body.id;
-            if (typeof(id) == 'undefined') {
-
-                var err=self._engine.getError('InvalidRequest','Missing id');
-                self._sendError(req,res,err,id);
-                return;
-            }
-            if (!method) {
-                var err=self._engine.getError('InvalidRequest','Missing method');
-                self._sendError(req,res,err,id);
-                return;
-            }
-            if (!controllerObj.actionExists(method)) {
-                var err=self._engine.getError('NotFound',method + ' not found');
-                self._sendError(req,res,err,id);
-                return;
-            }
-            //Remove the json params an make the body as the parasm
-            req.body = req.body.params;
-            res.send=self._getSendProxy(res,id);
-            next();
-        }
+    _getRouterHandlerComponent:function(){
+        return this._engine.getRouterHandler('JSONRPC');
     },
     _getSendProxy:function(res,id){
         var self=this;
         var oldSend=res.send;
-
+        
         return function(body){
             var statusCode=200;
             if (2 == arguments.length) {
@@ -89,10 +57,15 @@ module.exports = {
             var response;
             var result;
             var error;
+    
             /**
              * @todo find better way to identify error
              */
-            if(body.isError===true){
+            if(body.name=='ValidationError' ){
+                error=body;
+                error.data=body.errors;
+            }
+            else if(body.isError===true){
                 error=body;
             }
             else{
@@ -103,6 +76,9 @@ module.exports = {
             res.setHeader('Content-Type', 'application/json');
             oldSend.call(res,response);
         }
+    },
+    _getHTTPVerb:function(routeVerb){
+        return 'post';
     },
     buildResponse:function(id,error,result){
         var resp;
@@ -116,9 +92,33 @@ module.exports = {
         }
         return JSON.stringify(resp);
     },
-    _addRouteToApp: function(action, url, controllerObj, controllerData) {
-       var actionFunction=controllerObj.getActionFunctionByName(action);
-        var controllerFunc=controllerObj[actionFunction].bind(controllerObj);
-        this._app.post(url, this._validJsonMiddleWare(controllerObj), controllerFunc);
+    _addRouteToApp:function(action,url,controllerObj,controllerData){
+        var routeData=this._routerHandlerComponent.getRouteData(controllerData.name);
+        var verb=this._getHTTPVerb(routeData.verb);
+        var middlewares=this._getDefaultMiddlewares();
+        if(routeData.middlewares){
+            middlewares=middlewares.concat(routeData.middlewares);
+        } 
+        if(middlewares.length==0){  
+            this._app[verb](url,function(req,res){  
+            controllerFunction(req,res);
+            });
+            
+        }
+        else{
+            var argsToAdd=[url];
+            middlewares.forEach(function(m){
+                var middleware=this._engine.getComponent('middleware.'+m);
+                argsToAdd.push(middleware.getMiddleware(controllerObj,this));
+            },this);
+
+            argsToAdd.push(function(req,res){
+
+                var actionFunction=controllerObj.getActionFunctionByName(req.JSONRPC.method);
+                var controllerFunction=controllerObj[actionFunction].bind(controllerObj);
+                controllerFunction(req,res);
+            });
+            this._app[verb].apply(this._app,argsToAdd);
+        }
     }
 }

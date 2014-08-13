@@ -14,17 +14,30 @@ module.exports={
 		},
 		'DataBase':{
 			'mongo':{
-				'uri':'mongodb://localhost:27017/ginger'
+				//'uri':'mongodb://localhost:27017/gingerTests'
+				'url':'mongodb://localhost',
+				'port':'27017',
+				'base':'ginger'
 			}
 		},
+		'Authentication':{
+			'model':'authentication'
+		},
 		'Session':{
-			'secret':'Change_this!'
+			'secret':'Change_this!',
+			'saveUninitialized':true,
+			'resave':true
 		},
 		'Log':{}
 	},
 	'gateways':{
-		'HTTP':{},
-		'JSONRPC':{'prefix':'JSONRPC'},
+		'HTTP':{
+			'components':['Express','Session','Authentication']
+		},
+		'JSONRPC':{
+			'prefix':'JSONRPC',
+			'components':['Express','Session','Authentication']
+		},
 		'SocketIO':{}
 	},
 	'errors':[
