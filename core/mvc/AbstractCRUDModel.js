@@ -16,6 +16,9 @@ module.exports= {
 	read:function(search,cb){
 		this._dataBase.read(this._schemaName,search,cb)
 	},
+	readOne:function(search,cb){
+		this._dataBase.readOne(this._schemaName,search,cb)
+	},
 	destroy:function(search,cb){
 		this._dataBase.destroy(this._schemaName,search,cb)
 	}

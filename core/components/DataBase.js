@@ -50,6 +50,10 @@ module.exports={
 		var Schema=this.getSchemaClass(schemaName);
 		Schema.find(searchData,cb);
 	},
+	readOne:function(schemaName,searchData,cb){
+		var Schema=this.getSchemaClass(schemaName);
+		Schema.findOne(searchData,cb);
+	},
 	destroy:function(schemaName,searchData,cb){
 		var Schema=this.getSchemaClass(schemaName);
 		Schema.remove(searchData,cb);
