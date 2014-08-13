@@ -94,7 +94,7 @@ describe('Gateway JsonRPC',function(){
 
 
 		});
-		describe.only('Login',function(){
+		describe('Login',function(){
 			it('Should not be able to login with the wrong password',function(done){
 				var data={
 					'[user]':'notTheRightUser',
@@ -102,14 +102,33 @@ describe('Gateway JsonRPC',function(){
 				};
 				var cb=function(err,data){
 					expect(err).to.exist;
-					expext(err.code).to.equal('-32001');
+					expect(err.code).to.equal('-32001');
 					done();
 				}
 				httpHelper.sendJSONRpc('/JSONRPC/authentication','login',1234,data,cb);
 			});
-			it('Should be able to login with the right password');
-			it('Should show a error if there isn\t an authentication modle');
-			it('Should be able to logout');
+			it('Should be able to login with the right password',function(done){
+				var data={
+					'[user]':'foo',
+					'[password]':'bar'
+				};
+				var cb=function(err,data){
+					expect(err).to.not.exist;
+					expect(data.name).to.equal('johnson');
+
+					expect(data.email).to.equal('johnson@johnson.com');
+					done();
+				}
+				httpHelper.sendJSONRpc('/JSONRPC/authentication','login',1234,data,cb);
+			});
+			it('Should be able to logout',function(done){
+				var cb=function(err,data){
+					expect(err).to.not.exist;
+					expect(data).to.equal('success');
+					done();
+				}
+				httpHelper.sendJSONRpc('/JSONRPC/authentication','logout',1234,{},cb);
+			});
 		});
 		after(function(done){
 			ginger.down(done);
