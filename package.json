@@ -6,7 +6,10 @@
     "description": "A HMVC framework",
     "devDependencies": {
          "chai":"*",
-         "pow-mongodb-fixtures":"*"
+         "pow-mongodb-fixtures":"*",
+         "request":"*",
+         "tough-cookie":"*"
+
      },
     "dependencies": {
         "lodash":"*",

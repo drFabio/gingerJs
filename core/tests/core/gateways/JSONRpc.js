@@ -94,6 +94,23 @@ describe('Gateway JsonRPC',function(){
 
 
 		});
+		describe.only('Login',function(){
+			it('Should not be able to login with the wrong password',function(done){
+				var data={
+					'[user]':'notTheRightUser',
+					'[password]':'irrelevant'
+				};
+				var cb=function(err,data){
+					expect(err).to.exist;
+					expext(err.code).to.equal('-32001');
+					done();
+				}
+				httpHelper.sendJSONRpc('/JSONRPC/authentication','login',1234,data,cb);
+			});
+			it('Should be able to login with the right password');
+			it('Should show a error if there isn\t an authentication modle');
+			it('Should be able to logout');
+		});
 		after(function(done){
 			ginger.down(done);
 		});

@@ -4,7 +4,7 @@ module.exports = {
         var self = this;
         return function(req, res, next) {
         	 if (req.isAuthenticated()) { return next(); }
-    	 	var forbidden=self._engine.getError('Forbidden', 'You have to be logged in to access this area ');
+    	 	var forbidden=self._engine.getError('Forbidden', 'You have to be logged in to access this area!');
 
             res.send(forbidden);
             return;
