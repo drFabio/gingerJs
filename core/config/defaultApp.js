@@ -14,7 +14,10 @@ module.exports={
 		},
 		'DataBase':{
 			'mongo':{
-				'uri':'mongodb://localhost:27017/ginger'
+				//'uri':'mongodb://localhost:27017/gingerTests'
+				'url':'mongodb://localhost',
+				'port':'27017',
+				'base':'ginger'
 			}
 		},
 		'Authentication':{

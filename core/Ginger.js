@@ -23,7 +23,7 @@ function Ginger() {
      */
     this._bootstrap = {};
     /**
-     * gateWays to access the application like socketIO,JSONRPC ,HTTP etc
+     * gateWays to access the application like socketIO,JSONRPC ,HTTP etcng
      */
     this._gateways = {};
     /**
@@ -394,7 +394,7 @@ Ginger.prototype.hasSchema = function(name) {
     return this._schemaFactory.hasElement(name);
 };
 Ginger.prototype.getSchema = function(name) {
-  return this._schemaFactory.getElement(name);
+  return this._schemaFactory.create(name);
 };
 /**
  * @param  {String}  name index of the module

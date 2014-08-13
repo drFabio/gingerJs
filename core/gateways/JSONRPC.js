@@ -2,10 +2,11 @@ var _=require('lodash');
 var ERRORS_MAP={
     'PARSE_ERROR':'-32700',
     'INVALID_REQUEST':'-32600',
-    'NOT_FOUND':'-32601',
+    'NOT_FOUND':'-32001',
     'INVALID_PARAMS':'-32602',
     'INTERNAL':'-32603',
     'FORBIDDEN':'-32001',
+    'METHOD_NOT_FOUND':'-32601',
     'SERVER_ERROR':'-32000'//-32000 to -32099 default implementations errors 
 };  
 module.exports = {
@@ -60,7 +61,11 @@ module.exports = {
             /**
              * @todo find better way to identify error
              */
-            if(body.name=='ValidationError' || body.isError===true ){
+            if(body.name=='ValidationError' ){
+                error=body;
+                error.data=body.errors;
+            }
+            else if(body.isError===true){
                 error=body;
             }
             else{

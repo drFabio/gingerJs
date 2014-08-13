@@ -31,7 +31,7 @@ module.exports= {
                 return;
             }
             if (!controllerObj.actionExists(method)) {
-                var err=self._engine.getError('NotFound',method + ' not found');
+                var err=self._engine.getError('MethodNotFound',method + ' not found');
                 gateway._sendError(req,res,err,id);
                 return;
             }
