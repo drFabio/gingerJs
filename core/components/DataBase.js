@@ -69,26 +69,56 @@ module.exports={
 			}
 		}
 	},
-	readRawById:function(schemaName,id,cb){
+	readRawById:function(schemaName,id,fields,cb){
+		if(!cb){
+			cb=fields;
+			fields=null;
+		}
+		else if(!fields){
+			fields=null;
+		}
 		var Schema=this.getSchemaClass(schemaName);
-		Schema.findById(id,cb);
+		Schema.findById(id,fields,cb);
 	},
-	readRaw:function(schemaName,searchData,cb){
+	readRaw:function(schemaName,searchData,fields,cb){
+		if(!cb){
+			cb=fields;
+			fields=null;
+		}
+		else if(!fields){
+			fields=null;
+		}
 		var Schema=this.getSchemaClass(schemaName);
-		Schema.find(searchData,cb);
+		Schema.find(searchData,fields,cb);
 	},
-	readRawOne:function(schemaName,searchData,cb){
+	readRawOne:function(schemaName,searchData,fields,cb){
+		if(!cb){
+			cb=fields;
+			fields=null;
+		}
+		else if(!fields){
+			fields=null;
+		}
 		var Schema=this.getSchemaClass(schemaName);
-		Schema.findOne(searchData,cb);
+		Schema.findOne(searchData,fields,cb);
 	},
-	readById:function(schemaName,id,cb){
-		this.readRawById(schemaName,id,this._getPlainObjectCb(cb));
+	readById:function(schemaName,id,fields,cb){
+		if(!cb){
+			cb=fields;
+		}
+		this.readRawById(schemaName,id,fields,this._getPlainObjectCb(cb));
 	},
-	read:function(schemaName,searchData,cb){
-		this.readRaw(schemaName,searchData,this._getPlainObjectCb(cb));
+	read:function(schemaName,searchData,fields,cb){
+		if(!cb){
+			cb=fields;
+		}
+		this.readRaw(schemaName,searchData,fields,this._getPlainObjectCb(cb));
 	},
-	readOne:function(schemaName,searchData,cb){
-		this.readRawOne(schemaName,searchData,this._getPlainObjectCb(cb));
+	readOne:function(schemaName,searchData,fields,cb){
+		if(!cb){
+			cb=fields;
+		}
+		this.readRawOne(schemaName,searchData,fields,this._getPlainObjectCb(cb));
 	},
 	destroy:function(schemaName,searchData,cb){
 		var Schema=this.getSchemaClass(schemaName);

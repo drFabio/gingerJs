@@ -30,8 +30,9 @@ module.exports= {
 	},
 	readAction:function(req,res){
 		var search=req.query.search;
+		var fields=req.query.fields;
 		var self=this;
-		this._model.read(search,this._getSendResponse(req,res));
+		this._model.read(search,fields,this._getSendResponse(req,res));
 
 	},
 	destroyAction:function(req,res){
