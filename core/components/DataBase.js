@@ -1,4 +1,5 @@
 var mongoose=require('mongoose');
+var _=require('lodash');
 module.exports={
 	_isConnected:false,
 	_isClosed:false,
@@ -39,20 +40,41 @@ module.exports={
 		Schema.findOneAndUpdate(searchData,data,cb)
 	},
 	create:function(schemaName,data,cb){
+		var self=this;
 		var Schema=this.getSchemaClass(schemaName);
 		var schemaObj=new Schema(data);
 		schemaObj.save(function(err){
-			
-			cb(err,schemaObj);
+			self._getPlainObjectCb(cb)(err,schemaObj);
 		});
+	},
+	_getPlainObjectCb:function(cb){
+		return function(err,data){
+			if(err){
+				return cb(err);
+			}
+			if(_.isEmpty(data)){
+				return cb(null,data);
+			}
+			if(Array.isArray(data)){
+				var ret=[];
+				data.forEach(function(d){
+					ret.push(d.toObject());
+				});
+				cb(null,ret);
+			}
+
+			if(data.toObject){
+				return cb(null,data.toObject());
+			}
+		}
 	},
 	read:function(schemaName,searchData,cb){
 		var Schema=this.getSchemaClass(schemaName);
-		Schema.find(searchData,cb);
+		Schema.find(searchData,this._getPlainObjectCb(cb));
 	},
 	readOne:function(schemaName,searchData,cb){
 		var Schema=this.getSchemaClass(schemaName);
-		Schema.findOne(searchData,cb);
+		Schema.findOne(searchData,this._getPlainObjectCb(cb));
 	},
 	destroy:function(schemaName,searchData,cb){
 		var Schema=this.getSchemaClass(schemaName);
