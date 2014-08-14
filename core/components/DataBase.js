@@ -82,13 +82,13 @@ module.exports={
 		Schema.findOne(searchData,cb);
 	},
 	readById:function(schemaName,id,cb){
-		this.readRawById(id,this._getPlainObjectCb(cb));
+		this.readRawById(schemaName,id,this._getPlainObjectCb(cb));
 	},
 	read:function(schemaName,searchData,cb){
-		this.readRaw(searchData,this._getPlainObjectCb(cb));
+		this.readRaw(schemaName,searchData,this._getPlainObjectCb(cb));
 	},
 	readOne:function(schemaName,searchData,cb){
-		this.readRawOne(searchData,this._getPlainObjectCb(cb));
+		this.readRawOne(schemaName,searchData,this._getPlainObjectCb(cb));
 	},
 	destroy:function(schemaName,searchData,cb){
 		var Schema=this.getSchemaClass(schemaName);
