@@ -69,51 +69,38 @@ module.exports={
 			}
 		}
 	},
-	readRawById:function(schemaName,id,fields,cb){
+	readRawById:function(schemaName,id,cb,fields){
 		var Schema=this.getSchemaClass(schemaName);
 		var search=Schema.findById(id);
-		this._executeSearch(search,fields,cb);
+		this._executeSearch(search,cb,fields);
 	},
-	readRaw:function(schemaName,searchData,fields,cb){
+	readRaw:function(schemaName,searchData,cb,fields){
 		var Schema=this.getSchemaClass(schemaName);
 		var search=Schema.find(searchData);
-		this._executeSearch(search,fields,cb);
+		this._executeSearch(search,cb,fields);
 	},
-	readRawOne:function(schemaName,searchData,fields,cb){
+	readRawOne:function(schemaName,searchData,cb,fields){
 		var Schema=this.getSchemaClass(schemaName);
 		var search=Schema.findOne(searchData);
-		this._executeSearch(search,fields,cb);
+		this._executeSearch(search,cb,fields);
 	},
-	_executeSearch:function(search,fields,cb){
-		if(!cb){
-			cb=fields;
-			fields=null;
-		}
+	_executeSearch:function(search,cb,fields){
 		if(!!fields){
 			search.select(fields);
 		}
 		search.exec(cb);
 	},
-	readById:function(schemaName,id,fields,cb){
-		if(!cb){
-			cb=fields;
-			fields=null;
-		}
-		this.readRawById(schemaName,id,fields,this._getPlainObjectCb(cb));
+	readById:function(schemaName,id,cb,fields){
+		
+		this.readRawById(schemaName,id,this._getPlainObjectCb(cb),fields);
 	},
-	read:function(schemaName,searchData,fields,cb){
-		if(!cb){
-			cb=fields;
-			fields=null;
-		}
-		this.readRaw(schemaName,searchData,fields,this._getPlainObjectCb(cb));
+	read:function(schemaName,searchData,cb,fields){
+		
+		this.readRaw(schemaName,searchData,this._getPlainObjectCb(cb),fields);
 	},
-	readOne:function(schemaName,searchData,fields,cb){
-		if(!cb){
-			cb=fields;
-			fields=null;
-		}
-		this.readRawOne(schemaName,searchData,fields,this._getPlainObjectCb(cb));
+	readOne:function(schemaName,searchData,cb,fields){
+		
+		this.readRawOne(schemaName,searchData,this._getPlainObjectCb(cb),fields);
 	},
 	destroy:function(schemaName,searchData,cb){
 		var Schema=this.getSchemaClass(schemaName);
