@@ -20,7 +20,7 @@ module.exports= {
 		}
 	},
 	_sendResponse:function(req,res,err,data){
-		this._getSendResponse(req,ress)(err,data);
+		this._getSendResponse(req,res)(err,data);
 	},
 	updateAction:function(req,res){
 		var search=req.query.search;
