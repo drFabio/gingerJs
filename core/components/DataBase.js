@@ -39,6 +39,7 @@ module.exports={
 
 		Schema.findOneAndUpdate(searchData,data,cb)
 	},
+
 	create:function(schemaName,data,cb){
 		var self=this;
 		var Schema=this.getSchemaClass(schemaName);

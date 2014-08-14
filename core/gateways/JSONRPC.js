@@ -57,20 +57,21 @@ module.exports = {
             var response;
             var result;
             var error;
-    
-            /**
-             * @todo find better way to identify error
-             */
-            if(body.name=='ValidationError' ){
-                error=body;
-                error.data=body.errors;
-            }
-            else if(body.isError===true){
-                error=body;
-            }
-            else{
-                result= body;
+            if(body){
+                /**
+                 * @todo find better way to identify error
+                 */
+                if(body.name=='ValidationError' ){
+                    error=body;
+                    error.data=body.errors;
+                }
+                else if(body.isError===true){
+                    error=body;
+                }
+                else{
+                    result= body;
 
+                }
             }
            response=self.buildResponse(id,error,result);
             res.setHeader('Content-Type', 'application/json');
