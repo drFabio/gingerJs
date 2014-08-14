@@ -70,53 +70,48 @@ module.exports={
 		}
 	},
 	readRawById:function(schemaName,id,fields,cb){
-		if(!cb){
-			cb=fields;
-			fields=null;
-		}
-		else if(!fields){
-			fields=null;
-		}
 		var Schema=this.getSchemaClass(schemaName);
-		Schema.findById(id,fields,cb);
+		var search=Schema.findById(id);
+		this._executeSearch(search,fields,cb);
 	},
 	readRaw:function(schemaName,searchData,fields,cb){
-		if(!cb){
-			cb=fields;
-			fields=null;
-		}
-		else if(!fields){
-			fields=null;
-		}
 		var Schema=this.getSchemaClass(schemaName);
-		Schema.find(searchData,fields,cb);
+		var search=Schema.find(searchData);
+		this._executeSearch(search,fields,cb);
 	},
 	readRawOne:function(schemaName,searchData,fields,cb){
+		var Schema=this.getSchemaClass(schemaName);
+		var search=Schema.findOne(searchData);
+		this._executeSearch(search,fields,cb);
+	},
+	_executeSearch:function(search,fields,cb){
 		if(!cb){
 			cb=fields;
 			fields=null;
 		}
-		else if(!fields){
-			fields=null;
+		if(!!fields){
+			search.select(fields);
 		}
-		var Schema=this.getSchemaClass(schemaName);
-		Schema.findOne(searchData,fields,cb);
+		search.exec(cb);
 	},
 	readById:function(schemaName,id,fields,cb){
 		if(!cb){
 			cb=fields;
+			fields=null;
 		}
 		this.readRawById(schemaName,id,fields,this._getPlainObjectCb(cb));
 	},
 	read:function(schemaName,searchData,fields,cb){
 		if(!cb){
 			cb=fields;
+			fields=null;
 		}
 		this.readRaw(schemaName,searchData,fields,this._getPlainObjectCb(cb));
 	},
 	readOne:function(schemaName,searchData,fields,cb){
 		if(!cb){
 			cb=fields;
+			fields=null;
 		}
 		this.readRawOne(schemaName,searchData,fields,this._getPlainObjectCb(cb));
 	},
