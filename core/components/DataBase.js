@@ -69,13 +69,26 @@ module.exports={
 			}
 		}
 	},
-	read:function(schemaName,searchData,cb){
+	readRawById:function(schemaName,id,cb){
 		var Schema=this.getSchemaClass(schemaName);
-		Schema.find(searchData,this._getPlainObjectCb(cb));
+		Schema.findById(id,cb);
+	},
+	readRaw:function(schemaName,searchData,cb){
+		var Schema=this.getSchemaClass(schemaName);
+		Schema.find(searchData,cb);
+	},
+	readRawOne:function(schemaName,searchData,cb){
+		var Schema=this.getSchemaClass(schemaName);
+		Schema.findOne(searchData,cb);
+	},
+	readById:function(schemaName,id,cb){
+		this.readRawById(id,this._getPlainObjectCb(cb));
+	},
+	read:function(schemaName,searchData,cb){
+		this.readRaw(searchData,this._getPlainObjectCb(cb));
 	},
 	readOne:function(schemaName,searchData,cb){
-		var Schema=this.getSchemaClass(schemaName);
-		Schema.findOne(searchData,this._getPlainObjectCb(cb));
+		this.readRawOne(searchData,this._getPlainObjectCb(cb));
 	},
 	destroy:function(schemaName,searchData,cb){
 		var Schema=this.getSchemaClass(schemaName);
