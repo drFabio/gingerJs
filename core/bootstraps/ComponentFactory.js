@@ -1,3 +1,6 @@
+/**
+ * @todo clean code especially config part
+ */
 module.exports={
 	parent:'ginger.bootstraps.Element',
 	_defaultEngineNamespace:'ginger.components',
@@ -15,13 +18,22 @@ module.exports={
 			this._config[x.toLowerCase()]=config[x];
 		}
 	},
+	_getConfig:function(){
+		var config=this._engine.getConfigValue('components');
+		var retConfig={}
+		for(var x in config){
+			retConfig[x.toLowerCase()]=config[x];
+		}
+		return retConfig;
+	},
 	isLoaded:function(name){
 		name=name.toLowerCase();
 		return !!this._objectList[name];
 	},
 	isCancelled:function(name){
 		name=name.toLowerCase();
-	   if(this._config && this._config[name] === false) {
+		var config=this._getConfig();
+	   if(config && config[name] === false) {
 	        return true;
 	    }
 	    return false;
