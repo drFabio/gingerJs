@@ -1,4 +1,3 @@
-var passport = require('passport');
 module.exports = {
     getMiddleware: function(controllerObj, gateway) {
         var self = this;
