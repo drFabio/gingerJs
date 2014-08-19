@@ -65,6 +65,7 @@ module.exports={
 		var routeData=this._routerHandlerComponent.getRouteData(controllerData.name,action);
 		var verb=this._getHTTPVerb(routeData.verb);
 		var middlewares=this._getDefaultMiddlewares();
+		var self=this;
 		var controllerFunction=controllerObj[actionFunction].bind(controllerObj);
 		if(routeData.middlewares){
 			middlewares=middlewares.concat(routeData.middlewares);
@@ -79,7 +80,7 @@ module.exports={
 			var argsToAdd=[url];
 			middlewares.forEach(function(m){
 				var middleware=this._engine.getComponent('middleware.'+m);
-				argsToAdd.push(middleware.getMiddleware(controllerObj,this));
+				argsToAdd.push(middleware.getMiddleware(controllerObj,self,controllerData));
 			},this);
 
 			argsToAdd.push(function(req,res){

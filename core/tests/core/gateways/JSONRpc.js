@@ -95,6 +95,14 @@ describe('Gateway JsonRPC',function(){
 
 		});
 		describe('Login',function(){
+			it('Should not have access to a area without the propper login',function(done){
+				var cb=function(err,data){
+					expect(err).to.exist;
+					console.log(err);
+					done();
+				}
+				httpHelper.sendJSONRpc('/JSONRPC/restricted','hello',1234,{},cb);
+			});
 			it('Should not be able to login with the wrong password',function(done){
 				var data={
 					'[user]':'notTheRightUser',
@@ -120,6 +128,14 @@ describe('Gateway JsonRPC',function(){
 					done();
 				}
 				httpHelper.sendJSONRpc('/JSONRPC/authentication','login',1234,data,cb);
+			});
+			it('Should not  access to a area with the propper login',function(done){
+				var cb=function(err,data){
+					expect(err).to.not.exist;
+					expect(data).to.equal('Acessing restricted page');
+					done();
+				}
+				httpHelper.sendJSONRpc('/JSONRPC/restricted','hello',1234,{},cb);
 			});
 			it('Should be able to logout',function(done){
 				var cb=function(err,data){

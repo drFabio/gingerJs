@@ -13,8 +13,11 @@ module.exports= {
 		this._dataBase.update(this._schemaName,data,search,cb)
 
 	},
-	read:function(search,cb){
-		this._dataBase.read(this._schemaName,search,cb)
+	read:function(search,cb,fields){
+		this._dataBase.read(this._schemaName,search,cb,fields)
+	},
+	readOne:function(search,cb,fields){
+		this._dataBase.readOne(this._schemaName,search,cb,fields)
 	},
 	destroy:function(search,cb){
 		this._dataBase.destroy(this._schemaName,search,cb)

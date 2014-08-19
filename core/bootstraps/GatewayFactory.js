@@ -11,7 +11,10 @@ module.exports={
 	init : function(engine,params) {
 		this._objectList={};
 		this._super(engine,params);
-		this._gatewayConfig=this._engine._config.gateways;
+
+	},
+	_getConfig:function(){
+		return this._engine.getConfigValue('gateways');
 	},
 	create:function(name,params){
 		
@@ -29,7 +32,8 @@ module.exports={
 		return !!this._objectList[name];
 	},
 	isGatewayCancelled:function(name){
-		   if(this._gatewayConfig && this._gatewayConfig[name] === false) {
+		var gatewayConfig=this._getConfig();
+		   if(gatewayConfig && gatewayConfig[name] === false) {
 		        return true;
 		    }
 		    return false;
@@ -38,11 +42,13 @@ module.exports={
 		var config;
 		var self=this;
 		var required=[];
-		for(var name in this._gatewayConfig){
+		var gatewayConfig=this._getConfig();
+
+		for(var name in gatewayConfig){
 			if(this.isGatewayCancelled(name)){
 				continue;
 			}
-			config=this._gatewayConfig[name];
+			config=gatewayConfig[name];
 			if(!config.components){
 				continue;
 			}
@@ -56,6 +62,8 @@ module.exports={
 	startGateways:function(cb){
 		var asyncFunctions = [];
 		var self = this;
+		var gatewayConfig=this._getConfig();
+
 		var funcToCreateGateway = function (name, params) {
 
 			return function (asyncCb) {
@@ -71,11 +79,11 @@ module.exports={
 		}
 
 		//Looping trough each gateway to create it assynchronously
-		for (var name in this._gatewayConfig ) {
+		for (var name in gatewayConfig ) {
 			if (this.isGatewayLoaded(name) || this.isGatewayCancelled(name)) {
 				continue;
 			}
-			asyncFunctions.push(funcToCreateGateway(name, this._gatewayConfig[name]));
+			asyncFunctions.push(funcToCreateGateway(name, gatewayConfig[name]));
 		}
 		async.series(asyncFunctions, function (err, res) {
 			cb(err);

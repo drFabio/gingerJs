@@ -29,7 +29,7 @@ module.exports = {
         return {id:id,result:result,"version":"2.0"};
     },
     _getDefaultMiddlewares:function(){
-        return ['ValidJSONRPC'];
+        return ['ValidJSONRPC','JSONMiddlewareProxy'];
     },
     _sendError:function(req,res,error,id){
         var response= this._buildError(error,id);
@@ -57,20 +57,21 @@ module.exports = {
             var response;
             var result;
             var error;
-    
-            /**
-             * @todo find better way to identify error
-             */
-            if(body.name=='ValidationError' ){
-                error=body;
-                error.data=body.errors;
-            }
-            else if(body.isError===true){
-                error=body;
-            }
-            else{
-                result= body;
+            if(body){
+                /**
+                 * @todo find better way to identify error
+                 */
+                if(body.name=='ValidationError' ){
+                    error=body;
+                    error.data=body.errors;
+                }
+                else if(body.isError===true){
+                    error=body;
+                }
+                else{
+                    result= body;
 
+                }
             }
            response=self.buildResponse(id,error,result);
             res.setHeader('Content-Type', 'application/json');
@@ -80,6 +81,11 @@ module.exports = {
     _getHTTPVerb:function(routeVerb){
         return 'post';
     },
+    _handleControllerRoutes:function(controllerData){
+        var controllerObj=this._createController(controllerData);
+        this._handleControllerAction(null,controllerObj,controllerData);
+    },
+
     buildResponse:function(id,error,result){
         var resp;
         if(error){
@@ -93,32 +99,23 @@ module.exports = {
         return JSON.stringify(resp);
     },
     _addRouteToApp:function(action,url,controllerObj,controllerData){
-        var routeData=this._routerHandlerComponent.getRouteData(controllerData.name);
-        var verb=this._getHTTPVerb(routeData.verb);
+        var verb='post';//always post
+        //Just the default middlewares the remaining are handled by the proxy middleware
         var middlewares=this._getDefaultMiddlewares();
-        if(routeData.middlewares){
-            middlewares=middlewares.concat(routeData.middlewares);
-        } 
-        if(middlewares.length==0){  
-            this._app[verb](url,function(req,res){  
+    
+        var argsToAdd=[url];
+        var self=this;
+        middlewares.forEach(function(m){
+            var middleware=this._engine.getComponent('middleware.'+m);
+            argsToAdd.push(middleware.getMiddleware(controllerObj,self,controllerData));
+        },this);
+
+        argsToAdd.push(function(req,res){
+            var actionFunction=controllerObj.getActionFunctionByName(req.JSONRPC.method);
+            var controllerFunction=controllerObj[actionFunction].bind(controllerObj);
             controllerFunction(req,res);
-            });
-            
-        }
-        else{
-            var argsToAdd=[url];
-            middlewares.forEach(function(m){
-                var middleware=this._engine.getComponent('middleware.'+m);
-                argsToAdd.push(middleware.getMiddleware(controllerObj,this));
-            },this);
-
-            argsToAdd.push(function(req,res){
-
-                var actionFunction=controllerObj.getActionFunctionByName(req.JSONRPC.method);
-                var controllerFunction=controllerObj[actionFunction].bind(controllerObj);
-                controllerFunction(req,res);
-            });
-            this._app[verb].apply(this._app,argsToAdd);
-        }
+        });
+        this._app[verb].apply(this._app,argsToAdd);
+    
     }
 }
