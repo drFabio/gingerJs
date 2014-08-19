@@ -21,9 +21,9 @@ module.exports={
 		return this._schemaMap[name.toLowerCase()];
 	},
 	_addModelToSchema:function(originalName,model){
-		name=originalName.toLowerCase();
+		name=originalName.toLowerCase()
 		if(!this._schemaMap[name]){
-			this._schemaMap[name]=mongoose.model(originalName,model,originalName);
+			this._schemaMap[name]=mongoose.model(name,model,originalName);
 			this._addClearSchemaFunction(name);
 		}
 	},
