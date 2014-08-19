@@ -13,17 +13,17 @@ module.exports={
 
 	},
 
-	_getPojo:function(path,defaultParent){
+	_getPojo:function(path,defautlParent){
 		var pojo=require(path)(Schema);
 		return pojo;
 	},
 	create:function(name){	
 		return this._schemaMap[name.toLowerCase()];
 	},
-	_addModelToSchema:function(name,model){
-		name=name.toLowerCase();
+	_addModelToSchema:function(originalName,model){
+		name=originalName.toLowerCase();
 		if(!this._schemaMap[name]){
-			this._schemaMap[name]=mongoose.model(name,model);
+			this._schemaMap[name]=mongoose.model(model,{collection:originalName});
 			this._addClearSchemaFunction(name);
 		}
 	},
