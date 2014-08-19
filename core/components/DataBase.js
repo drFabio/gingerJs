@@ -69,10 +69,10 @@ module.exports={
 			}
 		}
 	},
-	readRawById:function(schemaName,id,cb,fields){
+	readRawById:function(schemaName,id,cb,fields,options){
 		var Schema=this.getSchemaClass(schemaName);
 		var search=Schema.findById(id);
-		this._executeSearch(search,cb,fields);
+		this._executeSearch(search,cb,fields,options);
 	},
 	readRaw:function(schemaName,searchData,cb,fields){
 		var Schema=this.getSchemaClass(schemaName);
@@ -84,9 +84,12 @@ module.exports={
 		var search=Schema.findOne(searchData);
 		this._executeSearch(search,cb,fields);
 	},
-	_executeSearch:function(search,cb,fields){
+	_executeSearch:function(search,cb,fields,options){
 		if(!!fields){
 			search.select(fields);
+		}
+		if(!!options){
+			search.setOptions(options);
 		}
 		search.exec(cb);
 	},
@@ -94,9 +97,9 @@ module.exports={
 		
 		this.readRawById(schemaName,id,this._getPlainObjectCb(cb),fields);
 	},
-	read:function(schemaName,searchData,cb,fields){
+	read:function(schemaName,searchData,cb,fields,options){
 		
-		this.readRaw(schemaName,searchData,this._getPlainObjectCb(cb),fields);
+		this.readRaw(schemaName,searchData,this._getPlainObjectCb(cb),fields,options);
 	},
 	readOne:function(schemaName,searchData,cb,fields){
 		
