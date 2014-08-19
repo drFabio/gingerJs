@@ -23,7 +23,7 @@ module.exports={
 	_addModelToSchema:function(originalName,model){
 		name=originalName.toLowerCase();
 		if(!this._schemaMap[name]){
-			this._schemaMap[name]=mongoose.model(model,{collection:originalName});
+			this._schemaMap[name]=mongoose.model(originalName,model,originalName);
 			this._addClearSchemaFunction(name);
 		}
 	},
