@@ -74,10 +74,10 @@ module.exports={
 		var search=Schema.findById(id);
 		this._executeSearch(search,cb,fields,options);
 	},
-	readRaw:function(schemaName,searchData,cb,fields){
+	readRaw:function(schemaName,searchData,cb,fields,options){
 		var Schema=this.getSchemaClass(schemaName);
 		var search=Schema.find(searchData);
-		this._executeSearch(search,cb,fields);
+		this._executeSearch(search,cb,fields,options);
 	},
 	readRawOne:function(schemaName,searchData,cb,fields){
 		var Schema=this.getSchemaClass(schemaName);
