@@ -6,22 +6,6 @@ module.exports= {
 		var self=this;
 		this._model.create(data,this._getSendResponse(req,res));
 	},
-	_getSendResponse:function(req,res){
-		return function(err,data){
-			var response;
-			if(err){
-				res.status(200).send(err);
-				return;
-			}
-			else{
-				response=JSON.stringify(data);
-			}
-			res.status(200).send(response);
-		}
-	},
-	_sendResponse:function(req,res,err,data){
-		this._getSendResponse(req,res)(err,data);
-	},
 	updateAction:function(req,res){
 		var search=req.query.search;
 		var data=req.query.data;

@@ -40,5 +40,21 @@ module.exports={
 	},
 	actionExists:function(plainName){
 		return !!this._actions[plainName];
-	}
+	},
+	_getSendResponse:function(req,res){
+		return function(err,data){
+			var response;
+			if(err){
+				res.status(200).send(err);
+				return;
+			}
+			else{
+				response=JSON.stringify(data);
+			}
+			res.status(200).send(response);
+		}
+	},
+	_sendResponse:function(req,res,err,data){
+		this._getSendResponse(req,res)(err,data);
+	},
 };
