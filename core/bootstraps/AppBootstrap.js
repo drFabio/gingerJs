@@ -139,6 +139,9 @@ module.exports={
 		this._routerHandlerFactory.setAppClass(name,path,parentNamespace);
 	},
 	_addSchema:function(path,name,parentNamespace){
+		if(name.indexOf('.')=='0'){
+			return;
+		}
 		this._schemaFactory.setAppClass(name,path,parentNamespace);
 
 	},
