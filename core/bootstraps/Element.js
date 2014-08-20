@@ -56,7 +56,7 @@ module.exports={
 					defaultParent=engineName;
 				}
 			}
-			else if(this._defaultAppParent){
+			if(!defaultParent && !!this._defaultAppParent){
 				defaultParent=this._defaultAppParent;
 			}
 		}
