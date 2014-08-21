@@ -19,6 +19,9 @@ module.exports= {
 	readOne:function(search,cb,fields){
 		this._dataBase.readOne(this._schemaName,search,cb,fields)
 	},
+	readById:function(id,cb,fields){
+		this._dataBase.readById(this._schemaName,id,cb,fields)
+	},
 	destroy:function(search,cb){
 		this._dataBase.destroy(this._schemaName,search,cb)
 	}
