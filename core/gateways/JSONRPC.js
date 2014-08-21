@@ -70,6 +70,9 @@ module.exports = {
                 }
                 else{
                     result= body;
+                    if(!result){
+                        result=true;
+                    }
 
                 }
             }
