@@ -42,6 +42,9 @@ module.exports= {
                 method:method
             },
             req.query=req.body;
+            if(!req.query){
+                req.query={};
+            }
             res.send=gateway._getSendProxy(res,id);
             next();
         }
