@@ -23,6 +23,12 @@ module.exports= {
 		var search=req.query.search;
 		var self=this;
 		this._model.destroy(search,this._getSendResponse(req,res));
+	},
+	readByIdAction:function(req,res){
+		var id=req.query.id;
+		var fields=req.query.fields;
+		this._model.readById(id,this._getSendResponse(req,res),fields);
+
 	}
 	
 };
