@@ -30,7 +30,7 @@ module.exports= {
 	},
 	list:function(search,limit,page,fields,cb){
 		search=this._buildSearch(search);
-		this._dataBase.list(this._schemaName,limit,page,fields,cb);
+		this._dataBase.list(this._schemaName,search,limit,page,fields,cb);
 	},
 	_buildSearch:function(search){
 		return search;

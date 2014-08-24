@@ -86,10 +86,10 @@ module.exports={
 		this._executeSearch(search,cb,fields);
 	},
 	_executeSearch:function(search,cb,fields,options){
-		if(!!fields){
+		if(!_.isEmpty(fields)){
 			search.select(fields);
 		}
-		if(!!options){
+		if(!_.isEmpty(options)){
 			search.setOptions(options);
 		}
 		search.exec(cb);
@@ -144,7 +144,7 @@ module.exports={
 			options.skip=limit*page;
 		}
 
-		this.read(schemaName,searchData,cb,fields,options);
+		this.read(schemaName,search,cb,fields,options);
 	}
 	 /**
 	  * 	listForSchema:function(schemaName,search,limit,page,language,cb){
