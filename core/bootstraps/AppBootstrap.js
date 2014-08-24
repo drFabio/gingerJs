@@ -139,9 +139,7 @@ module.exports={
 		this._routerHandlerFactory.setAppClass(name,path,parentNamespace);
 	},
 	_addSchema:function(path,name,parentNamespace){
-		if(name.indexOf('.')=='0'){
-			return;
-		}
+		
 		this._schemaFactory.setAppClass(name,path,parentNamespace);
 
 	},
@@ -215,6 +213,9 @@ module.exports={
 			}
 		}
 		list.forEach(function(item){
+			if(name.indexOf('.')=='0'){
+				return;
+			}
 			path=dir+'/'+item;
 			var stat=fs.statSync(path);
 			if( stat.isDirectory()){

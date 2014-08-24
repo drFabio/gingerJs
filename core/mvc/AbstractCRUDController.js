@@ -28,7 +28,14 @@ module.exports= {
 		var id=req.query.id;
 		var fields=req.query.fields;
 		this._model.readById(id,this._getSendResponse(req,res),fields);
-
+	},
+	listAction:function(req,res){
+		var cb=this._getSendResponse(req,res);
+		var limit=req.query.limit;
+		var page=req.query.page;
+		var search=req.query.search;
+		var fields=req.query.fields;
+		this._model.list(search,limit,page,fields,cb);
 	}
 	
 };

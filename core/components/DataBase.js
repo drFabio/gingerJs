@@ -1,5 +1,6 @@
 var mongoose=require('mongoose');
 var _=require('lodash');
+var DEFAULT_LIST_LIMIT=5;
 module.exports={
 	_isConnected:false,
 	_isClosed:false,
@@ -126,5 +127,60 @@ module.exports={
 			this._isClosed=true;
 		}
 	
+	},
+	list:function(schemaName,search,limit,page,fields,cb){
+		if(parseInt(limit)===-1){
+			limit=false;
+		}
+		else if(!limit || typeof(limit)=='undefined'){
+			limit=DEFAULT_LIST_LIMIT;
+		}
+		if(!page || typeof(page)=='undefined'){
+			page=0;
+		}
+		var options={sort:{name:1}};
+		if(limit){
+			options.limit=limit;
+			options.skip=limit*page;
+		}
+
+		this.read(schemaName,searchData,cb,fields,options);
 	}
+	 /**
+	  * 	listForSchema:function(schemaName,search,limit,page,language,cb){
+		if(parseInt(limit)===-1){
+			limit=false;
+		}
+		else if(!limit || typeof(limit)=='undefined'){
+			limit=DEFAULT_LIST_LIMIT;
+		}
+		if(!language){
+			language=this.getDefaultLanguage();
+		}
+		if(!page || typeof(page)=='undefined'){
+			page=0;
+		}
+		if(!search){
+			search={};
+		}
+		var options={sort:{name:1}};
+		if(limit){
+			options.limit=limit;
+			options.skip=limit*page;
+		}
+
+		var searchData={enabled:true,language:language};
+		if(search.string){
+			searchData.name=new RegExp('^'+search.string+'.*', "i");
+		}
+		var searchOptions=search.options;
+		if(searchOptions){
+			searchData=_.extend(searchData,searchOptions);
+		}
+
+
+		this._dataBase.read(schemaName,searchData,cb,null,options);
+
+	}
+	  */
 }
