@@ -92,7 +92,26 @@ module.exports={
 		if(!_.isEmpty(options)){
 			search.setOptions(options);
 		}
-		search.exec(cb);
+		var self=this;
+		var searchCb=function(err,data){
+			if(err){
+				if(err.name=='CastError'){
+					 /**
+					  * @todo move this to a error element
+					  */
+					err=self._engine.getError('NotFound');
+				}
+				cb(err);
+				return;
+			}
+			if(!data){
+				err=self._engine.getError('NotFound');
+
+			}
+			cb(err,data);
+		}
+		search.exec(searchCb);
+
 	},
 	readById:function(schemaName,id,cb,fields){
 		
@@ -111,8 +130,8 @@ module.exports={
 		Schema.remove(searchData,cb);
 	},
 	_addFunctionToClose:function(){
-	 	var self=this;
-	 	var func=function(cb){
+	 	var self=this
+ 	 	var func=function(cb){
 	 		self.end();
 	 		cb();
 	 	}
