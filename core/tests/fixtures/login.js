@@ -16,6 +16,14 @@ module.exports= {
 			'password':'foo',
 			'_id':id()
 
+		},
+		'user3':{
+			'email':'yetanothermail@gmail.com',
+			'active':true,
+			'name':'someone',
+			'password':'foo',
+			'_id':id()
+
 		}
 	}
 };

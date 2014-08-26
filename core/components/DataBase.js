@@ -188,42 +188,14 @@ module.exports={
 		}
 
 		this.read(schemaName,search,cb,fields,options);
+	},
+	count:function(schemaName,search,cb){
+		var Schema=this.getSchemaClass(schemaName);
+		if(search){
+			Schema.count(search,cb);
+		}
+		else{
+			Schema.count(cb);
+		}
 	}
-	 /**
-	  * 	listForSchema:function(schemaName,search,limit,page,language,cb){
-		if(parseInt(limit)===-1){
-			limit=false;
-		}
-		else if(!limit || typeof(limit)=='undefined'){
-			limit=DEFAULT_LIST_LIMIT;
-		}
-		if(!language){
-			language=this.getDefaultLanguage();
-		}
-		if(!page || typeof(page)=='undefined'){
-			page=0;
-		}
-		if(!search){
-			search={};
-		}
-		var options={sort:{name:1}};
-		if(limit){
-			options.limit=limit;
-			options.skip=limit*page;
-		}
-
-		var searchData={enabled:true,language:language};
-		if(search.string){
-			searchData.name=new RegExp('^'+search.string+'.*', "i");
-		}
-		var searchOptions=search.options;
-		if(searchOptions){
-			searchData=_.extend(searchData,searchOptions);
-		}
-
-
-		this._dataBase.read(schemaName,searchData,cb,null,options);
-
-	}
-	  */
 }

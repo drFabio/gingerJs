@@ -186,7 +186,39 @@ describe('Component database',function(){
 
 		});
 	});
+	describe('Count',function(){
+		it('Should be able to get the total data of a collection',function(done){
+			var cb=function(err,data){
+				expect(err).to.not.exist;
+				expect(data).to.equal(Object.keys(fixtureData.login).length);
+				done();
+			}
+			databaseComponent.count('login',null,cb);
+		});
+		it('Should be able to get the total data of a collection passing a search param',function(done){
+			var activeTotal=0;
+			for(var x in fixtureData.login){
+				if(fixtureData.login[x].active){
+					activeTotal++;
+				}
+			}
+			var cb=function(err,data){
+				expect(err).to.not.exist;
+				expect(data).to.equal(activeTotal);
+				done();
+			}
+			databaseComponent.count('login',{'active':true},cb)	
+		});
+	});
 	describe('List',function(){
+		it('Should be able to list all data limitless');
+		it('Should be able to paginate the data');
+		it('Should be able to set which fields are wanted');
+		it('Should be able to set which fields are not wanted with -1');
+		it('Should be able to set which fields are not wanted with \'-1\'');
+		it('Should be able to set which fields are not wanted with false');
+		it('Should be able to set which fields are not wanted with \'false\'');
+		it('Should be able to sort data');
 	});
 	describe('Destroy ',function(){
 		it('Should to delete a component by params');
