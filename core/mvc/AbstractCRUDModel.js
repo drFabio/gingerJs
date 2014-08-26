@@ -1,3 +1,4 @@
+var _=require('lodash');
 module.exports= {
 	parent:'ginger.mvc.AbstractModel',
 	init: function(engine) {
@@ -34,7 +35,27 @@ module.exports= {
 		search=this._buildSearch(search);
 		this._dataBase.list(this._schemaName,search,limit,page,fields,cb);
 	},
+	save:function(data,cb){
+		if(this._hasPrimaryKey(data)){
+			var pk=this._getPrimaryKey(data);
+			delete data[this._getPrimaryKeyField()];
+			this.updateById(pk,data,cb);
+		}
+		else{
+			this.create(data,cb);
+		}
+	},
 	_buildSearch:function(search){
 		return search;
+	},
+	_getPrimaryKeyField:function(){
+		return '_id';
+	},
+	_getPrimaryKey:function(data){
+		return data[this._getPrimaryKeyField()];
+	},
+	_hasPrimaryKey:function(data){
+		var pk=this._getPrimaryKey(data);
+		return !_.isEmpty(pk);
 	}
 };

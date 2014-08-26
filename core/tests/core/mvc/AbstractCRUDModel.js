@@ -1,0 +1,71 @@
+var databaseComponent;
+var createObjectId = require('pow-mongodb-fixtures').createObjectId;
+var _=require('lodash');
+var async=require('async');
+var Utils=require('../../tools/utils');
+var utils=new Utils();
+var expect=utils.expect;
+var should = utils.should;
+var fixtures=utils.fixtures;
+var fixtureData;
+describe('MVC',function(){
+	var ginger;
+	//Initializing the app by path first
+	before(function(done){
+		var cb=function(err){
+			if(err){
+				done(err);
+				return;
+			}
+			ginger=utils.getServer();
+			databaseComponent=ginger.getComponent('DataBase');
+			fixtureData=utils.getFixtureData('login');
+			done();
+
+		}
+		utils.initServer(cb);
+	});
+	describe('AbstractCRUDModel',function(){
+		describe('Save',function(){
+			before(function(done){
+				fixtures.clearAndLoad(fixtureData,done);
+			});
+			it('Should save a new data if no primary key is specified',function(done){
+				var data={
+					'email':'theEmail@gmail.com',
+					'active':true,
+					'name':'theName',
+					'password':'thePassword',
+				};
+				var model=ginger.getModel('login');
+				model.save(data,function(err,saveData){
+					for(var x in data){
+						expect(saveData[x]).to.equal(data[x]);
+					}
+					expect(saveData._id).to.exist;
+					done();
+				});
+			});
+			it('Should  update data the existing data if the primary key is specified',function(done){
+				var model=ginger.getModel('login');
+				var updateData=fixtureData.login.user1;
+				var newEmail='newEmailForSaved@gmail.com';
+				var data={
+					'email':newEmail,
+					'_id':updateData._id.toString()
+				};
+				var sameKeys=['active','name','password'];
+				model.save(data,function(err,saveData){
+					sameKeys.forEach(function(s){
+						expect(saveData[s]).to.equal(updateData[s]);
+					});
+
+					expect(saveData._id.toString()).to.equal(updateData._id.toString());
+					expect(saveData.email).to.equal(newEmail);
+					done();
+				});
+			});
+			
+		});
+	});
+});

@@ -186,8 +186,6 @@ describe('Component database',function(){
 
 		});
 	});
-	describe('Save',function(){
-	});
 	describe('List',function(){
 	});
 	describe('Destroy ',function(){

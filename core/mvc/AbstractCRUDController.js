@@ -1,6 +1,10 @@
 module.exports= {
 	parent:'ginger.mvc.AbstractController',
-
+	saveAction:function(req,res){
+		var data=req.query.data;
+		var self=this;
+		this._model.save(data,this._getSendResponse(req,res));
+	},
 	createAction:function(req,res){
 		var data=req.query.data;
 		var self=this;
