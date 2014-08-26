@@ -12,7 +12,9 @@ module.exports= {
 	update:function(data,search,cb){
 		search=this._buildSearch(search);
 		this._dataBase.update(this._schemaName,data,search,cb)
-
+	},
+	updateById:function(id,data,cb){
+		this._dataBase.updateById(this._schemaName,id,data,cb)
 	},
 	read:function(search,cb,fields){
 		this._dataBase.read(this._schemaName,search,cb,fields)

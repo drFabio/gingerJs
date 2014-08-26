@@ -12,6 +12,12 @@ module.exports= {
 		var self=this;
 		this._model.update(data,search,this._getSendResponse(req,res));
 	},
+	updateById:function(req,res){
+		var id=req.query.id;
+		var data=req.query.data;
+		var self=this;
+		this._model.updateById(id,data,this._getSendResponse(req,res));
+	},
 	readAction:function(req,res){
 		var search=req.query.search;
 		var fields=req.query.fields;
