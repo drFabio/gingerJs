@@ -76,6 +76,9 @@ module.exports = {
 
                 }
             }
+            else{
+                result=true;
+            }
            response=self.buildResponse(id,error,result);
             res.setHeader('Content-Type', 'application/json');
             oldSend.call(res,response);
