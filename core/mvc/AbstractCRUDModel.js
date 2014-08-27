@@ -31,12 +31,12 @@ module.exports= {
 		search=this._buildSearch(search);
 		this._dataBase.destroy(this._schemaName,search,cb)
 	},
-	_getDefaultOptions:function(options){
+	_getDefaultOptions:function(){
 		return {}
 	},
 	_getDefaultOptionsIfEmpty:function(options){
-		if(!options){
-			return {};
+		if(_.isEmpty(options)){
+			return this._getDefaultOptions();
 		}
 		return options;
 	},
