@@ -31,9 +31,19 @@ module.exports= {
 		search=this._buildSearch(search);
 		this._dataBase.destroy(this._schemaName,search,cb)
 	},
-	list:function(search,limit,page,fields,cb){
+	_getDefaultOptions:function(options){
+		return {}
+	},
+	_getDefaultOptionsIfEmpty:function(options){
+		if(!options){
+			return {};
+		}
+		return options;
+	},
+	list:function(search,limit,page,fields,options,cb){
 		search=this._buildSearch(search);
-		this._dataBase.list(this._schemaName,search,limit,page,fields,cb);
+		options=this._getDefaultOptionsIfEmpty(options);
+		this._dataBase.list(this._schemaName,search,limit,page,fields,options,cb);
 	},
 	save:function(data,cb){
 		if(this._hasPrimaryKey(data)){

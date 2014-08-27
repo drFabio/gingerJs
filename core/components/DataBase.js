@@ -1,5 +1,6 @@
 var mongoose=require('mongoose');
 var _=require('lodash');
+var async=require('async');
 var DEFAULT_LIST_LIMIT=5;
 module.exports={
 	_isConnected:false,
@@ -171,7 +172,7 @@ module.exports={
 		}
 	
 	},
-	list:function(schemaName,search,limit,page,fields,cb){
+	list:function(schemaName,search,limit,page,fields,options,cb){
 		if(parseInt(limit)===-1){
 			limit=false;
 		}
@@ -181,13 +182,26 @@ module.exports={
 		if(!page || typeof(page)=='undefined'){
 			page=0;
 		}
-		var options={sort:{name:1}};
 		if(limit){
+			if(!options){
+				options={};
+			}
 			options.limit=limit;
 			options.skip=limit*page;
 		}
+		var self=this;
+		var read=function(asyncCb){
+			self.read(schemaName,search,asyncCb,fields,options);
 
-		this.read(schemaName,search,cb,fields,options);
+		};
+		var total=function(asyncCb){
+			self.count(schemaName,search,asyncCb);
+		};
+		async.parallel({
+			'total':total,
+			'results':read
+		},cb);
+
 	},
 	count:function(schemaName,search,cb){
 		var Schema=this.getSchemaClass(schemaName);

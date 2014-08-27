@@ -45,7 +45,8 @@ module.exports= {
 		var page=req.query.page;
 		var search=req.query.search;
 		var fields=req.query.fields;
-		this._model.list(search,limit,page,fields,cb);
+		var options=req.query.options;
+		this._model.list(search,limit,page,fields,options,cb);
 	}
 	
 };

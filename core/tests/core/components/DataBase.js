@@ -7,7 +7,8 @@ var utils=new Utils();
 var expect=utils.expect;
 var should = utils.should;
 var fixtures=utils.fixtures;
-var fixtureData;
+var fixtureData=utils.getFixtureData('login');
+var totalLoginData=Object.keys(fixtureData.login).length;
 
 describe('Component database',function(){
 	var ginger;
@@ -20,7 +21,6 @@ describe('Component database',function(){
 			}
 			ginger=utils.getServer();
 			databaseComponent=ginger.getComponent('DataBase');
-			fixtureData=utils.getFixtureData('login');
 			done();
 
 		}
@@ -187,10 +187,13 @@ describe('Component database',function(){
 		});
 	});
 	describe('Count',function(){
+		before(function(done){
+			fixtures.clearAndLoad(fixtureData,done);
+		});
 		it('Should be able to get the total data of a collection',function(done){
 			var cb=function(err,data){
 				expect(err).to.not.exist;
-				expect(data).to.equal(Object.keys(fixtureData.login).length);
+				expect(data).to.equal(totalLoginData);
 				done();
 			}
 			databaseComponent.count('login',null,cb);
@@ -210,9 +213,28 @@ describe('Component database',function(){
 			databaseComponent.count('login',{'active':true},cb)	
 		});
 	});
-	describe('List',function(){
-		it('Should be able to list all data limitless');
-		it('Should be able to paginate the data');
+	describe.only('List',function(){
+		before(function(done){
+			fixtures.clearAndLoad(fixtureData,done);
+		});
+		it('Should be able to list all data limitless',function(done){
+			var cb=function(err,data){
+				expect(err).to.not.exist;
+				expect(data.total).to.equal(totalLoginData);
+				expect(data.results.length).to.equal(totalLoginData);
+				done();
+			}
+			databaseComponent.list('login',null,-1,null,null,null,cb);
+		});
+		it('Should be able to paginate the data',function(done){
+			var cb=function(err,data){
+				expect(err).to.not.exist;
+				expect(data.total).to.equal(5);
+				expect(data.results.length).to.equal(totalLoginData);
+				done();
+			}
+			databaseComponent.list('login',null,5,null,null,null,cb);
+		});
 		it('Should be able to set which fields are wanted');
 		it('Should be able to set which fields are not wanted with -1');
 		it('Should be able to set which fields are not wanted with \'-1\'');
