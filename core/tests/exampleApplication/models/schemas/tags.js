@@ -12,23 +12,23 @@ module.exports={
 	getValidators:function(){
 		return {
 				active: 'toBoolean',
-				numHits: [//Several validators
-					'isBase64',
-					'isInt'
-				],
-				name: 'isAlpha',
-				url: [
-					{
-						'isUrl': [//A validator with parameters 
-									{
-										'protocols': [
-											'http',
-											'https'
-										]
-									}
-						]
-					}
-				]
+				numHits:'isInt',
+				name: ['isAlpha','isLowercase'],
+				url: {
+					'isURL': [//A validator with parameters 
+						{
+							'protocols': [
+								'http',
+								'https',
+
+							],
+							require_tld: true, 
+							require_protocol: true,
+							allow_underscores: false
+						}	
+					]
+				}
+				
 		}
 	}
 }

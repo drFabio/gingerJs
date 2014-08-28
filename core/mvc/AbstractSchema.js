@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var validator=require('validator');
+var _=require('lodash');
 module.exports={
 
 	_engine:null,
@@ -21,6 +22,9 @@ module.exports={
 	},
 	validateField:function(field,value){
 		var validationFunc=this._getRuleForField(field);
+		if(!validationFunc){
+			return true;
+		}
 		return validationFunc(value);
 	},
 	_getRuleForField:function(field){
@@ -29,20 +33,63 @@ module.exports={
 			return this._buildRule(ruleData);
 
 		}
-		return {};
+		return null;
 	},
 	_buildRule:function(ruleData){
+		var self=this;
 		var type=typeof(ruleData);
+		if(Array.isArray(ruleData)){
+			var funcsToExecute=[];
+			ruleData.forEach(function(r){
+				funcsToExecute.push(self._buildRule(r));
+			});
+			return function(value){
+				var success=true;
+				for(var x in funcsToExecute){
+					if(!funcsToExecute[x](value)){
+						success=false;
+						break;
+					}
+				}
+				return success;
+			}
+		};
 		switch(type) {
 			case 'string':
 				return function(value){
 					return validator[ruleData](value);
 				}				
 			break;
+			case 'object':{
+				return function(value){
+					var success=true;
+					for(var ruleName in ruleData){
+						var params=_.clone(ruleData[ruleName]);
+						params.unshift(value);
+						if(!validator[ruleName].apply(validator,params)){
+							success=false;
+							break;
+						}
+					}
+					return success;
+
+					
+				}
+			}
+
 		}
 	},
 	validate:function(input){
-
+		var errorMap={};
+		for(var field in input){
+			if(!this.validateField(field,input[field])){
+				errorMap[field]=true;
+			}
+		}
+		if(!_.isEmpty(errorMap)){
+			throw this._engine.getError('Validation','The following fields did not pass validation',errorMap);
+		}
+		return true;
 	},
 	isAuto:function(){
 		return !!this._isAuto;
