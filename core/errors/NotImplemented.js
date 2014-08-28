@@ -1,5 +1,5 @@
 module.exports={
-	defaultMessage:'Resource not found',
+	defaultMessage:'Not implemented',
 	code:'NOT_IMPLEMENTED'
 
 }

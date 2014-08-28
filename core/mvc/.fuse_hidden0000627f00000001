@@ -1,0 +1,71 @@
+var mongoose = require('mongoose');
+var validator=require('validator');
+module.exports={
+
+	_engine:null,
+	_isAuto:true,
+	schemaName:null,
+	schemaDefinitions:null,
+	init: function(engine) {
+		this._engine=engine;
+		this._name=this.schemaName;
+		this._isLoaded=false;
+		this._dbObject=null;
+		this._schemaDefinitions=this.schemaDefinitions;
+		this._validatorRules=this.getValidators();
+	},
+	setup:function(){
+		if(!this._isLoaded){
+			this._createDatabaseObject();
+		}
+	},
+	validate:function(field,value){
+		var validationFunc=this._getRuleForField(field);
+	},y
+	_getRuleForField:function(field){
+		if(this._validatorRules[field]){
+
+		}
+		return {};
+	},
+	_buildRule:function(ruleData){
+		var type=typeof(ruleData);
+		switch(type) {
+			case 'string':
+				return function(value){
+					return validator[ruleData](value);
+				}				
+			break;
+		}
+	},
+	validateField:function(input){
+
+	},
+	isAuto:function(){
+		return !!this._isAuto;
+	},
+	getStructure:function(schema){
+		throw this._engine.getError('NotImplemented','Get structure is not implemented for '+this._name+' pleas implement it');
+	},
+	getValidators:function(){
+		return {};
+	},
+	getDbObject:function(){
+		return this._dbObject;
+	},
+	_createDatabaseObject:function(){
+		var structure=this.getStructure(this._schemaDefinitions);
+		this._dbObject= mongoose.model(this._name,structure,this._name);
+		this._isLoaded=true;
+		this._engine.addFunctionToCloseQueue(this.clearSchema.bind(this));
+
+	},
+	clearSchema:function(cb){
+		if(this._isLoaded){
+			delete mongoose.models[this._name];
+			delete mongoose.modelSchemas[this._name];
+		}
+		this._isLoaded=false;
+		cb();
+	}
+};
