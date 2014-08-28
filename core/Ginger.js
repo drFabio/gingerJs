@@ -92,7 +92,6 @@ Ginger.prototype._getNamespaceFunctionFromEngineConfig = function(name,configVal
     }
 };
 Ginger.prototype._setClassFactory = function(first_argument) {
-    console.log('NO SET CLASS FACTORY!');
     var OliveOil=require('olive_oil')();
     var oliveOil=new OliveOil(null);
     this.libs.classFactory=oliveOil;

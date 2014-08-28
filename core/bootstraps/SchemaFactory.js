@@ -85,10 +85,10 @@ module.exports={
 	 */
 	_isSchemaAutoCrud:function(name){
 		var saneName=this._sanitizeName(name);
-		if(_.isEmpty(this._schemaMap[name].behaviour)){
+		if(_.isEmpty(this._schemaMap[saneName].behaviour)){
 			return true;
 		}
-		return  this._schemaMap[name].behaviour.auto===false;
+		return  this._schemaMap[saneName].behaviour.auto!==false;
 	},
 	getAutoCrudSchemas:function(){
 		return Object.keys(this._autoCruds);
