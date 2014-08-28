@@ -49,7 +49,7 @@ module.exports={
 				return;
 			}
 			else{
-				response=JSON.stringify(data);
+				response=data;
 			}
 			res.status(200).send(response);
 		}

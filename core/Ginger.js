@@ -31,6 +31,7 @@ function Ginger() {
      * @type {Object}
      */
     this._config = {};
+    this._isSetup=false;
     /**
      * Just a map of all modules that we have
      * @type {Object}
@@ -58,6 +59,8 @@ function Ginger() {
      * Config relative to the engine initialization, you should be able to overwrite it but should not
      */
     this._engineConfig;
+
+
 }
 
 /**
@@ -136,9 +139,6 @@ Ginger.prototype._getFactories = function() {
  * @return {[type]}        [description]
  */
 Ginger.prototype.up = function (cb) {
-    this._setConfigAsDefaultIfNoneSet();
-    this._setupEngineConfig();
-    this._setClassFactory();
     var self=this;
     var startAppCb = function (err) {
         if (err) {
@@ -171,7 +171,26 @@ Ginger.prototype.up = function (cb) {
         self._getFactories();
         self._setupApp(startAppCb);
     };
-    this._setDefaultNamespaces(setNamespacesCb);
+    this._setup(setNamespacesCb);
+};
+Ginger.prototype._setup = function(cb) {
+
+    if(this._isSetup){
+        cb();
+        return;
+    }
+    var self=this;
+    this._setConfigAsDefaultIfNoneSet();
+    this._setupEngineConfig();
+    this._setClassFactory();
+    this._setDefaultNamespaces(function(err){
+        if(err){
+            cb(err);
+            return;
+        }
+        self._isSetup=true;
+        cb();
+    });
 };
 Ginger.prototype.setPreLaunchFunction = function (prelaunchFunction) {
     this._preLaunchFunction = prelaunchFunction;

@@ -1,6 +1,10 @@
 module.exports= {
 	parent:'ginger.mvc.AbstractController',
-
+	saveAction:function(req,res){
+		var data=req.query.data;
+		var self=this;
+		this._model.save(data,this._getSendResponse(req,res));
+	},
 	createAction:function(req,res){
 		var data=req.query.data;
 		var self=this;
@@ -11,6 +15,12 @@ module.exports= {
 		var data=req.query.data;
 		var self=this;
 		this._model.update(data,search,this._getSendResponse(req,res));
+	},
+	updateById:function(req,res){
+		var id=req.query.id;
+		var data=req.query.data;
+		var self=this;
+		this._model.updateById(id,data,this._getSendResponse(req,res));
 	},
 	readAction:function(req,res){
 		var search=req.query.search;
@@ -23,6 +33,20 @@ module.exports= {
 		var search=req.query.search;
 		var self=this;
 		this._model.destroy(search,this._getSendResponse(req,res));
+	},
+	readByIdAction:function(req,res){
+		var id=req.query.id;
+		var fields=req.query.fields;
+		this._model.readById(id,this._getSendResponse(req,res),fields);
+	},
+	listAction:function(req,res){
+		var cb=this._getSendResponse(req,res);
+		var limit=req.query.limit;
+		var page=req.query.page;
+		var search=req.query.search;
+		var fields=req.query.fields;
+		var options=req.query.options;
+		this._model.list(search,limit,page,fields,options,cb);
 	}
 	
 };

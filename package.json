@@ -23,7 +23,8 @@
         "cookie-parser":"*",
         "express-session":"*",
         "passport":"*",
-        "passport-local":"*"
+        "passport-local":"*",
+        "validator":"*"
     },
     "scripts": {
         "start": "node app.js",

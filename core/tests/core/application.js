@@ -1,4 +1,13 @@
-
+/**
+ * @todo  move to a fixture data
+ * @type {Object}
+ */
+var fixtureData={
+	'schemas':{
+		'auto':['sum.sum','login','categories'],
+		'nonAuto':['posts','tags']
+	}
+};
 describe('Application',function(){
 	var chai=require('chai');
 	chai.config.includeStack =true;
@@ -90,17 +99,36 @@ describe('Application',function(){
 		});
 		describe('Schema',function(){
 			it('Should have loaded all schemas',function(){
-				expect(ginger.hasSchema('login')).to.be.true;
-				expect(ginger.hasSchema('sum.sum')).to.be.true;
+				fixtureData.schemas.auto.forEach(function(s){
+					expect(ginger.hasSchema(s)).to.be.true;
+				});
+				fixtureData.schemas.nonAuto.forEach(function(s){
+					expect(ginger.hasSchema(s)).to.be.true;
+				});
 
 			});
 			it('Should have created non existend models for automatic cruds',function(){
-				expect(ginger.hasModel('login')).to.be.true;
+				fixtureData.schemas.auto.forEach(function(s){
+					expect(ginger.hasModel(s)).to.be.true;
+				});
+
+			});
+			it('Should not have created non existents models for non automatic cruds',function(){
+				fixtureData.schemas.nonAuto.forEach(function(s){
+					console.log(s+' '+ginger.hasModel(s));
+					expect(ginger.hasModel(s)).to.be.false;
+				});
+
 			});
 			it('Should have created non existent controllers for automatic cruds',function(){
-				var controllerFactory=ginger.getBootstrap('ControllerFactory');
-
-				expect(ginger.hasController('login')).to.be.true;
+				fixtureData.schemas.auto.forEach(function(s){
+					expect(ginger.hasController(s)).to.be.true;
+				});
+			});
+			it('Should not have created non existent controllers for non automatic cruds',function(){
+				fixtureData.schemas.nonAuto.forEach(function(s){
+					expect(ginger.hasController(s)).to.be.false;
+				});
 			});
 			it('Should have promoted existent controllers to CRUD controllers',function(){
 				var controllerFactory=ginger.getBootstrap('ControllerFactory');

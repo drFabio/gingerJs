@@ -70,8 +70,14 @@ module.exports = {
                 }
                 else{
                     result= body;
+                    if(!result){
+                        result=true;
+                    }
 
                 }
+            }
+            else{
+                result=true;
             }
            response=self.buildResponse(id,error,result);
             res.setHeader('Content-Type', 'application/json');
@@ -102,7 +108,6 @@ module.exports = {
         var verb='post';//always post
         //Just the default middlewares the remaining are handled by the proxy middleware
         var middlewares=this._getDefaultMiddlewares();
-    
         var argsToAdd=[url];
         var self=this;
         middlewares.forEach(function(m){
