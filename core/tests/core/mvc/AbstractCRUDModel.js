@@ -68,4 +68,7 @@ describe('MVC',function(){
 			
 		});
 	});
+	after(function(done){
+		utils.endServer(done);
+	});
 });

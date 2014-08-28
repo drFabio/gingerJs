@@ -34,7 +34,7 @@ module.exports={
 
 	},
 	getSchemaClass:function(schemaName){
-		return this._schemaFactory.create(schemaName);
+		return this._schemaFactory.createSchema(schemaName);
 	},
 	update:function(schemaName,data,searchData,cb){
 		var Schema=this.getSchemaClass(schemaName);

@@ -40,6 +40,9 @@ module.exports={
 		return appNamespace;
 
 	},
+	_sanitizeName:function(name){
+		return name.toLowerCase();
+	},
 	setAppClass:function(name,path,parentNamespace,fullNamespace){
 
 		var defaultParent=null;
@@ -82,7 +85,7 @@ module.exports={
 		return {namespace:namespace,isApp:!!isApp,isEngine:!!isEngine,pojo:POJO,name:name,isIndexed:true};
 	},
 	_setClassOnNamespace:function(namespace,POJO){
-		this._classFactory.setClassPojo(namespace,POJO);
+		this._classFactory.setClassPojo(namespace,POJO,true);
 	},
 	_addToIndex:function(name,namespace,POJO,isApp,isEngine){
 		if(this._indexedByName){

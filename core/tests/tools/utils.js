@@ -30,6 +30,7 @@ function Utils(){
 	};
 	this.createObjectId=powDbFixtures.createObjectId;
 	this.chai=chai;
+	this.appDir=appDir;
 	this.expect=expect;
 	this.should=should;
 	this.fixtures=fixtures;

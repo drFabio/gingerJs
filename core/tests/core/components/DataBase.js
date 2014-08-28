@@ -135,9 +135,15 @@ describe('Component database',function(){
 			});
 			it('Should update multiple instances if they all match',function(done){
 				var name=fixtureData.login.user1.name;
+				var sizeOfName=0;
+				for(var k in fixtureData.login){
+					if(fixtureData.login[k].name==name){
+						sizeOfName++;
+					}
+				}
 				var newName='new name';
 				var cb=function(err,data){
-					expect(data).to.equal(2);
+					expect(data).to.equal(sizeOfName);
 					done();
 				}
 				databaseComponent.update('login',{'name':newName},{'name':name},cb);
@@ -213,7 +219,7 @@ describe('Component database',function(){
 			databaseComponent.count('login',{'active':true},cb)	
 		});
 	});
-	describe.only('List',function(){
+	describe('List',function(){
 		before(function(done){
 			fixtures.clearAndLoad(fixtureData,done);
 		});
@@ -229,8 +235,8 @@ describe('Component database',function(){
 		it('Should be able to paginate the data',function(done){
 			var cb=function(err,data){
 				expect(err).to.not.exist;
-				expect(data.total).to.equal(5);
-				expect(data.results.length).to.equal(totalLoginData);
+				expect(data.total).to.equal(totalLoginData);
+				expect(data.results.length).to.equal(5);
 				done();
 			}
 			databaseComponent.list('login',null,5,null,null,null,cb);
