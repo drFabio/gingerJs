@@ -21,8 +21,7 @@ module.exports={
 			POJO.schemaDefinitions=Schema;
 		}
 		if(POJO._isAuto!==false){
-			var namespacedName=this._buildNamespace(namespace,name);
-			this._autoCruds.push(namespacedName);
+			this._autoCruds.push(name);
 			this._autoCruds=_.uniq(this._autoCruds);
 		}
 		return this._super(name,namespace,POJO,isApp,isEngine);
@@ -32,12 +31,13 @@ module.exports={
 		return schema.getDbObject();
 	},
 	getAutoCrudSchemas:function(){
+
 		return this._autoCruds;
 	},
 	initializeSchemas:function(){
 		var functionsToExecute=[];
 		for(var x in this._nameMap){
-			var obj=this.create(name);
+			var obj=this.create(x);
 			obj.setup();
 		}
 	}

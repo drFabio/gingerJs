@@ -115,7 +115,6 @@ describe('Application',function(){
 			});
 			it('Should not have created non existents models for non automatic cruds',function(){
 				fixtureData.schemas.nonAuto.forEach(function(s){
-					console.log(s+' '+ginger.hasModel(s));
 					expect(ginger.hasModel(s)).to.be.false;
 				});
 

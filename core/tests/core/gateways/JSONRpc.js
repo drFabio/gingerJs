@@ -98,7 +98,6 @@ describe('Gateway JsonRPC',function(){
 			it('Should not have access to a area without the propper login',function(done){
 				var cb=function(err,data){
 					expect(err).to.exist;
-					console.log(err);
 					done();
 				}
 				httpHelper.sendJSONRpc('/JSONRPC/restricted','hello',1234,{},cb);

@@ -27,7 +27,7 @@ module.exports={
 		return !!this._isAuto;
 	},
 	getStructure:function(schema){
-		throw this._engine.getError('NotImplemented');
+		throw this._engine.getError('NotImplemented','Get structure is not implemented for '+this._name+' pleas implement it');
 	},
 	getValidationRules:function(){
 		return null;
@@ -39,7 +39,7 @@ module.exports={
 		var structure=this.getStructure(this._schemaDefinitions);
 		this._dbObject= mongoose.model(this._name,structure,this._name);
 		this._isLoaded=true;
-		this._engine.addFunctionToCloseQueue(this.clearSchema);
+		this._engine.addFunctionToCloseQueue(this.clearSchema.bind(this));
 
 	},
 	clearSchema:function(cb){
