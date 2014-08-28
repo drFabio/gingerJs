@@ -19,14 +19,11 @@ module.exports={
 			this._createDatabaseObject();
 		}
 	},
-	validateField:function(field,value){
+	validate:function(field,value){
 		var validationFunc=this._getRuleForField(field);
-		return validationFunc(value);
-	},
+	},y
 	_getRuleForField:function(field){
-		var ruleData=this._validatorRules[field]
-		if(ruleData){
-			return this._buildRule(ruleData);
+		if(this._validatorRules[field]){
 
 		}
 		return {};
@@ -41,7 +38,7 @@ module.exports={
 			break;
 		}
 	},
-	validate:function(input){
+	validateField:function(input){
 
 	},
 	isAuto:function(){
