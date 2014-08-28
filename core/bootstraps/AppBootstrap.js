@@ -301,6 +301,7 @@ module.exports={
 			if(!_.isEmpty(requiredCompenents)){
 				self._componentFactory.initializeComponents(requiredCompenents);
 			}
+			self._schemaFactory.initializeSchemas();
 			cb();
 		}
 	},

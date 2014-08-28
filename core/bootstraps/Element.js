@@ -111,7 +111,7 @@ module.exports={
 			throw new Error("The class "+engineName+" does not exist");
 		}
 		/**
-		 * @todo  use isClassCreatable 
+		 * @todo  use isClassCreatable ddTo
 		 */
 		if(this._classFactory.isClassPojoSet(engineName)){
 			return engineName;
@@ -241,22 +241,17 @@ module.exports={
 			arguments[1]=params;
 		}
 		arguments[0]=namespace;
-	
-		// if(this._classFactory.classFileExists(namespace) ){
-			if(!namespaceData.isIndexed){
-				if(namespaceData.isApp){
-					this.setAppClass(askedName,null,null,namespace);
-				}
-				else if(namespaceData.isEngine){
-					this.setEngineClass(askedName,null,null,namespace);
-				}
+		var notIndexed=	!namespaceData.isIndexed;
+		if(notIndexed){
+			if(namespaceData.isApp){
+				this.setAppClass(askedName,null,null,namespace);
 			}
-			return this._getObject.apply(this,arguments);
-	  /*  }
-		else{
-			
-			return false;
-		}*/
+			else if(namespaceData.isEngine){
+				this.setEngineClass(askedName,null,null,namespace);
+			}
+		}
+		return this._getObject.apply(this,arguments);
+
 
 	}
 }
