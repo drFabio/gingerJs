@@ -149,6 +149,19 @@ describe('Component database',function(){
 				databaseComponent.update('login',{'name':newName},{'name':name},cb);
 			});
 		});
+		describe('One',function(){
+			beforeEach(function(done){
+				fixtures.clearAndLoad(fixtureData,done);
+			});
+			it('Shopuld be able to update a single record and return it',function(done){
+
+				var cb=function(err,data){
+					expect(data.active).to.be.false;
+					done();
+				}
+				databaseComponent.updateOne('login',{active:false},{'email':'email@gmail.com'},cb);
+			});
+		});
 		describe('By id',function(){
 			beforeEach(function(done){
 				fixtures.clearAndLoad(fixtureData,done);

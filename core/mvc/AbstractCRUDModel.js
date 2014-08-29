@@ -14,6 +14,10 @@ module.exports= {
 		search=this._buildSearch(search);
 		this._dataBase.update(this._schemaName,data,search,cb)
 	},
+	updateOne:function(data,search,cb){
+		search=this._buildSearch(search);
+		this._dataBase.updateOne(this._schemaName,data,search,cb)
+	},
 	updateById:function(id,data,cb){
 		this._dataBase.updateById(this._schemaName,id,data,cb)
 	},

@@ -42,6 +42,11 @@ module.exports={
 
 		Schema.update(searchData,data,options,cb);
 	},
+	updateOne:function(schemaName,data,searchData,cb){
+		var Schema=this.getSchemaClass(schemaName);
+		Schema.findOneAndUpdate(searchData,data,cb);
+	},
+		
 	updateById:function(schemaName,id,data,cb){
 		var plainCb=this._getPlainObjectCb(cb,true);
 		this.updateRawById(schemaName,data,id,plainCb);
