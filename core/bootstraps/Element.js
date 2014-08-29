@@ -88,13 +88,13 @@ module.exports={
 		this._classFactory.setClassPojo(namespace,POJO,true);
 	},
 	_addToIndex:function(name,namespace,POJO,isApp,isEngine){
+		var saneName=this._sanitizeName(name);
 		if(this._indexedByName){
 			if(isApp || !this.hasElement(name)){
 					 
-				name=name.toLowerCase();
-				this._nameMap[name]=this._buildIndexData(name,namespace,POJO,isApp,isEngine);
+				this._nameMap[saneName]=this._buildIndexData(name,namespace,POJO,isApp,isEngine);
 			}
-			POJO=this._nameMap[name].pojo;	
+			POJO=this._nameMap[saneName].pojo;	
 		}
 		this._setClassOnNamespace(namespace,POJO);
 	},
@@ -102,8 +102,8 @@ module.exports={
 		return !!this._defaultEngineNamespace || !!this._defaultAppParent;
 	},
 	hasElement:function(name){
-		name=name.toLowerCase();
-		return !!this._nameMap[name];
+		var saneName=this._sanitizeName(name);
+		return !!this._nameMap[saneName];
 	},
 	setEngineClass:function(name){
 		var engineName=this._defaultEngineNamespace+'.'+name;
@@ -174,8 +174,8 @@ module.exports={
 		return true;
 	},
 	_overwrideElementData:function(name,data){
-		var name=name.toLowerCase();
-		this._nameMap[name]=data;
+		var saneName=this._sanitizeName(name);
+		this._nameMap[saneName]=data;
 	},
 	_getObject:function(name,var_args){
 
@@ -201,8 +201,8 @@ module.exports={
 		return this._nameMap;
 	},
 	getElementByName:function(name){
-		name=name.toLowerCase();
-		return this._nameMap[name];
+		var saneName=this._sanitizeName(name);
+		return this._nameMap[saneName];
 
 	},
 	_getNamespaceDataFromName:function(name){

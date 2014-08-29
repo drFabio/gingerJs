@@ -27,33 +27,33 @@ module.exports={
 		return retConfig;
 	},
 	isLoaded:function(name){
-		name=name.toLowerCase();
-		return !!this._objectList[name];
+		var saneName=this._sanitizeName(name);
+		return !!this._objectList[saneName];
 	},
 	isCancelled:function(name){
-		name=name.toLowerCase();
+		var saneName=this._sanitizeName(name);
 		var config=this._getConfig();
-	   if(config && config[name] === false) {
+	   if(config && config[saneName] === false) {
 	        return true;
 	    }
 	    return false;
 	},
 	create:function(name,params){
+		var saneName=this._sanitizeName(name);
 		if(this.isCancelled(name)){
 			return false;
 		}
 		if(this.isLoaded(name)){
-			name=name.toLowerCase();
-			return this._objectList[name];
+			return this._objectList[saneName];
 		}
 		var component=this._super(name,params);
-		name=name.toLowerCase();
-		this._objectList[name]=component;
+		this._objectList[saneName]=component;
 		return component;
 	},
 	isComponentInitialized:function(name){
-		name=name.toLowerCase();
-		return !!this._initializedMap[name];
+		var saneName=this._sanitizeName(name);
+
+		return !!this._initializedMap[saneName];
 	},
 	initializeComponents:function(names){
 		var self=this;
@@ -69,10 +69,10 @@ module.exports={
 		if(!component ){
 			return false;
 		}
-		name=name.toLowerCase();
+		var saneName=this._sanitizeName(name);
 		var func=component.up.bind(component);
 		this._engine.addFunctionToLaunchQueue(func);
-		this._initializedMap[name]=true;
+		this._initializedMap[saneName]=true;
 		return true;
 	}
 }
