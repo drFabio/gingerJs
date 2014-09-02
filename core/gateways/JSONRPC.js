@@ -61,7 +61,7 @@ module.exports = {
                 /**
                  * @todo find better way to identify error
                  */
-                if(body.name=='ValidationError' ){
+                if(!!body.name && body.name.indexOf('Error')!=-1){
                     error=body;
                     error.data=body.errors;
                 }
