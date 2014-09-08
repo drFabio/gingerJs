@@ -33,27 +33,48 @@ module.exports={
 		return url+':'+port+'/'+base;
 
 	},
-	getSchemaClass:function(schemaName){
+	getSchema:function(schemaName){
+		return this._schemaFactory.create(schemaName);
+	},
+	getSchemaDbObject:function(schemaName){
 		return this._schemaFactory.createSchema(schemaName);
 	},
 	update:function(schemaName,data,searchData,cb){
-		var Schema=this.getSchemaClass(schemaName);
-		options = { multi: true };
+		try{ 
+			this._validateDataToSave(schemaName,data,'update');
+			var Schema=this.getSchemaDbObject(schemaName);
+			options = { multi: true };
 
-		Schema.update(searchData,data,options,cb);
+			Schema.update(searchData,data,options,cb);
+		}
+		catch(err){
+			cb(err);
+		}
 	},
 	updateOne:function(schemaName,data,searchData,cb){
-		var Schema=this.getSchemaClass(schemaName);
-		Schema.findOneAndUpdate(searchData,data,cb);
+		try{
+			this._validateDataToSave(schemaName,data,'update');
+			var Schema=this.getSchemaDbObject(schemaName);
+			Schema.findOneAndUpdate(searchData,data,cb);
+		}
+		catch(err){
+			cb(err);
+		}
 	},
 		
 	updateById:function(schemaName,id,data,cb){
-		var plainCb=this._getPlainObjectCb(cb,true);
-		this.updateRawById(schemaName,data,id,plainCb);
+		try{
+			this._validateDataToSave(schemaName,data,'update');
+			var plainCb=this._getPlainObjectCb(cb,true);
+			this.updateRawById(schemaName,data,id,plainCb);
+		}
+		catch(err){
+			cb(err);	
+		}
 
 	},
 	updateRawById:function(schemaName,data,id,cb){
-		var Schema=this.getSchemaClass(schemaName);
+		var Schema=this.getSchemaDbObject(schemaName);
 		var self=this;
 		Schema.findByIdAndUpdate(id,data, function (err, schemaObj) {
 			if (err) {
@@ -65,13 +86,23 @@ module.exports={
 		});
 
 	},
+	_validateDataToSave:function(schemaName,data,context){
+		var Schema=this.getSchema(schemaName);
+		Schema.validate(data);
+	},
 	create:function(schemaName,data,cb){
 		var self=this;
-		var Schema=this.getSchemaClass(schemaName);
-		var schemaObj=new Schema(data);
-		schemaObj.save(function(err){
-			self._getPlainObjectCb(cb)(err,schemaObj);
-		});
+		try{
+			this._validateDataToSave(schemaName,data,'create');
+			var SchemaDbObject=this.getSchemaDbObject(schemaName);
+			var schemaObj=new SchemaDbObject(data);
+			schemaObj.save(function(err){
+				self._getPlainObjectCb(cb)(err,schemaObj);
+			});
+		}
+		catch(err){
+			cb(err);
+		}
 	},
 	_getPlainObjectCb:function(cb,notFoundIfEmpty){
 		var self=this;
@@ -100,27 +131,27 @@ module.exports={
 		}
 	},
 	readRawById:function(schemaName,id,cb,fields,options){
-		var Schema=this.getSchemaClass(schemaName);
+		var Schema=this.getSchemaDbObject(schemaName);
 		var search=Schema.findById(id);
 		this._executeSearch(search,cb,fields,options);
 	},
 	readRaw:function(schemaName,searchData,cb,fields,options){
-		var Schema=this.getSchemaClass(schemaName);
+		var Schema=this.getSchemaDbObject(schemaName);
 		var search=Schema.find(searchData);
 		this._executeSearch(search,cb,fields,options);
 	},
 	readRawOne:function(schemaName,searchData,cb,fields){
-		var Schema=this.getSchemaClass(schemaName);
+		var Schema=this.getSchemaDbObject(schemaName);
 		var search=Schema.findOne(searchData);
 		this._executeSearch(search,cb,fields);
 	},
 	_getErroFromMongooseError:function(err){
 		switch(err.name){
 			case 'CastError':
-				return this._engine.getError('InvalidParams','The sent id is not valid');
+				return this._engine.getError('InvalidParams',err.message);
 			break;
 			default:
-				return err;
+				return this._engine.getError('Internal',err.message);
 			break;
 		}
 
@@ -156,7 +187,7 @@ module.exports={
 		this.readRawOne(schemaName,searchData,this._getPlainObjectCb(cb,true),fields);
 	},
 	destroy:function(schemaName,searchData,cb){
-		var Schema=this.getSchemaClass(schemaName);
+		var Schema=this.getSchemaDbObject(schemaName);
 		Schema.remove(searchData,cb);
 	},
 	_addFunctionToClose:function(){
@@ -209,7 +240,7 @@ module.exports={
 
 	},
 	count:function(schemaName,search,cb){
-		var Schema=this.getSchemaClass(schemaName);
+		var Schema=this.getSchemaDbObject(schemaName);
 		if(search){
 			Schema.count(search,cb);
 		}

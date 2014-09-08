@@ -67,6 +67,13 @@ describe('MVC',function(){
 			});
 			
 		});
+		
+		describe('Validate',function(){
+			/*it('Should validate data before inserting',function(done){
+
+			});
+			it('Should validate data before updating');*/
+		});
 	});
 	after(function(done){
 		utils.endServer(done);

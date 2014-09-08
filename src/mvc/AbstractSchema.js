@@ -30,34 +30,59 @@ module.exports={
 	_getRuleForField:function(field){
 		var ruleData=this._validatorRules[field]
 		if(ruleData){
-			return this._buildRule(ruleData);
+			return this._buildRule(ruleData,field);
 
 		}
 		return null;
 	},
-	_buildRule:function(ruleData){
+	_buildValidationError:function(field,ruleName,value){
+		return this._engine.getError('Validation',null,{'field':field,rule:ruleName,value:value});
+	},
+	_buildRule:function(ruleData,field){
 		var self=this;
 		var type=typeof(ruleData);
 		if(Array.isArray(ruleData)){
 			var funcsToExecute=[];
 			ruleData.forEach(function(r){
-				funcsToExecute.push(self._buildRule(r));
+				funcsToExecute.push(self._buildRule(r,field));
 			});
 			return function(value){
 				var success=true;
+				var errors=[];
 				for(var x in funcsToExecute){
-					if(!funcsToExecute[x](value)){
-						success=false;
-						break;
+					try{
+						funcsToExecute[x](value);
 					}
+					catch(err){
+						errors.push(err);
+					}
+					
 				}
-				return success;
+				if(!_.isEmpty(errors)){
+					var fieldArray=[];
+					var data={};
+					errors.forEach(function(e){
+						fieldArray.push()
+
+						if(!data[e.data.field]){
+							data[e.data.field]=[];
+						}
+						fieldArray.push(e.data.field);
+						data[e.data.field].push({'rule':e.data.rule,'value':e.data.value});
+					});
+					var fieldsNames=fieldArray.join(',');
+					throw self._engine.getError('Validation','The following fields did not pass validation '+fieldsNames,{'fieldMap':data});
+				}
+				return true;
 			}
 		};
 		switch(type) {
 			case 'string':
 				return function(value){
-					return validator[ruleData](value);
+					if(!validator[ruleData](value)){
+						throw self._buildValidationError(field,ruleData	,value);
+					}
+					return true;
 				}				
 			break;
 			case 'object':{
@@ -67,7 +92,8 @@ module.exports={
 						var params=_.clone(ruleData[ruleName]);
 						params.unshift(value);
 						if(!validator[ruleName].apply(validator,params)){
-							success=false;
+							throw self._buildValidationError(field,ruleName,value);
+							// success=false;
 							break;
 						}
 					}

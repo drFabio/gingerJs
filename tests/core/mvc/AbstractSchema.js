@@ -11,6 +11,7 @@ var fixtureData;
 var ginger;
 var schemaFactory;
 var tagSchema;
+var validationError;
 describe('AbstractSchema',function(){
 	before(function(done){
 			utils.initServer(function(err){
@@ -19,6 +20,7 @@ describe('AbstractSchema',function(){
 					return;
 				}
 				ginger=utils.getServer();
+				validationError=ginger.getError('Validation');
 				schemaFactory=ginger.getBootstrap('SchemaFactory');
 				tagSchema=schemaFactory.create('tags');
 				done();
@@ -29,17 +31,23 @@ describe('AbstractSchema',function(){
 			var field='numHits';
 			var ok=tagSchema.validateField(field,1234);
 			expect(ok).to.be.true;
-			var fail=tagSchema.validateField(field,'foo');
-			expect(fail).to.be.false;
+			var fails=function(){
+				var fail=tagSchema.validateField(field,'foo');
+			}
+			expect(fails).to.throw(validationError);
 		});
 		it('Should validate multiple rules',function(){
 			var field='name';
 			var ok=tagSchema.validateField(field,'shouldpass');
 			expect(ok).to.be.true;
-			var fail=tagSchema.validateField(field,'AAA');
-			expect(fail).to.be.false;
-			fail=tagSchema.validateField(field,1234);
-			expect(fail).to.be.false;
+			var fails=function(){
+				tagSchema.validateField(field,'AAA')
+			}
+			expect(fails).to.throw(validationError);
+			fails=function(){
+				tagSchema.validateField(field,1234);
+			}
+			expect(fails).to.throw(validationError);
 
 		});
 		it('Should validate complex rules',function(){

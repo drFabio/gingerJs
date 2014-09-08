@@ -7,7 +7,7 @@ var utils=new Utils();
 var expect=utils.expect;
 var should = utils.should;
 var fixtures=utils.fixtures;
-var fixtureData=utils.getFixtureData('login');
+var fixtureData=utils.getFixtureData('login','tags');
 var totalLoginData=Object.keys(fixtureData.login).length;
 
 describe('Component database',function(){
@@ -84,8 +84,19 @@ describe('Component database',function(){
 		beforeEach(function(done){
 			fixtures.clearAndLoad(fixtureData,done);
 		});
-		describe('Failure',function(){
-			describe('Validation',function(){
+		describe('Validation',function(){
+			it('Should not accept data that is not validated',function(done){
+				var fields={
+					'name':'UPPPERCASE',
+					'active':'1',
+					'numHits':'NOT A NUMBER',
+					'slug':'someSlug',
+					'url':'notAUrl'
+				};
+				databaseComponent.create('tags',fields,function(err,data){
+					expect(err).to.exist;
+					done();
+				})
 			});
 			it('Should not be able to create  without required fields');
 		});
@@ -117,6 +128,44 @@ describe('Component database',function(){
 					done();
 				}
 				databaseComponent.update('login',{'email':newEmail},{'email':notFoundEmail},cb);
+			});
+			describe('On normal update',function(){
+				it('description',function(done){
+					var fields={
+						'url':'notAUrl'
+					};
+					var id=fixtureData.tags.NodeJS._id.toString();
+					databaseComponent.update('tags',fields,{'_id':id},function(err,data){
+
+						expect(err).to.exist;
+						done();
+					});
+				});
+			});
+			describe('On update by Id',function(){
+				it('Should not allow to update invalid fields',function(done){
+					var fields={
+						'url':'notAUrl'
+					};
+					var id=fixtureData.tags.NodeJS._id.toString();
+					databaseComponent.updateById('tags',id,fields,function(err,data){
+						expect(err).to.exist;
+						done();
+					})
+				});
+			});
+			describe('On Update one',function(){
+				it('Should not allow to update invalid fields',function(done){
+					var fields={
+						'url':'notAUrl'
+					};
+					var id=fixtureData.tags.NodeJS._id.toString();
+					databaseComponent.updateOne('tags',fields,{'_id':id},function(err,data){
+
+						expect(err).to.exist;
+						done();
+					})
+				});
 			});
 		});
 		describe('success',function(){

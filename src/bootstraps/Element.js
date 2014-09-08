@@ -41,6 +41,10 @@ module.exports={
 
 	},
 	_sanitizeName:function(name){
+		if(_.isEmpty(name)){
+
+			return '';
+		}
 		return name.toLowerCase();
 	},
 	setAppClass:function(name,path,parentNamespace,fullNamespace){
