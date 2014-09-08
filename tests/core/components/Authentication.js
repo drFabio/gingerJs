@@ -1,7 +1,7 @@
 var chai=require('chai');
 chai.config.includeStack =true;
 var expect=chai.expect;
-var Ginger=require(__dirname+'/../../../Ginger.js');
+var Ginger=require(__dirname+'/../../../src/Ginger.js');
 var should = chai.should
 var ginger;
 

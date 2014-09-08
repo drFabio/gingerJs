@@ -1,4 +1,4 @@
-var Ginger = require(__dirname+'/../../Ginger');
+var Ginger = require(__dirname+'/../../src/Ginger');
 var appDir=__dirname+'/../exampleApplication';
 /**
  * @todo get this from the joined config file

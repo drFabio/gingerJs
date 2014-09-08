@@ -1,4 +1,4 @@
-var Ginger=require(__dirname+'/../../Ginger.js');
+var Ginger=require(__dirname+'/../../src/Ginger.js');
 ginger=new Ginger();
 ginger.setAppPath(__dirname);
 var cb=function(err,data){

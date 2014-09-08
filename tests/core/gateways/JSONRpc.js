@@ -4,7 +4,7 @@ var should = chai.should();
 var http=require('http');
 var host='localhost';
 var port=3000;
-var Ginger=require(__dirname+'/../../../Ginger');
+var Ginger=require(__dirname+'/../../../src/Ginger');
 
 describe('Gateway JsonRPC',function(){
 	var httpHelper=require(__dirname+'/../../tools/http')(host,port);
