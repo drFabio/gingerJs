@@ -1,1 +1,1 @@
-module.exports=require(__dirname+'/core/Ginger.js');
+module.exports=require(__dirname+'/src/Ginger.js');

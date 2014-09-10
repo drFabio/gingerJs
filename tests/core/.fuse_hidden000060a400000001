@@ -17,9 +17,7 @@ describe('Application',function(){
 	var ginger;
 	describe('Config',function(){
 		it.only('Should infer the config by environment',function(done){
-			console.log(process.env.NODE_ENV);
-			done();
-
+			
 		});
 	});
 	describe('up() \'by path\'',function(){

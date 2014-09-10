@@ -39,7 +39,7 @@ function Ginger() {
     this.moduleMap = {
 
     };
-
+    
     /**
      * The path to the application.It can set programmatically,by config data or if everything file it will be proccess.cwd
      * @type {String}
