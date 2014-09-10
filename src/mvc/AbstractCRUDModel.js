@@ -22,13 +22,18 @@ module.exports= {
 		this._dataBase.updateById(this._schemaName,id,data,cb)
 	},
 	read:function(search,cb,fields){
+		fields=this._getDefaultFieldsIfEmpty(fields);
+
 		this._dataBase.read(this._schemaName,search,cb,fields)
 	},
 	readOne:function(search,cb,fields){
+		fields=this._getDefaultFieldsIfEmpty(fields);
+
 		search=this._buildSearch(search);
 		this._dataBase.readOne(this._schemaName,search,cb,fields)
 	},
 	readById:function(id,cb,fields){
+		fields=this._getDefaultFieldsIfEmpty(fields);
 		this._dataBase.readById(this._schemaName,id,cb,fields)
 	},
 	destroy:function(search,cb){
@@ -44,8 +49,19 @@ module.exports= {
 		}
 		return options;
 	},
+	_getDefaultFields:function(){
+		return null;
+	},
+
+	_getDefaultFieldsIfEmpty:function(fields){
+		if(_.isEmpty(fields)){
+			return this._getDefaultFields();
+		}
+		return fields;
+	},
 	list:function(search,limit,page,fields,options,cb){
 		search=this._buildSearch(search);
+		fields=this._getDefaultFieldsIfEmpty(fields);
 		options=this._getDefaultOptionsIfEmpty(options);
 		this._dataBase.list(this._schemaName,search,limit,page,fields,options,cb);
 	},

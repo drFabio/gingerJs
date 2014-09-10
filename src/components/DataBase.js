@@ -209,7 +209,8 @@ module.exports={
 	
 	},
 	list:function(schemaName,search,limit,page,fields,options,cb){
-		if(parseInt(limit)===-1){
+
+		if(parseInt(limit)===-1 || limit==='false' || limit===false){
 			limit=false;
 		}
 		else if(!limit || typeof(limit)=='undefined'){

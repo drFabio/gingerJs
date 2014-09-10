@@ -7,8 +7,7 @@ var utils=new Utils();
 var expect=utils.expect;
 var should = utils.should;
 var fixtures=utils.fixtures;
-var	dbFixtureData=utils.getFixtureData('categories','login');
-
+var fixtureData;
 describe('MVC',function(){
 	var ginger;
 	//Initializing the app by path first
@@ -19,13 +18,10 @@ describe('MVC',function(){
 				return;
 			}
 			ginger=utils.getServer();
-			var fixtures=utils.fixtures;
 			databaseComponent=ginger.getComponent('DataBase');
+			fixtureData=utils.getFixtureData('login');
+			done();
 
-			fixtures.clearAndLoad(dbFixtureData,function(err,data){
-				done();
-
-			});
 		}
 		utils.initServer(cb);
 	});
@@ -33,11 +29,11 @@ describe('MVC',function(){
 		it.only('Should be able to set the default Fields to list',function(done){
 			var model=ginger.getModel('categories');
 			var checkIfDefaultFieldsApplyed=function(err,result){
-				expect(err).to.not.exist;
-				expect(result.total).to.be.above(0);
-				expect(result).to.exist;
-				expect(result.results).to.exist;
-				var fields=model._getDefaultFields();
+				if(err){
+					done(err);
+					return;
+				}
+				var fields=model._getDefaulFields();
 				result.results.forEach(function(r){
 					for(var k in fields){
 						if(fields[k]){
@@ -49,11 +45,11 @@ describe('MVC',function(){
 						}
 
 					}
+					done();
 				});
-				done();	
 				
 			}
-			model.list({},false,null,null,null,checkIfDefaultFieldsApplyed);
+			model.list({},{'limit':-1},null,null,null,checkIfDefaultFieldsApplyed);
 
 		});
 	});
