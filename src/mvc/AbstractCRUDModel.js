@@ -74,11 +74,12 @@ module.exports= {
 		}
 		return fields;
 	},
-	list:function(search,limit,page,fields,options,cb){
+	list:function(search,limit,page,fields,options,cb,populate){
 		search=this._buildSearch(search);
 		fields=this._getDefaultFieldsIfEmpty(fields);
 		options=this._getDefaultOptionsIfEmpty(options);
-		this._dataBase.list(this._schemaName,search,limit,page,fields,options,cb);
+		populate=this._getDefaultPopulateIfEmpty(populate);
+		this._dataBase.list(this._schemaName,search,limit,page,fields,options,cb,populate);
 	},
 	save:function(data,cb){
 		if(this._hasPrimaryKey(data)){

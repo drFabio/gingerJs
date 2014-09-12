@@ -232,7 +232,7 @@ module.exports={
 		}
 	
 	},
-	list:function(schemaName,search,limit,page,fields,options,cb){
+	list:function(schemaName,search,limit,page,fields,options,cb,populate){
 
 		if(parseInt(limit)===-1 || limit==='false' || limit===false){
 			limit=false;
@@ -252,7 +252,7 @@ module.exports={
 		}
 		var self=this;
 		var read=function(asyncCb){
-			self.read(schemaName,search,asyncCb,fields,options);
+			self.read(schemaName,search,asyncCb,fields,options,populate);
 
 		};
 		var total=function(asyncCb){
