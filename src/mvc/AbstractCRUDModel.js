@@ -21,18 +21,24 @@ module.exports= {
 	updateById:function(id,data,cb){
 		this._dataBase.updateById(this._schemaName,id,data,cb)
 	},
-	read:function(search,cb,fields){
+	read:function(search,cb,fields,options,populate){
+		options=this._getDefaultOptionsIfEmpty(options);
+		populate=this._getDefaultPopulateIfEmpty(populate);
 		fields=this._getDefaultFieldsIfEmpty(fields);
 
 		this._dataBase.read(this._schemaName,search,cb,fields)
 	},
-	readOne:function(search,cb,fields){
+	readOne:function(search,cb,fields,options,populate){
+		options=this._getDefaultOptionsIfEmpty(options);
+		populate=this._getDefaultPopulateIfEmpty(populate);
 		fields=this._getDefaultFieldsIfEmpty(fields);
 
 		search=this._buildSearch(search);
 		this._dataBase.readOne(this._schemaName,search,cb,fields)
 	},
-	readById:function(id,cb,fields){
+	readById:function(id,cb,fields,options,populate){
+		options=this._getDefaultOptionsIfEmpty(options);
+		populate=this._getDefaultPopulateIfEmpty(populate);
 		fields=this._getDefaultFieldsIfEmpty(fields);
 		this._dataBase.readById(this._schemaName,id,cb,fields)
 	},
@@ -42,6 +48,15 @@ module.exports= {
 	},
 	_getDefaultOptions:function(){
 		return {}
+	},
+	_getDefaultPopulate:function(){
+		return null;
+	},
+	_getDefaultPopulateIfEmpty:function(populate){
+		if(_.isEmpty(populate)){
+			return this._getDefaultPopulate();
+		}
+		return populate;
 	},
 	_getDefaultOptionsIfEmpty:function(options){
 		if(_.isEmpty(options)){
