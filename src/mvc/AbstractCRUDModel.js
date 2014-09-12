@@ -26,7 +26,7 @@ module.exports= {
 		populate=this._getDefaultPopulateIfEmpty(populate);
 		fields=this._getDefaultFieldsIfEmpty(fields);
 
-		this._dataBase.read(this._schemaName,search,cb,fields)
+		this._dataBase.read(this._schemaName,search,cb,fields,options,populate);
 	},
 	readOne:function(search,cb,fields,options,populate){
 		options=this._getDefaultOptionsIfEmpty(options);
@@ -34,13 +34,13 @@ module.exports= {
 		fields=this._getDefaultFieldsIfEmpty(fields);
 
 		search=this._buildSearch(search);
-		this._dataBase.readOne(this._schemaName,search,cb,fields)
+		this._dataBase.readOne(this._schemaName,search,cb,fields,options,populate);
 	},
 	readById:function(id,cb,fields,options,populate){
 		options=this._getDefaultOptionsIfEmpty(options);
 		populate=this._getDefaultPopulateIfEmpty(populate);
 		fields=this._getDefaultFieldsIfEmpty(fields);
-		this._dataBase.readById(this._schemaName,id,cb,fields)
+		this._dataBase.readById(this._schemaName,id,cb,fields,options,populate);
 	},
 	destroy:function(search,cb){
 		search=this._buildSearch(search);
