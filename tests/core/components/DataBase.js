@@ -7,7 +7,7 @@ var utils=new Utils();
 var expect=utils.expect;
 var should = utils.should;
 var fixtures=utils.fixtures;
-var fixtureData=utils.getFixtureData('login','tags');
+var fixtureData=utils.getFixtureData('login','tags','categories');
 var totalLoginData=Object.keys(fixtureData.login).length;
 
 describe('Component database',function(){
@@ -73,6 +73,17 @@ describe('Component database',function(){
 					var fields='email';
 					databaseComponent.readById('login',id,cb,fields);
 				});
+			});
+			it('Should be able to execute population',function(done){
+				var id=fixtureData.categories.forDevelopers._id.toString();
+				var cb=function(err,data){
+				
+					expect(err).to.not.exist;
+					expect(typeof(data.user)).to.equal('object');
+					console.log(data);
+					done();
+				};
+				databaseComponent.readById('categories',id,cb,{},null,'user');
 			});
 		});
 		describe('One',function(){

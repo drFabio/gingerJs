@@ -29,7 +29,7 @@
     "scripts": {
         "start": "node app.js",
         "debug": "node debug app.js",
-        "test":"mocha --timeout 10000  --recursive tests/core"
+        "test":"mocha --timeout 30000  --recursive tests/core"
     },
     "main": "index.js",
     "repository": {

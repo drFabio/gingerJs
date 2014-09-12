@@ -130,20 +130,20 @@ module.exports={
 			}
 		}
 	},
-	readRawById:function(schemaName,id,cb,fields,options){
+	readRawById:function(schemaName,id,cb,fields,options,populate){
 		var Schema=this.getSchemaDbObject(schemaName);
 		var search=Schema.findById(id);
-		this._executeSearch(search,cb,fields,options);
+		this._executeSearch(search,cb,fields,options,populate);
 	},
-	readRaw:function(schemaName,searchData,cb,fields,options){
+	readRaw:function(schemaName,searchData,cb,fields,options,populate){
 		var Schema=this.getSchemaDbObject(schemaName);
 		var search=Schema.find(searchData);
-		this._executeSearch(search,cb,fields,options);
+		this._executeSearch(search,cb,fields,options,populate);
 	},
-	readRawOne:function(schemaName,searchData,cb,fields){
+	readRawOne:function(schemaName,searchData,cb,fields,options,populate){
 		var Schema=this.getSchemaDbObject(schemaName);
 		var search=Schema.findOne(searchData);
-		this._executeSearch(search,cb,fields);
+		this._executeSearch(search,cb,fields,options,populate);
 	},
 	_getErroFromMongooseError:function(err){
 		switch(err.name){
@@ -156,13 +156,37 @@ module.exports={
 		}
 
 	},
-	_executeSearch:function(search,cb,fields,options){
+	_executeSearch:function(search,cb,fields,options,populate){
 		if(!_.isEmpty(fields)){
 			search.select(fields);
 		}
 		if(!_.isEmpty(options)){
 			search.setOptions(options);
 		}
+		if(!_.isEmpty(populate)){
+			if(Array.isArray(populate)){
+				populate.forEach(function(p){
+					search.populate(p);
+				});
+			}
+			else{
+				switch(typeof(populate)){
+					case 'object':
+						for(var k in populate){
+							if(_.isEmpty(populate[k])){
+								search.populate(k);
+							}
+							else{
+								search.populate(k,populate[k]);
+							}
+						}
+					break;
+					case 'string':
+						search.populate(populate);
+					break;
+				}
+			}
+		};
 		var self=this;
 		var searchCb=function(err,data){
 			if(err){
@@ -174,17 +198,17 @@ module.exports={
 		search.exec(searchCb);
 
 	},
-	readById:function(schemaName,id,cb,fields){
+	readById:function(schemaName,id,cb,fields,options,populate){
 		
-		this.readRawById(schemaName,id,this._getPlainObjectCb(cb,true),fields);
+		this.readRawById(schemaName,id,this._getPlainObjectCb(cb,true),fields,options,populate);
 	},
-	read:function(schemaName,searchData,cb,fields,options){
+	read:function(schemaName,searchData,cb,fields,options,populate){
 		
-		this.readRaw(schemaName,searchData,this._getPlainObjectCb(cb),fields,options);
+		this.readRaw(schemaName,searchData,this._getPlainObjectCb(cb),fields,options,populate);
 	},
-	readOne:function(schemaName,searchData,cb,fields){
+	readOne:function(schemaName,searchData,cb,fields,options,populate){
 		
-		this.readRawOne(schemaName,searchData,this._getPlainObjectCb(cb,true),fields);
+		this.readRawOne(schemaName,searchData,this._getPlainObjectCb(cb,true),fields,options,populate);
 	},
 	destroy:function(schemaName,searchData,cb){
 		var Schema=this.getSchemaDbObject(schemaName);
