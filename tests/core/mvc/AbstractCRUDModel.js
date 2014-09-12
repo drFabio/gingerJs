@@ -30,7 +30,7 @@ describe('MVC',function(){
 		utils.initServer(cb);
 	});
 	describe('List',function(){
-		it.only('Should be able to set the default Fields to list',function(done){
+		it('Should be able to set the default Fields to list',function(done){
 			var model=ginger.getModel('categories');
 			var checkIfDefaultFieldsApplyed=function(err,result){
 				expect(err).to.not.exist;
@@ -60,7 +60,7 @@ describe('MVC',function(){
 	describe('AbstractCRUDModel',function(){
 		describe('Save',function(){
 			before(function(done){
-				fixtures.clearAndLoad(fixtureData,done);
+				fixtures.clearAndLoad(dbFixtureData,done);
 			});
 			it('Should save a new data if no primary key is specified',function(done){
 				var data={
@@ -80,7 +80,7 @@ describe('MVC',function(){
 			});
 			it('Should  update data the existing data if the primary key is specified',function(done){
 				var model=ginger.getModel('login');
-				var updateData=fixtureData.login.user1;
+				var updateData=dbFixtureData.login.user1;
 				var newEmail='newEmailForSaved@gmail.com';
 				var data={
 					'email':newEmail,

@@ -71,7 +71,7 @@ describe('Gateway JsonRPC',function(){
 
 
 			});
-			it('Should respond to error -32001 on Forbidden',function(done){
+			it('Should respond to error -32002 on Forbidden',function(done){
 				var postData={'method':'hello',"id":"1234"};
 				httpHelper.sendPost('/JSONRPC/restricted',postData,function(err,data){
 					if(err){
@@ -81,7 +81,7 @@ describe('Gateway JsonRPC',function(){
 					var response=JSON.parse(data.body);
 					var statusCode=data.status;
 					expect(response.error).to.exist
-					expect(response.error.code).to.equal('-32001');
+					expect(response.error.code).to.equal('-32002');
 					expect(statusCode).to.equal(200);
 					done(err);
 				});
@@ -109,7 +109,7 @@ describe('Gateway JsonRPC',function(){
 				};
 				var cb=function(err,data){
 					expect(err).to.exist;
-					expect(err.code).to.equal('-32001');
+					expect(err.code).to.equal('-32002');
 					done();
 				}
 				httpHelper.sendJSONRpc('/JSONRPC/authentication','login',1234,data,cb);

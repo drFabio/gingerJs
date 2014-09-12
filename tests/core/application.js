@@ -16,7 +16,7 @@ describe('Application',function(){
 	var should = chai.should
 	var ginger;
 	describe('Config',function(){
-		it.only('Should infer the config by environment',function(done){
+		it('Should infer the config by environment',function(done){
 			console.log(process.env.NODE_ENV);
 			done();
 
