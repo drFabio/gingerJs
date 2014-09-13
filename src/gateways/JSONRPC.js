@@ -5,6 +5,7 @@ var ERRORS_MAP={
     'NOT_FOUND':'-32001',
     'INVALID_PARAMS':'-32602',
     'INTERNAL':'-32603',
+    'VALIDATION':'-32003',
     'FORBIDDEN':'-32002',
     'METHOD_NOT_FOUND':'-32601',
     'SERVER_ERROR':'-32000'//-32000 to -32099 default implementations errors 
