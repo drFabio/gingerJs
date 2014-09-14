@@ -24,9 +24,9 @@ module.exports= {
 		this._model.read(search,this._getSendResponse(req,res),fields);
 
 	},
-	destroyAction:function(req,res){
-		var search=req.query.search;
-		this._model.destroy(search,this._getSendResponse(req,res));
+	destroyByIdAction:function(req,res){
+		var id=req.query.id;
+		this._model.destroyById(id,this._getSendResponse(req,res));
 	},
 	readByIdAction:function(req,res){
 		var id=req.query.id;

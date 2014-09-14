@@ -11,10 +11,18 @@ module.exports= {
 		this._dataBase.create(this._schemaName,data,cb)
 	},
 	update:function(data,search,cb){
+		if(_.isEmpty(search)){
+			cb(this._engine.getError('InvalidParams','Search can not be empty'));
+			return;
+		}
 		search=this._buildSearch(search);
 		this._dataBase.update(this._schemaName,data,search,cb)
 	},
 	updateOne:function(data,search,cb){
+		if(_.isEmpty(search)){
+			cb(this._engine.getError('InvalidParams','Search can not be empty'));
+			return;
+		}
 		search=this._buildSearch(search);
 		this._dataBase.updateOne(this._schemaName,data,search,cb)
 	},
@@ -42,7 +50,15 @@ module.exports= {
 		fields=this._getDefaultFieldsIfEmpty(fields);
 		this._dataBase.readById(this._schemaName,id,cb,fields,options,populate);
 	},
+	destroyById:function(id,cb){
+		
+		this._dataBase.destroyById(this._schemaName,id,cb)
+	},
 	destroy:function(search,cb){
+		if(_.isEmpty(search)){
+			cb(this._engine.getError('InvalidParams','Search can not be empty'));
+			return;
+		}
 		search=this._buildSearch(search);
 		this._dataBase.destroy(this._schemaName,search,cb)
 	},

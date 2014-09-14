@@ -214,6 +214,11 @@ module.exports={
 		var Schema=this.getSchemaDbObject(schemaName);
 		Schema.remove(searchData,cb);
 	},
+	destroyById:function(schemaName,id,cb){
+		var Schema=this.getSchemaDbObject(schemaName);
+		Schema.findByIdAndRemove(id,cb);
+	},
+	
 	_addFunctionToClose:function(){
 	 	var self=this
  	 	var func=function(cb){
