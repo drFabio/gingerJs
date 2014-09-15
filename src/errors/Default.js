@@ -5,22 +5,19 @@ module.exports={
 	isError:true,
 	defaultMessage:'There was an error',
 	
-	init:function(message,data,code){
+	init:function(message,code,data){
 		
 		if(message){
-
-			this.message=message;
+			this.setMessage(message);
 		}
 		else{
-			this.message=this.defaultMessage;
+			this.setMessage(this.defaultMessage);
 		}
 		if(code){
-
-			this.code=code;
+			this.setCode(code);
 		}
 		if(data){
-
-			this.data=data;
+			this.setData(data);
 		}
 	},
 	setCode:function(code){
