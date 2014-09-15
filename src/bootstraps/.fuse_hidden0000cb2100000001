@@ -138,7 +138,6 @@ module.exports={
 		}
 	},
 	_addRouterHandler:function(path,name,parentNamespace){
-		console.log("ADD O ROUTER HANDLER "+name);
 		this._routerHandlerFactory.setAppClass(name,path,parentNamespace);
 	},
 	_addSchema:function(path,name,parentNamespace){

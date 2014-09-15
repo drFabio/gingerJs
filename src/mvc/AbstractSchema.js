@@ -36,7 +36,23 @@ module.exports={
 		return null;
 	},
 	_buildValidationError:function(field,ruleName,value){
-		return this._engine.getError('Validation',null,{'field':field,rule:ruleName,value:value});
+		return this._engine.getError('Validation',null,null,{'field':field,rule:ruleName,value:value});
+	},
+	_buildSingleErroFromErrorArray:function(errors){
+		var fieldArray=[];
+		var data={};
+		errors.forEach(function(e){
+			fieldArray.push()
+
+			if(!data[e.data.field]){
+				data[e.data.field]=[];
+			}
+			fieldArray.push(e.data.field);
+			data[e.data.field].push({'rule':e.data.rule,'value':e.data.value});
+		});
+		var fieldsNames=fieldArray.join(',');
+		var err= this._engine.getError('Validation','The following fields did not pass validation '+fieldsNames,null,{'fieldMap':data});
+		return err;
 	},
 	_buildRule:function(ruleData,field){
 		var self=this;
@@ -59,19 +75,7 @@ module.exports={
 					
 				}
 				if(!_.isEmpty(errors)){
-					var fieldArray=[];
-					var data={};
-					errors.forEach(function(e){
-						fieldArray.push()
-
-						if(!data[e.data.field]){
-							data[e.data.field]=[];
-						}
-						fieldArray.push(e.data.field);
-						data[e.data.field].push({'rule':e.data.rule,'value':e.data.value});
-					});
-					var fieldsNames=fieldArray.join(',');
-					throw self._engine.getError('Validation','The following fields did not pass validation '+fieldsNames,{'fieldMap':data});
+					throw self._buildSingleErroFromErrorArray(errors);
 				}
 				return true;
 			}
@@ -106,14 +110,19 @@ module.exports={
 		}
 	},
 	validate:function(input){
-		var errorMap={};
+		var errors=[];
 		for(var field in input){
-			if(!this.validateField(field,input[field])){
-				errorMap[field]=true;
+			try{
+				this.validateField(field,input[field])
 			}
+			catch(err){
+				errors.push(err);
+			}
+			
 		}
-		if(!_.isEmpty(errorMap)){
-			throw this._engine.getError('Validation','The following fields did not pass validation',errorMap);
+
+		if(errors.length>0){
+			throw this._buildSingleErroFromErrorArray(errors);
 		}
 		return true;
 	},

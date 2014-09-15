@@ -58,8 +58,7 @@ describe('Gateways HTTP ',function(){
 					'data[name]':'mr someone',
 					'data[password]':'12345'};
 			httpHelper.sendGet('/login/create',data,function(err,data){
-				console.log('Data body');
-				console.log(data);
+	
 				done(err);
 			});
 		});

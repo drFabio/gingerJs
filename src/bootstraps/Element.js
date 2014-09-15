@@ -79,6 +79,16 @@ module.exports={
 			POJO=this._setDefaultParentOnPOJO(POJO,defaultParent);
 			
 		}
+		else {
+			var isEngineClass=POJO.parent.indexOf(this._defaultEngineNamespace)===0;
+			//POJO=this._setDefaultParentOnPOJO(POJO,defaultParent);
+			if(isEngineClass && !this._classFactory.isClassSet(POJO.parent)){
+				var name=POJO.parent.replace(this._defaultEngineNamespace+'.',"");
+				this.setEngineClass(name);
+
+			}
+
+		}
 
 		var appNamespace=this._buildNamespace(this._defaulAppNamespace,name);
 		this._addToIndex(name,appNamespace,POJO,true);

@@ -80,7 +80,6 @@ describe('Component database',function(){
 				
 					expect(err).to.not.exist;
 					expect(typeof(data.user)).to.equal('object');
-					console.log(data);
 					done();
 				};
 				databaseComponent.readById('categories',id,cb,{},null,'user');

@@ -5,8 +5,9 @@ module.exports={
 	_configValue:'errors',
 	_defaultEngineParent:'ginger.errors.Default',
 	_isSingleton:false,
-	_getObject:function(name,message,data,code){	
-		return this._classFactory.createObject(name,message,data,code);
+	_getObject:function(name,message,code,data){
+	
+		return this._classFactory.createObject(name,message,code,data);
 	}
 
 }

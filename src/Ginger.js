@@ -426,8 +426,8 @@ Ginger.prototype.hasModule = function (name) {
 Ginger.prototype.getLib = function(name) {
     return this.libs[name];
 };
-Ginger.prototype.getError = function(name,message,data,code) {
-   return this._errorFactory.create(name,message,data,code);
+Ginger.prototype.getError = function(name,message,code,data) {
+   return this._errorFactory.create(name,message,code,data);
    
 };
 module.exports = Ginger;
