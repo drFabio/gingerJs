@@ -22,5 +22,15 @@ module.exports={
 
 			this.data=data;
 		}
+	},
+	setCode:function(code){
+		this.code=code;
+	},
+	setMessage:function(message){
+		this.message=message;
+	},
+	setData:function(data){
+		this.data=data;
 	}
 }
+
