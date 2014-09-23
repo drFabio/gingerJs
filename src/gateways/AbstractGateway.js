@@ -67,6 +67,7 @@ module.exports={
 		var middlewares=this._getDefaultMiddlewares();
 		var self=this;
 		var controllerFunction=controllerObj[actionFunction].bind(controllerObj);
+
 		if(routeData.middlewares){
 			middlewares=middlewares.concat(routeData.middlewares);
 		} 

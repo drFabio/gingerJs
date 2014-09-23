@@ -83,8 +83,8 @@ module.exports={
 			var isEngineClass=POJO.parent.indexOf(this._defaultEngineNamespace)===0;
 			//POJO=this._setDefaultParentOnPOJO(POJO,defaultParent);
 			if(isEngineClass && !this._classFactory.isClassSet(POJO.parent)){
-				var name=POJO.parent.replace(this._defaultEngineNamespace+'.',"");
-				this.setEngineClass(name);
+				var engineName=POJO.parent.replace(this._defaultEngineNamespace+'.',"");
+				this.setEngineClass(engineName);
 
 			}
 
