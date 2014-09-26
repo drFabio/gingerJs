@@ -90,6 +90,9 @@ module.exports= {
 		}
 		return fields;
 	},
+	count:function(search,cb){
+		this._dataBase.count(this._schemaName,search,cb);
+	},
 	list:function(search,limit,page,fields,options,cb,populate){
 		search=this._buildSearch(search);
 		fields=this._getDefaultFieldsIfEmpty(fields);
