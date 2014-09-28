@@ -69,6 +69,9 @@ module.exports= {
 		return null;
 	},
 	_getDefaultPopulateIfEmpty:function(populate){
+		if(populate==false){
+			return {};
+		}
 		if(_.isEmpty(populate)){
 			return this._getDefaultPopulate();
 		}
