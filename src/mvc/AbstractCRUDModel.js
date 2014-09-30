@@ -40,7 +40,6 @@ module.exports= {
 		options=this._getDefaultOptionsIfEmpty(options);
 		populate=this._getDefaultPopulateIfEmpty(populate);
 		fields=this._getDefaultFieldsIfEmpty(fields);
-
 		search=this._buildSearch(search);
 		this._dataBase.readOne(this._schemaName,search,cb,fields,options,populate);
 	},
@@ -48,6 +47,7 @@ module.exports= {
 		options=this._getDefaultOptionsIfEmpty(options);
 		populate=this._getDefaultPopulateIfEmpty(populate);
 		fields=this._getDefaultFieldsIfEmpty(fields);
+		
 		this._dataBase.readById(this._schemaName,id,cb,fields,options,populate);
 	},
 	destroyById:function(id,cb){

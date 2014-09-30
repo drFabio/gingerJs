@@ -29,6 +29,21 @@ describe('MVC',function(){
 		}
 		utils.initServer(cb);
 	});
+	describe('Read',function(){
+		describe('Populations',function(){
+			it.skip('Should be able to set fields to populate on the fields part',function(done){
+				var fields={'user.email':true,'user.active':true};
+				var id=dbFixtureData.categories.forDevelopers._id.toString();
+				var model=ginger.getModel('categories');
+				var readCb=function(err,data){
+					expect(err).to.not.exist;
+					console.log(data);
+					done();
+				}
+				model.readById(id,readCb,fields);
+			});
+		});
+	});	
 	describe('List',function(){
 		it('Should be able to set the default Fields to list',function(done){
 			var model=ginger.getModel('categories');

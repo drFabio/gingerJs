@@ -75,6 +75,13 @@ describe('Application',function(){
 				expect(model).to.exist;
 				expect(model.sum(1,2)).to.equal(3);
 			});
+			it('Should be able to get a model as a non singleton instance',function(done){
+				var model=ginger.getModel('Hello');
+				model.someProperty=10;
+				model=ginger.getModel('Hello');
+				expect(model.someProperty).to.be.empty;
+				done();
+			});
 		});
 		describe('Controller',function(){
 				it('Should be able to inherits the default controller',function(){

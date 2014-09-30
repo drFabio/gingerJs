@@ -192,21 +192,28 @@ module.exports={
 		this._nameMap[saneName]=data;
 	},
 	_getObject:function(name,var_args){
+		var askedName=name;
 
 		var newArgs=[];
-		newArgs.push(name);
+		newArgs.push(askedName);
 		//By default all objects have the engine as the first argument
 		arguments[0]=this._engine;
 		for(var x in arguments){
 			newArgs.push(arguments[x]);
 		}
 		var classFactory=this._classFactory;
-	
-			
-		if(this._isSingleton){
+
+		if(this.isClassSingleton(askedName)){
 		   return  classFactory.getSingletonObject.apply(classFactory,newArgs);
 		}
 		return classFactory.createObject.apply(classFactory,newArgs);
+	},
+	isClassSingleton:function(name){ 
+		var pojoData=this._classFactory.getClassPojo(name);
+		if(!!pojoData && _.isBoolean(pojoData.isSingleton) ){
+			return pojoData.isSingleton;
+		}
+		return !!this._isSingleton;
 	},
 	isConfigurable:function(){
 		return !! this._configValue;
@@ -256,7 +263,9 @@ module.exports={
 		}
 		arguments[0]=namespace;
 		var notIndexed=	!namespaceData.isIndexed;
+		
 		if(notIndexed){
+		
 			if(namespaceData.isApp){
 				this.setAppClass(askedName,null,null,namespace);
 			}
