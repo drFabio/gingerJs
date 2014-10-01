@@ -1,10 +1,10 @@
 var _=require('lodash');
 module.exports= {
-	_search:{},
-	_field:{},
-	_option:{},
-	_populate:{},
 	init: function(engine,search,fields,options,populate) {
+		this._search={};
+		this._field={};
+		this._option={};
+		this._populate={};
 		this._engine=engine;
 		this._setPopulateFromInput(populate);
 		this._setSearchFromInput(search);
@@ -21,6 +21,10 @@ module.exports= {
 		return false;
 	},
 	_setOptionsFromInput:function(options){
+		if(!options){
+			this._option={};
+			return;
+		}
 		var parts;
 		var populateKey;
 		var optionKey;
@@ -46,8 +50,12 @@ module.exports= {
 		}
 	},
 	_setFieldsFromInput:function(fields){
+		if(!fields){
+			this._field={};
+			return;
+		}
 		if(typeof(fields)=='string'){
-			fields=fields.split(' ');
+			fields=this._getSelectPartFromString(fields);
 		}
 		var parts;
 		var populateKey;
@@ -78,7 +86,19 @@ module.exports= {
 			}
 		}
 	},
+	_getSelectPartFromString:function(str){
+		var parts=str.split(' ');
+		var ret={};
+		parts.forEach(function(p){
+			ret[p]=true;
+		});
+		return ret;
+	},
 	_setPopulateFromInput:function(populate){
+		if(!populate){
+			this._populate={};
+			return;
+		}
 		for(var k in populate){
 		
 			if(_.isObject(populate[k])){
@@ -88,14 +108,19 @@ module.exports= {
 				}
 			}
 			else{
+				var selectPart=this._getSelectPartFromString(populate[k]);
+
 				this._populate[k]={
 					path:k,
-					select:populate[k]
+					select:selectPart
 				}
 			}
 		}
 	},
 	_setSearchFromInput:function(search){
+		if(!search){
+			this._search={};
+		}
 		var parts;
 		var populateKey;
 		var searchKey;
