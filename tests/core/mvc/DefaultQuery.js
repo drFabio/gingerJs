@@ -53,12 +53,14 @@ describe('DefaultQuery',function(){
 	it('Should be able to set the normal options ',function(done){
 		var search={'fieldA':'equal comething'};
 		var field={'fieldB':true,'fieldC':true};
-		var option={'sort':{'name':1}};;
+		var option={'sort':{'name':1}};
 		var populate={'populated':'name _id','fullPopulated':{'path':'fullPopulated','select':{'bar':true}}};
 
 		var query=ginger.getQuery(search,field,option,populate);
 		expect(_.isEqual(query._search,search)).to.be.true;
-		expect(_.isEqual(query._field,field)).to.be.true;
+		var sentFieldKeys=Object.keys(field);
+		var fieldKeysIntersection=_.intersection(Object.keys(query._field),sentFieldKeys);
+		expect(_.isEqual(fieldKeysIntersection,sentFieldKeys)).to.be.true;
 		expect(_.isEqual(query._option,option)).to.be.true;
 		comparePopulate(query,populate);
 		done();
@@ -74,8 +76,7 @@ describe('DefaultQuery',function(){
 			var field={
 				'populated+someField':true,
 				'populated+foo':true,
-				
-				'normalField':'bar'
+				'normalField':true
 			}
 			var populate={
 				'anotherPopulated':'name _id enabled',
@@ -86,6 +87,7 @@ describe('DefaultQuery',function(){
 			for(var k in field){
 				if(k.indexOf('+')>-1){
 					var parts=k.split('+');
+					expect(query._field[parts[0]]).to.equal(true);
 					expect(query._populate[parts[0]]).to.exist;
 					expect(query._populate[parts[0]].select[parts[1]]).to.equal(field[k]);
 				}
