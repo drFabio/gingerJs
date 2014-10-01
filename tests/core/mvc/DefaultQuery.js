@@ -11,6 +11,11 @@ var	dbFixtureData=utils.getFixtureData('categories','login');
 var ginger;
 var queryFactory;
 var comparePopulate=function(query,inputPopulate){
+	if(typeof(inputPopulate)=='string'){
+		expect(query._populate[inputPopulate]).to.exist;
+		expect(query._populate[inputPopulate].path).to.equal(inputPopulate);
+		return;
+	}
 	for(var k in inputPopulate){
 		if(typeof(inputPopulate[k])=='string'){
 			expect(query._populate[k].path).to.equal(k);
@@ -59,6 +64,12 @@ describe('DefaultQuery',function(){
 		done();
 	});
 	describe('Population',function(){
+		it('Should be able to set populate as a string',function(done){
+			var populate='something';
+			var query=ginger.getQuery(null,null,null,populate);
+			comparePopulate(query,populate);
+			done();
+		});
 		it('Should be able to set population from a field,while respecting both field and population',function(done){
 			var field={
 				'populated.someField':{'foo':true,'bar':true,'baz':true},

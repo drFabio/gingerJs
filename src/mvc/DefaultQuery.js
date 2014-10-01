@@ -112,6 +112,11 @@ module.exports= {
 			this._populate={};
 			return;
 		}
+		if(typeof(populate)=='string'){
+			this._populate={};
+			this._populate[populate]={'path':populate};
+			return;
+		}
 		for(var k in populate){
 		
 			if(_.isObject(populate[k])){
