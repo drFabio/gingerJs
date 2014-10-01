@@ -28,8 +28,8 @@ module.exports= {
 	},
 	
 	_getPopulatePartsIfExistent:function(key){
-		if(key.indexOf('.')>-1){
-			return key.split('.');
+		if(key.indexOf('+')>-1){
+			return key.split('+');
 		}
 		return false;
 	},

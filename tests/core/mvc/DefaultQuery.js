@@ -72,7 +72,7 @@ describe('DefaultQuery',function(){
 		});
 		it('Should be able to set population from a field,while respecting both field and population',function(done){
 			var field={
-				'populated.someField':{'foo':true,'bar':true,'baz':true},
+				'populated+someField':{'foo':true,'bar':true,'baz':true},
 				'normalField':'bar'
 			}
 			var populate={
@@ -82,8 +82,8 @@ describe('DefaultQuery',function(){
 			}
 			var query=ginger.getQuery(null,field,null,populate);
 			for(var k in field){
-				if(k.indexOf('.')>-1){
-					var parts=k.split('.');
+				if(k.indexOf('+')>-1){
+					var parts=k.split('+');
 					expect(query._populate[parts[0]]).to.exist;
 					expect(query._populate[parts[0]].select[parts[1]]).to.equal(field[k]);
 				}
@@ -98,9 +98,9 @@ describe('DefaultQuery',function(){
 		it('Should be able to set population from a option, while respecting both option and population',function(done){
 			var options={
 				'sort':{'name':1},
-				'populated.limit':5,
-				'populated.sort':{'name':-1},
-				'someOtherField.limit':10
+				'populated+limit':5,
+				'populated+sort':{'name':-1},
+				'someOtherField+limit':10
 			}
 			var populate={
 				'populated':'someOtherField',
@@ -109,8 +109,8 @@ describe('DefaultQuery',function(){
 			var query=ginger.getQuery(null,null,options,populate);
 			for(var k in options){
 				var value=options[k];
-				if(k.indexOf('.')>-1){
-					var parts=k.split('.');
+				if(k.indexOf('+')>-1){
+					var parts=k.split('+');
 					expect(query._populate[parts[0]]).to.exist;
 					if(_.isObject(value)){
 						expect(_.isEqual(query._populate[parts[0]].options[parts[1]],value)).to.be.true;
@@ -128,15 +128,15 @@ describe('DefaultQuery',function(){
 			done();
 		});
 		it('Should be able to set population from a search, while respecting both search and population',function(done){
-			var search={'fieldA':'equal comething','populated.fieldB':14};
+			var search={'fieldA':'equal comething','populated+fieldB':14};
 			var populate={
 				'populated':'someOtherField'
 			}
 			var query=ginger.getQuery(search,null,null,populate);
 			for(var k in search){
 				var value=search[k];
-				if(k.indexOf('.')>-1){
-					var parts=k.split('.');
+				if(k.indexOf('+')>-1){
+					var parts=k.split('+');
 					expect(query._populate[parts[0]]).to.exist;
 					if(_.isObject(value)){
 						expect(_.isEqual(query._populate[parts[0]].match[parts[1]],value)).to.be.true;
