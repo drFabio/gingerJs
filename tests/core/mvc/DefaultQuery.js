@@ -72,7 +72,9 @@ describe('DefaultQuery',function(){
 		});
 		it('Should be able to set population from a field,while respecting both field and population',function(done){
 			var field={
-				'populated+someField':{'foo':true,'bar':true,'baz':true},
+				'populated+someField':true,
+				'populated+foo':true,
+				
 				'normalField':'bar'
 			}
 			var populate={

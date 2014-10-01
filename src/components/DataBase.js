@@ -161,9 +161,6 @@ module.exports={
 	},
 	_executeSearch:function(search,query,cb){
 		var fields=query.getFields();
-		console.log('aqui');
-		console.log(query._populate);
-		console.log(query._search);
 		if(!_.isEmpty(fields)){
 			search.select(fields);
 		}
