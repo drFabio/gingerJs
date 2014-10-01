@@ -126,6 +126,7 @@ Ginger.prototype._getFactories = function() {
     this._gatewayFactory=this.getBootstrap('GatewayFactory');
     this._componentFactory=this.getBootstrap('ComponentFactory');
     this._errorFactory=this.getBootstrap('ErrorFactory');
+    this._queryFactory=this.getBootstrap('QueryFactory');
     this._controllerFactory=this.getBootstrap('ControllerFactory');
     this._modelFactory=this.getBootstrap('ModelFactory');
     this._schemaFactory=this.getBootstrap('SchemaFactory');
@@ -222,6 +223,11 @@ Ginger.prototype._setupApp = function (cb) {
 Ginger.prototype.loadAppFile = function (name) {
     return require(this._config['app']['dir'] + name);
 }
+Ginger.prototype.getQuery = function ( params) {
+    var queryFactory=this._queryFactory;
+    return queryFactory.create.apply(queryFactory,arguments);
+
+};
 /**
  * Get a model on the app model directory
  * @return {[type]} [description]
@@ -310,6 +316,7 @@ Ginger.prototype.getRouterHandler = function(name,params) {
   return  this._routerHandlerFactory.create(name,params);
 
 };
+
 Ginger.prototype.getBootstrap = function (name, params) {
     var fullName='ginger.bootstraps.'+name;
     if (!this.libs.classFactory.isObjectSet(fullName)) {

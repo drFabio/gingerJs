@@ -9,7 +9,7 @@ var should = utils.should;
 var fixtures=utils.fixtures;
 var	dbFixtureData=utils.getFixtureData('categories','login');
 
-describe('MVC',function(){
+describe('AbstractCRUDModel',function(){
 	var ginger;
 	//Initializing the app by path first
 	before(function(done){
