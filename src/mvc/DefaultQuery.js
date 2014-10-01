@@ -12,8 +12,21 @@ module.exports= {
 		this._setOptionsFromInput(options);
 	},
 	getPopulate:function(){
-		return Object.values(this._populate);
+		if(_.isEmpty(this._populate)){
+			return {};
+		}
+		return _.values(this._populate);
 	},
+	getOptions:function(){
+		return  this._option;
+	},
+	getFields:function(){
+		return this._field;
+	},
+	getSearch:function(){
+		return this._search;
+	},
+	
 	_getPopulatePartsIfExistent:function(key){
 		if(key.indexOf('.')>-1){
 			return key.split('.');
