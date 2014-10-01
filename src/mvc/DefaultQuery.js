@@ -1,10 +1,10 @@
 var _=require('lodash');
 module.exports= {
-	_search:{},
-	_field:{},
-	_option:{},
-	_populate:{},
 	init: function(engine,search,fields,options,populate) {
+		this._search={};
+		this._field={};
+		this._option={};
+		this._populate={};
 		this._engine=engine;
 		this._setPopulateFromInput(populate);
 		this._setSearchFromInput(search);
