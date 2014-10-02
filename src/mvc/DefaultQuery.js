@@ -29,6 +29,7 @@ module.exports= {
 		return  this._option;
 	},
 	getFields:function(){
+		this._addPopulatePartsToFieldsIfFieldsSet();
 		return this._field;
 	},
 	getSearch:function(){
