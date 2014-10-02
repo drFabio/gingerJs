@@ -129,7 +129,7 @@ module.exports= {
 		}
 	},
 	_addPopulatePartsToFieldsIfFieldsSet:function(){
-		if(_.isEmpty(this._field)){
+		if(_.isEmpty(this._field) || _.isEmpty(this._populate)){
 			return;
 		}	
 		//Check if ther isnt a false
