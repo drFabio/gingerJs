@@ -11,34 +11,36 @@ var	dbFixtureData=utils.getFixtureData('categories','login');
 var ginger;
 var queryFactory;
 var comparePopulate=function(query,inputPopulate){
+	var populate=query.getPopulateAsMap();
+
 	if(typeof(inputPopulate)=='string'){
-		expect(query._populate[inputPopulate]).to.exist;
-		expect(query._populate[inputPopulate].path).to.equal(inputPopulate);
+		expect(populate[inputPopulate]).to.exist;
+		expect(populate[inputPopulate].path).to.equal(inputPopulate);
 		return;
 	}
 	for(var k in inputPopulate){
 		if(typeof(inputPopulate[k])=='string'){
-			expect(query._populate[k].path).to.equal(k);
+			expect(populate[k].path).to.equal(k);
 			var populateParts=query._getSelectPartFromString(inputPopulate[k]);
 			for(var populateKey in populateParts){
-				expect(query._populate[k].select[populateKey]).to.equal(populateParts[populateKey]);
+				expect(populate[k].select[populateKey]).to.equal(populateParts[populateKey]);
 			}
 		}
 		else{
 			for(fieldKey in inputPopulate[k]){
 				if(_.isObject(inputPopulate[k][fieldKey])){
-					var isEqual=_.isEqual(query._populate[k][fieldKey],inputPopulate[k][fieldKey]);
+					var isEqual=_.isEqual(populate[k][fieldKey],inputPopulate[k][fieldKey]);
 					expect(isEqual).to.be.true;
 				}
 				else{
 
-					expect(query._populate[k][fieldKey]).to.equal(inputPopulate[k][fieldKey]);
+					expect(populate[k][fieldKey]).to.equal(inputPopulate[k][fieldKey]);
 				}
 			}
 		}
 	}
 }
-describe('DefaultQuery',function(){
+describe.only('DefaultQuery',function(){
 	before(function(done){
 		utils.initServer(function(err){
 			if(err){
@@ -84,12 +86,13 @@ describe('DefaultQuery',function(){
 				
 			}
 			var query=ginger.getQuery(null,field,null,populate);
+			var populate=query.getPopulateAsMap();
 			for(var k in field){
 				if(k.indexOf('+')>-1){
 					var parts=k.split('+');
 					expect(query._field[parts[0]]).to.equal(true);
-					expect(query._populate[parts[0]]).to.exist;
-					expect(query._populate[parts[0]].select[parts[1]]).to.equal(field[k]);
+					expect(populate[parts[0]]).to.exist;
+					expect(populate[parts[0]].select[parts[1]]).to.equal(field[k]);
 				}
 				else{
 
@@ -111,16 +114,18 @@ describe('DefaultQuery',function(){
 				'yetAnotherPopulation':'foo bar baz'
 			}
 			var query=ginger.getQuery(null,null,options,populate);
+			var populate=query.getPopulateAsMap();
+
 			for(var k in options){
 				var value=options[k];
 				if(k.indexOf('+')>-1){
 					var parts=k.split('+');
-					expect(query._populate[parts[0]]).to.exist;
+					expect(populate[parts[0]]).to.exist;
 					if(_.isObject(value)){
-						expect(_.isEqual(query._populate[parts[0]].options[parts[1]],value)).to.be.true;
+						expect(_.isEqual(populate[parts[0]].options[parts[1]],value)).to.be.true;
 					}
 					else{
-						expect(query._populate[parts[0]].options[parts[1]]).to.equal(value);
+						expect(populate[parts[0]].options[parts[1]]).to.equal(value);
 					}
 				}
 				else{
@@ -137,16 +142,18 @@ describe('DefaultQuery',function(){
 				'populated':'someOtherField'
 			}
 			var query=ginger.getQuery(search,null,null,populate);
+			var populate=query.getPopulateAsMap();
+
 			for(var k in search){
 				var value=search[k];
 				if(k.indexOf('+')>-1){
 					var parts=k.split('+');
-					expect(query._populate[parts[0]]).to.exist;
+					expect(populate[parts[0]]).to.exist;
 					if(_.isObject(value)){
-						expect(_.isEqual(query._populate[parts[0]].match[parts[1]],value)).to.be.true;
+						expect(_.isEqual(populate[parts[0]].match[parts[1]],value)).to.be.true;
 					}
 					else{
-						expect(query._populate[parts[0]].match[parts[1]]).to.equal(value);
+						expect(populate[parts[0]].match[parts[1]]).to.equal(value);
 					}
 				}
 				else{

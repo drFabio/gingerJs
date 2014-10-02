@@ -13,10 +13,17 @@ module.exports= {
 	},
 	getPopulate:function(){
 		if(_.isEmpty(this._populate)){
-			return {};
+			return [];
 		}
 		this._addPopulatePartsToFieldsIfFieldsSet();
 		return _.values(this._populate);
+	},
+	getPopulateAsMap:function(){
+		if(_.isEmpty(this._populate)){
+			return {};
+		}
+		this._addPopulatePartsToFieldsIfFieldsSet();
+		return this._populate;
 	},
 	getOptions:function(){
 		return  this._option;
