@@ -19,7 +19,7 @@
         "async":"*",
         "olive_oil":"git://github.com/drFabio/OliveOil.git#master",
         "body-parser":"*",
-        "mongoose":"*",
+        "mongoose":"3.8.17",
         "cookie-parser":"*",
         "express-session":"*",
         "passport":"*",

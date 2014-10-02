@@ -131,19 +131,22 @@ module.exports={
 		}
 	},
 	readRawById:function(schemaName,id,cb,fields,options,populate){
+		var query=this._engine.getQuery(null,fields,options,populate);
 		var Schema=this.getSchemaDbObject(schemaName);
 		var search=Schema.findById(id);
-		this._executeSearch(search,cb,fields,options,populate);
+		this._executeSearch(search,query,cb);
 	},
 	readRaw:function(schemaName,searchData,cb,fields,options,populate){
+		var query=this._engine.getQuery(searchData,fields,options,populate);
 		var Schema=this.getSchemaDbObject(schemaName);
-		var search=Schema.find(searchData);
-		this._executeSearch(search,cb,fields,options,populate);
+		var search=Schema.find(query.getSearch());
+		this._executeSearch(search,query,cb);
 	},
 	readRawOne:function(schemaName,searchData,cb,fields,options,populate){
+		var query=this._engine.getQuery(searchData,fields,options,populate);
 		var Schema=this.getSchemaDbObject(schemaName);
-		var search=Schema.findOne(searchData);
-		this._executeSearch(search,cb,fields,options,populate);
+		var search=Schema.findOne(query.getSearch());
+		this._executeSearch(search,query,cb);
 	},
 	_getErroFromMongooseError:function(err){
 		switch(err.name){
@@ -156,13 +159,16 @@ module.exports={
 		}
 
 	},
-	_executeSearch:function(search,cb,fields,options,populate){
+	_executeSearch:function(search,query,cb){
+		var fields=query.getFields();
 		if(!_.isEmpty(fields)){
 			search.select(fields);
 		}
+		var options=query.getOptions();
 		if(!_.isEmpty(options)){
 			search.setOptions(options);
 		}
+		var populate=query.getPopulate();
 		if(!_.isEmpty(populate)){
 			if(Array.isArray(populate)){
 				populate.forEach(function(p){

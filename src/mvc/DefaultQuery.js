@@ -12,13 +12,43 @@ module.exports= {
 		this._setOptionsFromInput(options);
 	},
 	getPopulate:function(){
-		return Object.values(this._populate);
-	},
-	_getPopulatePartsIfExistent:function(key){
-		if(key.indexOf('.')>-1){
-			return key.split('.');
+		if(_.isEmpty(this._populate)){
+			return [];
 		}
-		return false;
+		this._addPopulatePartsToFieldsIfFieldsSet();
+		return _.values(this._populate);
+	},
+	getPopulateAsMap:function(){
+		if(_.isEmpty(this._populate)){
+			return {};
+		}
+		this._addPopulatePartsToFieldsIfFieldsSet();
+		return this._populate;
+	},
+	getOptions:function(){
+		return  this._option;
+	},
+	getFields:function(){
+		this._addPopulatePartsToFieldsIfFieldsSet();
+		return this._field;
+	},
+	getSearch:function(){
+		return this._search;
+	},
+	_isKeyAPopulation:function(key){
+		return key.indexOf('+')>-1;
+	},
+	_setPopulateProperty:function(key,value,property){
+		var parts=key.split('+');
+		var populateKey=parts[0];
+		var valueKey=parts[1];
+		if(!this._populate[populateKey]){
+			this._populate[populateKey]={'path':populateKey};
+		}
+		if(!this._populate[populateKey][property]){
+			this._populate[populateKey][property]={};
+		}
+		this._populate[populateKey][property][valueKey]=value;
 	},
 	_setOptionsFromInput:function(options){
 		if(!options){
@@ -31,27 +61,19 @@ module.exports= {
 		var value;
 		for(var key in options){
 			value=options[key];
-			if(parts=this._getPopulatePartsIfExistent(key)){
-				populateKey=parts[0];
-				optionKey=parts[1];
-				if(!this._populate[populateKey]){
-					this._populate[populateKey]={'path':populateKey};
-				}
-				if(!this._populate[populateKey].options){
-					this._populate[populateKey].options={};
-				}
-					this._populate[populateKey].options[optionKey]=value;
-
+			if(this._isKeyAPopulation(key)){
+				this._setPopulateProperty(key,value,'options');
 			}
 			else{
 				this._option[key]=options[key];
 			}
-
 		}
 	},
 	_setFieldsFromInput:function(fields){
 		if(!fields){
-			this._field={};
+			if(!this._field){
+				this._field={};
+			}
 			return;
 		}
 		if(typeof(fields)=='string'){
@@ -65,17 +87,8 @@ module.exports= {
 			value=fields[key];
 
 			if(value){
-
-				if(parts=this._getPopulatePartsIfExistent(key)){
-					populateKey=parts[0];
-					fieldKey=parts[1];
-					if(!this._populate[populateKey]){
-						this._populate[populateKey]={'path':populateKey};
-					}
-					if(!this._populate[populateKey].select){
-						this._populate[populateKey].select={};
-					}
-					this._populate[populateKey].select[fieldKey]=value;
+				if(this._isKeyAPopulation(key)){
+					this._setPopulateProperty(key,value,'select');
 				}
 				else{
 					this._field[key]=value;
@@ -99,6 +112,11 @@ module.exports= {
 			this._populate={};
 			return;
 		}
+		if(typeof(populate)=='string'){
+			this._populate={};
+			this._populate[populate]={'path':populate};
+			return;
+		}
 		for(var k in populate){
 		
 			if(_.isObject(populate[k])){
@@ -114,6 +132,23 @@ module.exports= {
 					path:k,
 					select:selectPart
 				}
+
+			}
+		}
+	},
+	_addPopulatePartsToFieldsIfFieldsSet:function(){
+		if(_.isEmpty(this._field) || _.isEmpty(this._populate)){
+			return;
+		}	
+		//Check if ther isnt a false
+		for(var x in this._field){
+			if(this._field[x]===false){
+				return;
+			}
+		}
+		for(populateKey in this._populate){
+			if(!(populateKey in this._field)){
+				this._field[populateKey]=true;
 			}
 		}
 	},
@@ -125,22 +160,13 @@ module.exports= {
 		var populateKey;
 		var searchKey;
 		var value;
-		for(var searchKey in search){
-			value=search[searchKey];
-
-			if(parts=this._getPopulatePartsIfExistent(searchKey)){
-				populateKey=parts[0];
-				searchKey=parts[1];
-				if(!this._populate[populateKey]){
-					this._populate[populateKey]={'path':populateKey};
-				}
-				if(!this._populate[populateKey].match){
-					this._populate[populateKey].match={};
-				}
-				this._populate[populateKey].match[searchKey]=value;
+		for(var key in search){
+			value=search[key];
+			if(this._isKeyAPopulation(key)){
+				this._setPopulateProperty(key,value,'match');
 			}
 			else{
-				this._search[searchKey]=value;
+				this._search[key]=value;
 			}
 		}
 	},
