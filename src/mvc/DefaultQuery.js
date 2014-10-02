@@ -15,6 +15,7 @@ module.exports= {
 		if(_.isEmpty(this._populate)){
 			return {};
 		}
+		this._addPopulatePartsToFieldsIfFieldsSet();
 		return _.values(this._populate);
 	},
 	getOptions:function(){
@@ -40,7 +41,6 @@ module.exports= {
 			this._populate[populateKey][property]={};
 		}
 		this._populate[populateKey][property][valueKey]=value;
-		this._addPopulatePartsToFieldsIfFieldsSet();
 	},
 	_setOptionsFromInput:function(options){
 		if(!options){
@@ -59,7 +59,6 @@ module.exports= {
 			else{
 				this._option[key]=options[key];
 			}
-
 		}
 	},
 	_setFieldsFromInput:function(fields){
@@ -91,7 +90,6 @@ module.exports= {
 				this._field[key]=value;
 			}
 		}
-		this._addPopulatePartsToFieldsIfFieldsSet();
 	},
 	_getSelectPartFromString:function(str){
 		var parts=str.split(' ');
@@ -109,7 +107,6 @@ module.exports= {
 		if(typeof(populate)=='string'){
 			this._populate={};
 			this._populate[populate]={'path':populate};
-			this._addPopulatePartsToFieldsIfFieldsSet();
 			return;
 		}
 		for(var k in populate){
@@ -129,13 +126,18 @@ module.exports= {
 				}
 
 			}
-			this._addPopulatePartsToFieldsIfFieldsSet();
 		}
 	},
 	_addPopulatePartsToFieldsIfFieldsSet:function(){
 		if(_.isEmpty(this._field)){
 			return;
 		}	
+		//Check if ther isnt a false
+		for(var x in this._field){
+			if(this._field[x]===false){
+				return;
+			}
+		}
 		for(populateKey in this._populate){
 			if(!(populateKey in this._field)){
 				this._field[populateKey]=true;
