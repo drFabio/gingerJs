@@ -10,7 +10,7 @@ module.exports={
 	},
 	_buildNamespace:function(parentNamespace,currentDirectory){
 		var ret;
-		if(parentNamespace==='' || typeof(parentNamespace)=='undefined'){
+		if(parentNamespace==='' || typeof(parentNamespace)=='undefined' || parentNamespace==null){
 			ret=currentDirectory;
 		}
 		else{

@@ -34,9 +34,39 @@ module.exports={
 
 		return this._autoCruds;
 	},
-	createEmptySchema:function(name){
-		var structure=new mongoose.Schema({},{strict:false});
-		return mongoose.model(name,structure,name);
+	create:function(name,var_args){
+		try{
+			return this._super.apply(this,arguments);
+		}
+		catch(err){
+			return this._createEmptySchema.apply(this,arguments);
+
+		}
+
+
+	},
+	/**
+	*@todo cleancode
+	*/
+	_createEmptySchema:function(name){
+		var obj={
+			getStructure:function(){
+				return new mongoose.Schema({},{strict:false})
+			}
+		}
+		var askedName=name;
+		var appName=this._defaulAppNamespace+'.'+name;
+		var namespaceData= {name:name,namespace:appName,isApp:true,isEngine:false};
+		var namespace=namespaceData.namespace;
+		//If is configurable the first argument is the parasm from the config
+		if(this.isConfigurable()){
+			var params=this._getParams(name,arguments[1]);
+			arguments[1]=params;
+		}
+		this.setAppClass(name,null,null,namespace,obj);
+		arguments[0]=namespace;
+		return this._getObject.apply(this,arguments);
+
 	},
 	initializeSchemas:function(){
 		var functionsToExecute=[];

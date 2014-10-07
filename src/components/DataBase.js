@@ -38,15 +38,6 @@ module.exports={
 	getSchemaDbObject:function(schemaName){
 		return this._schemaFactory.createSchema(schemaName);
 	},
-	getSchemaDbObjectOrCreateEmpty:function(schemaName){
-		try{
-			return this._schemaFactory.createSchema(schemaName);
-		}
-		catch(err){
-			return this._schemaFactory.createEmptySchema(schemaName);
-
-		}
-	},
 	update:function(schemaName,data,searchData,cb){
 		try{ 
 			this._validateDataToSave(schemaName,data,'update');

@@ -28,7 +28,7 @@ describe('Schema Factory',function(){
 			}
 			schemaFactory=ginger.getBootstrap('SchemaFactory');
 			done();
-		})
+		});
 	});
 	describe('Add schema',function(){
 		it('Should be able to add a normal one',function(done){
@@ -53,6 +53,11 @@ describe('Schema Factory',function(){
 				obj.setup();
 				done();
 			});
+		});
+		it('Should create a empty schema if one is not defined',function(done){
+			var obj=schemaFactory.create('nonExistantSchema');
+			expect(obj).to.exist;
+			done();
 		});
 	});
 	after(function(done){

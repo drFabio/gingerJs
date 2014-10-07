@@ -47,7 +47,7 @@ module.exports={
 		}
 		return name.toLowerCase();
 	},
-	setAppClass:function(name,path,parentNamespace,fullNamespace){
+	setAppClass:function(name,path,parentNamespace,fullNamespace,POJO){
 
 		var defaultParent=null;
 		name=this._buildNamespace(parentNamespace,name);
@@ -67,14 +67,17 @@ module.exports={
 				defaultParent=this._defaultAppParent;
 			}
 		}
-		var POJO;
-		if(path){
+		if(!POJO){
+			POJO={};
+			if(path){
 
-			POJO=this._getPojo(path,defaultParent);
+				POJO=this._getPojo(path,defaultParent);
+			}
+			else{
+				POJO=this._classFactory.getClassFileContents(fullNamespace);
+			}
 		}
-		else{
-			POJO=this._classFactory.getClassFileContents(fullNamespace);
-		}
+
 		if(!POJO.parent){
 			POJO=this._setDefaultParentOnPOJO(POJO,defaultParent);
 			
