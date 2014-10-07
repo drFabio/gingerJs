@@ -3,30 +3,29 @@ var _=require('lodash');
 var async=require('async');
 var DEFAULT_LIST_LIMIT=5;
 module.exports={
-	_isConnected:false,
-	_isClosed:false,
 	init: function(engine,params) {
+		this._isConnected=false;
+		this._isClosed=false;
 		this._engine=engine;
 		this._params=params;
 		this._schemaFactory=engine.getBootstrap('SchemaFactory');
-		if(!this._isConnected){
-			this._isConnected=true;
-			this._isClosed=false;
-			var mongoConfig=this._params['mongo'];
-			var uri=this._buildConection(mongoConfig.url,mongoConfig.port,mongoConfig.base);
-			mongoose.connect(uri);
-			this._addFunctionToClose();
+	
 
-			// CONNECTION EVENTS
-			// When successfully connected
-			mongoose.connection.on('connected', function () {
-			});
+	},
+	up:function(cb){
 
-			// If the connection throws an error
-			mongoose.connection.on('error',function (err) {
-				throw err;
-			});
+		if(this._isConnected){
+			cb();
+			return;
 		}
+		this._isConnected=true;
+		this._isClosed=false;
+		var mongoConfig=this._params['mongo'];
+		var uri=this._buildConection(mongoConfig.url,mongoConfig.port,mongoConfig.base);
+		mongoose.connect(uri,function(err,data){
+			cb(err);
+		});
+		this._addFunctionToClose();
 
 	},
 	_buildConection:function(url,port,base){

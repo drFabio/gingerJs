@@ -40,7 +40,7 @@ var comparePopulate=function(query,inputPopulate){
 		}
 	}
 }
-describe.only('DefaultQuery',function(){
+describe('DefaultQuery',function(){
 	before(function(done){
 		utils.initServer(function(err){
 			if(err){

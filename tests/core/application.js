@@ -26,7 +26,9 @@ describe('Application',function(){
 		before(function(done){
 			ginger=new Ginger();
 			ginger.setAppPath(__dirname+'/../exampleApplication/');
-			ginger.up(done);
+			ginger.up(function(err,data){
+				done(err);
+			});
 		});
 		it('Should have the config by the application',function(){
 			expect(ginger.getConfig().name).to.equal("Example");

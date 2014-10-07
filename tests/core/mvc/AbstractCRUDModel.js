@@ -37,7 +37,6 @@ describe('AbstractCRUDModel',function(){
 				var model=ginger.getModel('categories');
 				var readCb=function(err,data){
 					expect(err).to.not.exist;
-					console.log(data);
 					done();
 				}
 				model.readById(id,readCb,fields);
