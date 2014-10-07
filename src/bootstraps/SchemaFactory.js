@@ -34,6 +34,10 @@ module.exports={
 
 		return this._autoCruds;
 	},
+	createEmptySchema:function(name){
+		var structure=new mongoose.Schema({},{strict:false});
+		return mongoose.model(name,structure,name);
+	},
 	initializeSchemas:function(){
 		var functionsToExecute=[];
 		for(var x in this._nameMap){
