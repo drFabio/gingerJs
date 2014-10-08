@@ -136,6 +136,9 @@ module.exports={
 		return {};
 	},
 	getDbObject:function(){
+		if(!this._isLoaded){
+			this.setup();
+		}
 		return this._dbObject;
 	},
 	_createDatabaseObject:function(){

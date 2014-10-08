@@ -6,6 +6,9 @@ module.exports= {
 		this._dataBase=engine.getComponent('DataBase');
 
 	},
+	insert:function(data,cb){
+		this._dataBase.insert(this._schemaName,data,cb);
+	},
 	create:function(data,cb){
 
 		this._dataBase.create(this._schemaName,data,cb)

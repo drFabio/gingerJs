@@ -89,6 +89,10 @@ module.exports={
 		var Schema=this.getSchema(schemaName);
 		Schema.validate(data);
 	},
+	insert:function(schemaName,data,cb){
+		var SchemaDbObject=this.getSchemaDbObject(schemaName);
+		SchemaDbObject.collection.insert(data,cb);
+	},
 	create:function(schemaName,data,cb){
 		var self=this;
 		try{
