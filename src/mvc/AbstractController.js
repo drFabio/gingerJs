@@ -1,8 +1,8 @@
 module.exports={
+	parent:'ginger.mvc.AbstractElement',
+
 	_actionSuffix:'Action',
-	init: function(engine) {
-		
-		this._engine=engine;
+	_setup:function(){
 		this._initializeModel();
 		this._actions=this.getActionsMap();
 	},

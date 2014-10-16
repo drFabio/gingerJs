@@ -3,6 +3,10 @@ module.exports={
 	_defaulAppNamespace:'models',
 	_defaultAppParent:'ginger.mvc.AbstractModel',
 	_defaultCRUDParent:'ginger.mvc.AbstractCRUDModel',
+	init : function(engine,params) {
+		this._super(engine,params);
+		this._eventFactory=engine.getBootstrap('EventEmitterFactory');
+	},
 	handleAutoSchemaCrud:function(schemaNames){
 		schemaNames.forEach(function(s){
 			if(this.hasElement(s)){
@@ -13,24 +17,12 @@ module.exports={
 			}
 			this.mergeObjectPojo(s,{_schemaName:s});
 		},this);
+	},
+	create : function (name, var_args) {
+		var obj=this._super.apply(this,arguments);
+		if(obj.hasEvents){
+			obj=this._eventFactory.makeObjectEventEmitter(obj);
+		}
+		return obj;
 	}
 }
-/*
-	changeObjectParent:function(name,newParent){
-		var element=this.getElementByName(name);
-		var namespace=element.namespace;
-		var pojo=this._classFactory.getClassPojo(namespace);
-		if(_.isEmpty(pojo)){
-			throw new Error(name+' was not found!,searched on the '+namespace+'  namespace');
-		}
-
-		if(!this._isParentTheDefault(pojo.parent)){
-			return false;
-		}
-		pojo.parent=newParent;
-		element.pojo=pojo;
-		this._overwrideElementData(name,element);
-		this._classFactory.setClassPojo(namespace,pojo,true);
-		return true;
-	},
- */
