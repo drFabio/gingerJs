@@ -34,14 +34,16 @@ describe('Model Factory',function(){
 			var obj=addModelSuccessfully('Event');
 			expect(obj).to.exist;
 			var testName='bar';
-			obj.on('foo',function(){
-				obj.callHello(testName);
+			var model=ginger.getModel('Event');
+			model.on('foo',function(){
+
+				model.callHello(testName);
 			});
-			obj.on('hello',function(helloName){
+			model.on('hello',function(helloName){
 				expect(helloName).to.equal('Hello '+testName);
 				done();
 			});
-			obj.emit('foo');
+			model.emit('foo');
 		});
 	});
 	after(function(done){

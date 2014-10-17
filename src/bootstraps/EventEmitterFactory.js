@@ -4,6 +4,9 @@ var _=require('lodash');
 module.exports= {
 	parent:'ginger.bootstraps.Default',
 	makeObjectEventEmitter:function(obj){
+		if(!!obj.on && !!obj.emit){
+			return obj;
+		}
 		var ee = new EventEmitter();
 		for(var k in ee){
 			if(obj[k]){

@@ -74,5 +74,12 @@ module.exports={
 		this._engine.addFunctionToLaunchQueue(func);
 		this._initializedMap[saneName]=true;
 		return true;
+	},
+	create : function (name, var_args) {
+		var obj=this._super.apply(this,arguments);
+		if(obj.hasEvents){
+			obj=this._eventFactory.makeObjectEventEmitter(obj);
+		}
+		return obj;
 	}
 }
