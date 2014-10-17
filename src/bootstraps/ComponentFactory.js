@@ -11,6 +11,7 @@ module.exports={
 	init : function(engine,params) {
 		this._objectList={};
 		this._initializedMap={};
+		this._eventFactory=engine.getBootstrap('EventEmitterFactory');
 		this._super(engine,params);
 		var config=this._engine._config.components;
 		this._config={}
