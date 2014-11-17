@@ -215,7 +215,6 @@ Ginger.prototype._setupApp = function (cb) {
 
 
     } catch (err) {
-        throw err;
         cb(err);
     }
 }

@@ -16,7 +16,7 @@ module.exports = {
     _buildError:function(error,id){
       var code=ERRORS_MAP[error.code];
       if(!code){
-        code=ERRORS_MAP['SERVER_ERROR'];
+        code=ERRORS_MAP['INTERNAL'];
       }
         message=error.message;
         var data=error.data;
@@ -24,7 +24,7 @@ module.exports = {
             data=error.message;
         }
         var jsonError= {code:code,message:message,data:data}
-        return  {id:id,error:jsonError,"version":"2.0"};
+        return  {id:id,error:jsonError,"version":"2.0",isError:true};
     },
     _buildResult:function(result,id){
         return {id:id,result:result,"version":"2.0"};
@@ -32,10 +32,11 @@ module.exports = {
     _getDefaultMiddlewares:function(){
         return ['ValidJSONRPC','JSONMiddlewareProxy'];
     },
-    _sendError:function(req,res,error,id){
+    _sendError:function(req,res,error){
+        var id=req.query.id;
         var response= this._buildError(error,id);
         res.setHeader('Content-Type', 'application/json');
-        res.status(200).send(JSON.stringify(response));
+        res.status(200).send(response);
     },
     _getRouterHandlerComponent:function(){
         return this._engine.getRouterHandler('JSONRPC');
@@ -67,6 +68,7 @@ module.exports = {
                     error.data=body.errors;
                 }
                 else if(body.isError===true){
+                    delete body.isError;
                     error=body;
                 }
                 else{
@@ -116,12 +118,22 @@ module.exports = {
             argsToAdd.push(middleware.getMiddleware(controllerObj,self,controllerData));
         },this);
 
+
+
         argsToAdd.push(function(req,res){
             var actionFunction=controllerObj.getActionFunctionByName(req.JSONRPC.method);
             var controllerFunction=controllerObj[actionFunction].bind(controllerObj);
-            controllerFunction(req,res);
+            var theFunc=    controllerObj[actionFunction].bind(controllerObj);
+            try{
+                
+                theFunc(req,res);
+            }
+            catch(err){
+                self._sendError(req,res,err)
+            }
         });
         this._app[verb].apply(this._app,argsToAdd);
     
-    }
+    },
+   
 }

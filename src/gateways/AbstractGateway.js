@@ -66,8 +66,16 @@ module.exports={
 		var verb=this._getHTTPVerb(routeData.verb);
 		var middlewares=this._getDefaultMiddlewares();
 		var self=this;
-		var controllerFunction=controllerObj[actionFunction].bind(controllerObj);
-
+		var controllerFunction=function(req,res){
+			var theFunc=	controllerObj[actionFunction].bind(controllerObj);
+			try{
+				
+				theFunc(req,res);
+			}
+			catch(err){
+				self._sendError(req,res,err)
+			}
+		}
 		if(routeData.middlewares){
 			middlewares=middlewares.concat(routeData.middlewares);
 		} 
@@ -100,5 +108,8 @@ module.exports={
 		self._expressComponent=express;
 		self._app=self._expressComponent.getApp();
 
-	}
+	},
+	_sendError:function(req,res,error){
+        res.send(error);
+    }
 }

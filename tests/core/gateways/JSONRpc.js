@@ -80,7 +80,7 @@ describe('Gateway JsonRPC',function(){
 					}
 					var response=JSON.parse(data.body);
 					var statusCode=data.status;
-					expect(response.error).to.exist
+					expect(response.error).to.exist;
 					expect(response.error.code).to.equal('-32002');
 					expect(statusCode).to.equal(200);
 					done(err);
@@ -90,7 +90,23 @@ describe('Gateway JsonRPC',function(){
 			});
 
 			it('Should respond to error -32602 on Invalid Params');
-			it('Should respond to error -32603 on Internal error');
+			it('Should respond to error -32603 on Internal error',function(done){
+				var postData={'method':'error',"id":"1234"};
+				httpHelper.sendPost('/JSONRPC/ExceptionTrhower',postData,function(err,data){
+					if(err){
+						done(err);
+						return;
+					}
+					var response=JSON.parse(data.body);
+					var statusCode=data.status;
+					console.log(response);
+					expect(response.error).to.exist;
+					expect(response.error.code).to.equal('-32603');
+					expect(statusCode).to.equal(200);
+					done(err);
+				});
+
+			});
 
 
 		});
