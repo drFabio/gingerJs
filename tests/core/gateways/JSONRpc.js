@@ -99,7 +99,6 @@ describe('Gateway JsonRPC',function(){
 					}
 					var response=JSON.parse(data.body);
 					var statusCode=data.status;
-					console.log(response);
 					expect(response.error).to.exist;
 					expect(response.error.code).to.equal('-32603');
 					expect(statusCode).to.equal(200);

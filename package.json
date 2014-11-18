@@ -24,7 +24,9 @@
         "express-session":"*",
         "passport":"*",
         "passport-local":"*",
-        "validator":"*"
+        "validator":"*",
+        "jsnlog":"*",
+        "jsnlog-nodejs":"*"
     },
     "scripts": {
         "start": "node app.js",

@@ -7,7 +7,7 @@ module.exports={
 
 	init: function(engine,params) {
 		this._configParams(engine,params);
-
+		this._log=engine.getComponent('Log');
 	},
 	start:function(cb){
 		this._initExpress();

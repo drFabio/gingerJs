@@ -125,10 +125,12 @@ module.exports = {
             var controllerFunction=controllerObj[actionFunction].bind(controllerObj);
             var theFunc=    controllerObj[actionFunction].bind(controllerObj);
             try{
-                
+                self._log.info('Acessing '+controllerData.name+' '+actionFunction);
                 theFunc(req,res);
+
             }
             catch(err){
+                self._log.error('Error acessing '+controllerData.name+' '+actionFunction);
                 self._sendError(req,res,err)
             }
         });
