@@ -121,18 +121,9 @@ module.exports = {
 
 
         argsToAdd.push(function(req,res){
-            var actionFunction=controllerObj.getActionFunctionByName(req.JSONRPC.method);
-            var controllerFunction=controllerObj[actionFunction].bind(controllerObj);
-            var theFunc=    controllerObj[actionFunction].bind(controllerObj);
-            try{
-                self._log.info('Acessing '+controllerData.name+' '+actionFunction);
-                theFunc(req,res);
-
-            }
-            catch(err){
-                self._log.error('Error acessing '+controllerData.name+' '+actionFunction);
-                self._sendError(req,res,err)
-            }
+            var action=req.JSONRPC.method;
+            var controllerFunction=self._getControllerFunction(controllerData.name,action,controllerObj);
+            controllerFunction(req,res);
         });
         this._app[verb].apply(this._app,argsToAdd);
     

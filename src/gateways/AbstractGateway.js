@@ -61,21 +61,11 @@ module.exports={
 		return [];
 	},
 	_addRouteToApp:function(action,url,controllerObj,controllerData){
-		var actionFunction=controllerObj.getActionFunctionByName(action);
 		var routeData=this._routerHandlerComponent.getRouteData(controllerData.name,action);
 		var verb=this._getHTTPVerb(routeData.verb);
 		var middlewares=this._getDefaultMiddlewares();
 		var self=this;
-		var controllerFunction=function(req,res){
-			var theFunc=	controllerObj[actionFunction].bind(controllerObj);
-			try{
-				
-				theFunc(req,res);
-			}
-			catch(err){
-				self._sendError(req,res,err)
-			}
-		}
+		var controllerFunction=this._getControllerFunction(controllerData.name,action,controllerObj);
 		if(routeData.middlewares){
 			middlewares=middlewares.concat(routeData.middlewares);
 		} 
@@ -92,10 +82,7 @@ module.exports={
 				argsToAdd.push(middleware.getMiddleware(controllerObj,self,controllerData));
 			},this);
 
-			argsToAdd.push(function(req,res){
-
-				controllerFunction(req,res);
-			});
+			argsToAdd.push(controllerFunction);
 			this._app[verb].apply(this._app,argsToAdd);
 		}
 	},
@@ -111,5 +98,25 @@ module.exports={
 	},
 	_sendError:function(req,res,error){
         res.send(error);
+    },
+    _canUserAccessAction:function(req,res,controller,action,cb){
+    	cb(req,res);
+    },
+    _getControllerFunction:function(controller,action,controllerObj){
+    	var actionFunctionName=controllerObj.getActionFunctionByName(action);
+        var actionFunction=controllerObj[actionFunctionName].bind(controllerObj);
+		var self=this;
+		var actionFunctionWithErrorHandling=function(req,res){
+	        try{
+	            actionFunction(req,res);
+
+	        }
+	        catch(err){
+	            self._sendError(req,res,err)
+	        }
+		}
+		return function(req,res){
+			self._canUserAccessAction(req,res,controller,action,actionFunctionWithErrorHandling);
+		}
     }
 }
