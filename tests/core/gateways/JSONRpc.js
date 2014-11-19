@@ -61,6 +61,7 @@ describe('Gateway JsonRPC',function(){
 						done(err);
 						return;
 					}
+					console.log(data.body);
 					var response=JSON.parse(data.body);
 					var statusCode=data.status;
 					expect(response.error).to.exist

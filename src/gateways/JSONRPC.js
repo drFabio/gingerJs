@@ -33,10 +33,16 @@ module.exports = {
         return ['ValidJSONRPC','JSONMiddlewareProxy'];
     },
     _sendError:function(req,res,error){
-        var id=req.query.id;
-        var response= this._buildError(error,id);
+        var statusCode=200;
+        var response=this.buildResponse(req.query.id,error);
         res.setHeader('Content-Type', 'application/json');
-        res.status(200).send(response);
+        if(res.originalSend){
+            res.originalSend.call(res,response);
+            return;
+        }
+        else{
+            res.status(200).send(response);
+        }
     },
     _getRouterHandlerComponent:function(){
         return this._engine.getRouterHandler('JSONRPC');
@@ -44,9 +50,8 @@ module.exports = {
     _getSendProxy:function(res,id){
         var self=this;
         var oldSend=res.send;
-        
+        res.originalSend=oldSend;
         return function(body){
-            var statusCode=200;
             if (2 == arguments.length) {
                 // res.send(body, status) backwards compat
                 if ('number' != typeof body && 'number' == typeof arguments[1]) {
@@ -82,6 +87,7 @@ module.exports = {
             else{
                 result=true;
             }
+            var statusCode=200;
            response=self.buildResponse(id,error,result);
             res.setHeader('Content-Type', 'application/json');
             oldSend.call(res,response);
