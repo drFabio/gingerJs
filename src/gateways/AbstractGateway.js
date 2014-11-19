@@ -100,7 +100,7 @@ module.exports={
         res.send(error);
     },
     _canUserAccessAction:function(req,res,controller,action,cb){
-    	var err=this._sendError(req,res,this._engine.getError('Forbidden'));
+    	// var err=this._sendError(req,res,this._engine.getError('Forbidden'));
 
     	cb(req,res);
     },

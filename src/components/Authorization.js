@@ -1,4 +1,5 @@
 var _=require('lodash');
+var async=require('async');
 module.exports= {
 	init:function(engine,params) {
 		this._super(engine,params);
@@ -82,8 +83,49 @@ module.exports= {
 			return false;
 		}
 		return true;
-	}
+	},
+	isUserAllowed:function(user,req,controller,action,cb){
+		var requirements=this.getAccessRequirements(controller,action);
+		
+		var funcsToExecute=[];
+		var self=this;
+		if(!_.isEmpty(requirements.role)){
+			requirements.role.forEach(function(r){
+				funcsToExecute.push(function(asyncCb){
+					self._checkIfUserHasRole(user,req,r,asyncCb);
+				});
+			});
+		}
+		if(!_.isEmpty(requirements.permission)){
+			requirements.permission.forEach(function(p){
+				funcsToExecute.push(function(asyncCb){
+					self._checkIfUserHasPermission(user,req,p,asyncCb);
+				});
+			});
+		}
+		if(_.isEmpty(funcsToExecute)){
+			cb(null,true);
+			return;
+		};
+		async.parallel(funcsToExecute,function(err,data){
+			cb(err,true);
+		});
 
+	},
+	_checkIfUserHasRole:function(user,req,role,cb){
+		if(user.roles.indexOf(role)>=0){
+			cb(null,true);
+			return;
+		}
+		cb(this._engine.getError('Forbidden'));
+	},
+	_checkIfUserHasPermission:function(user,req,permission,cb){
+		if(user.permissions.indexOf(permission)>=0){
+			cb(null,true);
+			return;
+		}
+		cb(this._engine.getError('Forbidden'));
+	},
 
 };
 

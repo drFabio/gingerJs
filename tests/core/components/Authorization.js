@@ -26,7 +26,7 @@ var rulesToParse=[
 	},
 		
 ];
-describe('Component Authorization',function(){
+describe.only('Component Authorization',function(){
 	var ginger;
 	//Initializing the app by path first
 	before(function(done){
@@ -63,6 +63,34 @@ describe('Component Authorization',function(){
 
 			access=authorizationComponent.getAccessRequirements('someController','anotherAction');
 			expect(access.role.indexOf('manager')).to.be.at.least(0);
+		});
+		it('Should be able to check static permissions',function(done){
+			authorizationComponent.setRules(rulesToParse);
+			var user={
+				'permissions':['permissionC']
+			}
+			authorizationComponent._checkIfUserHasPermission(user,null,'permissionC',function(err,hasPermission){
+				expect(hasPermission).to.be.true;
+				authorizationComponent._checkIfUserHasPermission(user,null,'permissionD',function(err,hasPermission){
+					expect(err).to.be.exist;
+					expect(err.code).to.equal('FORBIDDEN');
+					done();
+				});
+			});
+		});
+		it('Should be able to check static roles',function(done){
+			authorizationComponent.setRules(rulesToParse);
+			var user={
+				'roles':['roleA']
+			}
+			authorizationComponent._checkIfUserHasRole(user,null,'roleA',function(err,hasPermission){
+				expect(hasPermission).to.be.true;
+				authorizationComponent._checkIfUserHasRole(user,null,'roleB',function(err,hasPermission){
+					expect(err).to.be.exist;
+					expect(err.code).to.equal('FORBIDDEN');
+					done();
+				});
+			});
 		});
 	});
 
