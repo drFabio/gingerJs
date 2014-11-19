@@ -107,23 +107,20 @@ module.exports={
     	var actionFunctionName=controllerObj.getActionFunctionByName(action);
         var actionFunction=controllerObj[actionFunctionName].bind(controllerObj);
 		var self=this;
-		var actionFunctionWithErrorHandling=function(req,res){
-	        try{
-	            actionFunction(req,res);
-
-	        }
-	        catch(err){
-	            self._sendError(req,res,err)
-	        }
-		}
+		
 		return function(req,res){
-			self._canUserAccessAction(req,res,controller,action,function(err,canAccess){
-				if(err){
-					self._sendError(req,res,err);
-					return;
-				}
-				actionFunctionWithErrorHandling(req,res);
-			});
+			try{
+				self._canUserAccessAction(req,res,controller,action,function(err,canAccess){
+						if(err){
+							self._sendError(req,res,err);
+							return;
+						}
+						actionFunction(req,res);
+				});
+			}
+			catch(err){
+				self._sendError(req,res,err)
+			}
 		}
-    }
+	}
 }

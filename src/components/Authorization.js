@@ -134,7 +134,7 @@ module.exports= {
 			this._roleResolvers[role](user,req,role,cb);
 			return;
 		}
-		if(!!user.roles && user.roles.indexOf(role)>=0){
+		if(!!user && !!user.roles && user.roles.indexOf(role)>=0){
 			cb(null,true);
 			return;
 		}
@@ -145,7 +145,7 @@ module.exports= {
 			this._permissionResolvers[permission](user,req,permission,cb);
 			return;
 		}
-		if(!!user.permissions && user.permissions.indexOf(permission)>=0){
+		if(!!user && !!user.permissions && user.permissions.indexOf(permission)>=0){
 			cb(null,true);
 			return;
 		}
