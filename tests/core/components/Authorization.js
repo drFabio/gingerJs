@@ -1,4 +1,5 @@
 var authorizationComponent;
+var async=require('async');
 var _=require('lodash');
 var Utils=require('../../tools/utils');
 var utils=new Utils();
@@ -24,9 +25,13 @@ var rulesToParse=[
 		exclude:['someController#action'],
 		role:'manager'
 	},
-		
+	{
+		include:['someController#dynamicAction'],
+		permission:'dynamicPermission',
+		role:'dynamicRole'
+	},
 ];
-describe.only('Component Authorization',function(){
+describe('Component Authorization',function(){
 	var ginger;
 	//Initializing the app by path first
 	before(function(done){
@@ -37,6 +42,21 @@ describe.only('Component Authorization',function(){
 			}
 			ginger=utils.getServer();
 			authorizationComponent=ginger.getComponent('Authorization');
+			authorizationComponent.setRules(rulesToParse);
+			authorizationComponent.addPermissionResolver('dynamicPermission',function(user,req,role,cb){
+				if(req.query.a='b'){
+					cb(null,true);
+					return;
+				}
+				cb(ginger.getError('Forbidden'));
+			});
+			authorizationComponent.addRoleResolver('dynamicRole',function(user,req,role,cb){
+				if(req.query.a='b'){
+					cb(null,true);
+					return;
+				}
+				cb(ginger.getError('Forbidden'));
+			});
 			done();
 
 		}
@@ -44,7 +64,6 @@ describe.only('Component Authorization',function(){
 	});
 	describe('Initialization',function(){
 		it('Should be able to get the rules for a given controller action',function(){
-			authorizationComponent.setRules(rulesToParse);
 			var access=authorizationComponent.getAccessRequirements('anyController','anyAction');
 			
 			expect(access.role.indexOf('authenticated')).to.be.at.least(0);
@@ -65,7 +84,6 @@ describe.only('Component Authorization',function(){
 			expect(access.role.indexOf('manager')).to.be.at.least(0);
 		});
 		it('Should be able to check static permissions',function(done){
-			authorizationComponent.setRules(rulesToParse);
 			var user={
 				'permissions':['permissionC']
 			}
@@ -79,7 +97,6 @@ describe.only('Component Authorization',function(){
 			});
 		});
 		it('Should be able to check static roles',function(done){
-			authorizationComponent.setRules(rulesToParse);
 			var user={
 				'roles':['roleA']
 			}
@@ -91,6 +108,59 @@ describe.only('Component Authorization',function(){
 					done();
 				});
 			});
+		});
+
+		it('Should be able to check dynamic permissions',function(done){
+			var user={}
+			authorizationComponent._checkIfUserHasPermission(user,{'query':{'a':'b'}},'dynamicPermission',function(err,hasPermission){
+				expect(hasPermission).to.be.true;
+				done();
+			});
+		});
+		it('Should be able to check dynamic roles',function(done){
+			var user={}
+			authorizationComponent._checkIfUserHasRole(user,{'query':{'a':'b'}},'dynamicRole',function(err,hasPermission){
+				expect(hasPermission).to.be.true;
+				done();
+			});
+		});
+		it('Should be able to check if a user has access to controllers and actions',function(done){
+			var user={
+				'permissions':['permissionC'],
+				'roles':['manager','authenticated']
+			}
+			var req={'query':{'a':'b'}};
+			var expectError=function(asyncCb){
+				return function(err,data){
+					expect(err).to.exist;
+					expect(err.code).to.equal('FORBIDDEN');
+					asyncCb();
+				}
+			}
+			var expectSuccess=function(asyncCb){
+				return function(err,data){
+					expect(err).to.not.exist;
+					expect(data).to.be.true;
+					asyncCb();
+				}
+			}
+			var userb={
+				'permissions':['permissionA','permissionB'],
+			}
+			var functionsToExecute=[
+				function(asyncCb){
+					authorizationComponent.isUserAllowed(user,req,'someController','dynamicAction',expectSuccess(asyncCb));
+				},
+				function(asyncCb){
+					authorizationComponent.isUserAllowed(user,req,'someController','action',expectError(asyncCb));
+				},
+				function(asyncCb){
+					authorizationComponent.isUserAllowed(userb,req,'someController','action',expectSuccess(asyncCb));
+				}
+			];
+			async.parallel(functionsToExecute,function(err,data){
+				done();
+			})
 		});
 	});
 

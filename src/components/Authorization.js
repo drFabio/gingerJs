@@ -3,8 +3,10 @@ var async=require('async');
 module.exports= {
 	init:function(engine,params) {
 		this._super(engine,params);
+		this._permissionResolvers={};
+		this._roleResolvers={};
 	},
-	setRules:function(rules){
+	_parseRules:function(rules){
 		var theRule;
 		var include;
 		var exclude;
@@ -58,7 +60,16 @@ module.exports= {
 			}
 			rulesToAdd.push(theRule);
 		});
-		this._rules=rulesToAdd;
+		return rulesToAdd;
+	},
+	addRoleResolver:function(role,resolver){
+		this._roleResolvers[role]=resolver;
+	},
+	addPermissionResolver:function(permission,resolver){
+		this._permissionResolvers[permission]=resolver;
+	},
+	setRules:function(rules){
+		this._rules=this._parseRules(rules);
 	},
 	getAccessRequirements:function(controller,action){
 		var ret={role:[],permission:[]};
@@ -108,11 +119,19 @@ module.exports= {
 			return;
 		};
 		async.parallel(funcsToExecute,function(err,data){
-			cb(err,true);
+			if(err){
+				cb(err);
+				return;
+			}
+			cb(null,true);
 		});
 
 	},
 	_checkIfUserHasRole:function(user,req,role,cb){
+		if(this._roleResolvers[role]){
+			this._roleResolvers[role](user,req,role,cb);
+			return;
+		}
 		if(user.roles.indexOf(role)>=0){
 			cb(null,true);
 			return;
@@ -120,6 +139,10 @@ module.exports= {
 		cb(this._engine.getError('Forbidden'));
 	},
 	_checkIfUserHasPermission:function(user,req,permission,cb){
+		if(this._permissionResolvers[permission]){
+			this._permissionResolvers[permission](user,req,permission,cb);
+			return;
+		}
 		if(user.permissions.indexOf(permission)>=0){
 			cb(null,true);
 			return;
