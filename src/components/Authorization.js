@@ -74,14 +74,16 @@ module.exports= {
 	getAccessRequirements:function(controller,action){
 		var ret={role:[],permission:[]};
 		var self=this;	
-		this._rules.forEach(function(r){
-			//First we see if it's included
-			if(self._isRuleApplicable(r,controller,action)){
-				ret.role=ret.role.concat(r.role);
-				ret.permission=ret.permission.concat(r.permission);
-			}
+		if(this._rules){
+			this._rules.forEach(function(r){
+				//First we see if it's included
+				if(self._isRuleApplicable(r,controller,action)){
+					ret.role=ret.role.concat(r.role);
+					ret.permission=ret.permission.concat(r.permission);
+				}
 
-		});
+			});
+		}
 		return ret;
 	},
 	_isRuleApplicable:function(rule,controller,action){
@@ -132,7 +134,7 @@ module.exports= {
 			this._roleResolvers[role](user,req,role,cb);
 			return;
 		}
-		if(user.roles.indexOf(role)>=0){
+		if(!!user.roles && user.roles.indexOf(role)>=0){
 			cb(null,true);
 			return;
 		}
@@ -143,7 +145,7 @@ module.exports= {
 			this._permissionResolvers[permission](user,req,permission,cb);
 			return;
 		}
-		if(user.permissions.indexOf(permission)>=0){
+		if(!!user.permissions && user.permissions.indexOf(permission)>=0){
 			cb(null,true);
 			return;
 		}

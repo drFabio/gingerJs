@@ -8,6 +8,7 @@ module.exports={
 	init: function(engine,params) {
 		this._configParams(engine,params);
 		this._log=engine.getComponent('Log');
+		this._authorization=engine.getComponent('Authorization');
 	},
 	start:function(cb){
 		this._initExpress();
@@ -100,9 +101,7 @@ module.exports={
         res.send(error);
     },
     _canUserAccessAction:function(req,res,controller,action,cb){
-    	// var err=this._sendError(req,res,this._engine.getError('Forbidden'));
-
-    	cb(req,res);
+    	this._authorization.isUserAllowed(req.user,req,controller,action,cb);
     },
     _getControllerFunction:function(controller,action,controllerObj){
     	var actionFunctionName=controllerObj.getActionFunctionByName(action);
@@ -118,7 +117,13 @@ module.exports={
 	        }
 		}
 		return function(req,res){
-			self._canUserAccessAction(req,res,controller,action,actionFunctionWithErrorHandling);
+			self._canUserAccessAction(req,res,controller,action,function(err,canAccess){
+				if(err){
+					self._sendError(req,res,err);
+					return;
+				}
+				actionFunctionWithErrorHandling(req,res);
+			});
 		}
     }
 }
