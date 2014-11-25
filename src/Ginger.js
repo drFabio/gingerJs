@@ -231,9 +231,9 @@ Ginger.prototype.getQuery = function ( params) {
  * Get a model on the app model directory
  * @return {[type]} [description]
  */
-Ginger.prototype.getModel = function (name) {
+Ginger.prototype.getModel = function (name,var_args) {
     var modelFactory=this.getBootstrap('ModelFactory');
-    return modelFactory.create(name);
+    return modelFactory.create.apply(modelFactory,arguments);
 }
 /**
  * Get a view starting from the view directory
