@@ -286,5 +286,11 @@ module.exports={
 		else{
 			Schema.count(cb);
 		}
+	},
+	ObjectId:function(value){
+		if(typeof(value)=='object'){
+			return value;
+		}
+		return	mongoose.Schema.Types.ObjectId(value);
 	}
 }
