@@ -291,6 +291,6 @@ module.exports={
 		if(typeof(value)=='object'){
 			return value;
 		}
-		return	mongoose.Schema.Types.ObjectId(value);
+		return	mongoose.Types.ObjectId(value);
 	}
 }
