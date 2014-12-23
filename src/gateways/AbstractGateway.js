@@ -11,7 +11,6 @@ module.exports={
 		this._authorization=engine.getComponent('Authorization');
 	},
 	start:function(cb){
-		this._initExpress();
 		this.buildRoutes();
 		cb();
 
@@ -87,16 +86,7 @@ module.exports={
 			this._app[verb].apply(this._app,argsToAdd);
 		}
 	},
-	_initExpress:function(){
-		var self=this;
-		var express=this._engine.getComponent('Express');
-		if(!express){
-			throw new Error('The express component is required to run the HTTP gateway');
-		}
-		self._expressComponent=express;
-		self._app=self._expressComponent.getApp();
 
-	},
 	_sendError:function(req,res,error){
         res.send(error);
     },
