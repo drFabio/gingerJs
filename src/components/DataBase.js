@@ -18,7 +18,6 @@ module.exports={
 			cb();
 			return;
 		}
-		this._mongoose=mongoose;
 		this._isConnected=true;
 		this._isClosed=false;
 		var mongoConfig=this._params['mongo'];

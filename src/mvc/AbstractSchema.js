@@ -143,7 +143,13 @@ module.exports={
 	},
 	_createDatabaseObject:function(){
 		var structure=this.getStructure(this._schemaDefinitions);
-		this._dbObject= mongoose.model(this._name,structure,this._name);
+		try{
+
+			this._dbObject= mongoose.model(this._name,structure,this._name);
+		}
+		catch(err){
+			this._dbObject= mongoose.model(this._name);
+		}
 		this._isLoaded=true;
 		this._engine.addFunctionToCloseQueue(this.clearSchema.bind(this));
 
