@@ -9,8 +9,11 @@ module.exports={
 		this._engine=engine;
 		this._params=params;
 		this._schemaFactory=engine.getBootstrap('SchemaFactory');
-	
+		this._mongoose=mongoose;
 
+	},
+	getMongosse:function(){
+		return this._mongoose;
 	},
 	up:function(cb){
 
