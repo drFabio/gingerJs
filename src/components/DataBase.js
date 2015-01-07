@@ -12,7 +12,7 @@ module.exports={
 		this._mongoose=mongoose;
 
 	},
-	getMongosse:function(){
+	getMongoose:function(){
 		return this._mongoose;
 	},
 	up:function(cb){
