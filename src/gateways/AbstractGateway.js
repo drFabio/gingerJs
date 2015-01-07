@@ -11,6 +11,7 @@ module.exports={
 		this._authorization=engine.getComponent('Authorization');
 	},
 	start:function(cb){
+		this._initExpress();
 		this.buildRoutes();
 		cb();
 
@@ -112,5 +113,15 @@ module.exports={
 				self._sendError(req,res,err)
 			}
 		}
+	},
+	_initExpress:function(){
+		var self=this;
+		var express=this._engine.getComponent('Express');
+		if(!express){
+			throw new Error('The express component is required to run the HTTP gateway');
+		}
+		self._expressComponent=express;
+		self._app=self._expressComponent.getApp();
+
 	}
 }
