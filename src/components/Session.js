@@ -5,8 +5,11 @@ module.exports={
 		var app=expressComponent.getApp();	
 		var self=this;
 		var cookieParser = require('cookie-parser');
-		var session = require('express-session')
+		var session =this._getSession();
 		app.use(cookieParser());
 		app.use(session(self._params));	
+	},
+	_getSession:function(){
+		return require('express-session');
 	}
 }
