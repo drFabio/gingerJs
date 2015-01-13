@@ -291,6 +291,9 @@ module.exports={
 		}
 	},
 	ObjectId:function(value){
+		if(!value){
+			return mongoose.Types.ObjectId();
+		}
 		if(typeof(value)=='object'){
 			return value;
 		}
