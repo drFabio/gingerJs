@@ -157,10 +157,10 @@ module.exports={
 	_getErroFromMongooseError:function(err){
 		switch(err.name){
 			case 'CastError':
-				return this._engine.getError('InvalidParams',err.message);
+				return this._engine.getError('InvalidParams',err.message,null,err.errors);
 			break;
 			default:
-				return this._engine.getError('Internal',err.message);
+				return this._engine.getError('Internal',err.message,null,err.errors);
 			break;
 		}
 
