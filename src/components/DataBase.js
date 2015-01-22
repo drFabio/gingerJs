@@ -252,7 +252,7 @@ module.exports={
 	list:function(schemaName,search,limit,page,fields,options,cb,populate){
 
 		if(parseInt(limit)===-1 || limit==='false' || limit===false){
-			limit=false;
+			limit=this._params.maxAllowedLimit;
 		}
 		else if(!limit || typeof(limit)=='undefined'){
 			limit=DEFAULT_LIST_LIMIT;
