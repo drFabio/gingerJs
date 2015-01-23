@@ -1,5 +1,6 @@
 #GingerJs
-    A HMVC,fully configurable and overwritable Node JS framework
+    A HMVC,fully configurable and overwritable Node JS framework.
+    See the example application on tests for a overview of how it works
 
 #Configuration
 	The config/defaultApp.js gives an overview of how the ginger configuration is made. You can select gateways,put general data and configure components by it.
