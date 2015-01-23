@@ -1,12 +1,18 @@
-#GingerJs
+#*GingerJs*
+---
     A HMVC,fully configurable and overwritable Node JS framework.
     See the example application on tests for a overview of how it works
 
 #Configuration
 	The config/defaultApp.js gives an overview of how the ginger configuration is made. You can select gateways,put general data and configure components by it.
-
+#Inheritance And association
+	The inheritance of classes can be set  by the parent property of the class.
+	By default all controllers inherit ginger.mvc.AbstractController and all modules inherits ginger.mvc.AbstractModel(Unless they have a schema) 
+	Models with the same name of a controller are associated to them.
+	If there is a schema and a controller the controller will Inherit AbstractCrudController,if there is a model it's model will inherits AbastractCrudModel.
+	If there is a schema and no controller or model , they are automatically created unless it's specified to not to.
 #Structures
-
+---
 ##The engine
     The engine is the main structure to access the components, it is commanded by a config file.
 
