@@ -12,7 +12,7 @@ var libs = {
     _: _,
 };
 /**
- * The application main Ginger
+ * The application main engine
  */
 function Ginger() {
     this._closeQueue=[];
