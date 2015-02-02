@@ -15,7 +15,7 @@
         "lodash":"2.*",
         "express":"*",
         "socket.io":"*",
-		"class.extend":"*",
+	"class.extend":"0.9.1",
         "async":"*",
         "olive_oil":"git://github.com/drFabio/OliveOil.git#master",
         "body-parser":"*",
