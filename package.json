@@ -12,7 +12,7 @@
 
      },
     "dependencies": {
-        "lodash":"*",
+        "lodash":"2.*",
         "express":"*",
         "socket.io":"*",
 		"class.extend":"*",

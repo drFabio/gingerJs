@@ -16,7 +16,6 @@ module.exports={
 		return this._mongoose;
 	},
 	up:function(cb){
-
 		if(this._isConnected){
 			cb();
 			return;
