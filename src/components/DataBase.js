@@ -233,18 +233,21 @@ module.exports={
 	_addFunctionToClose:function(){
 	 	var self=this
  	 	var func=function(cb){
-	 		self.end();
-	 		cb();
+	 		self.end(cb);
 	 	}
 		this._engine.addFunctionToCloseQueue(func);
 	},
-	end:function(){
+	end:function(cb){
 		if(this._isConnected && !this._isClosed){
 
 			this._isConnected=false;
 
 			mongoose.connection.close();
 			this._isClosed=true;
+			cb();
+		}
+		else{
+			cb();
 		}
 	
 	},
