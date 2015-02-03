@@ -244,11 +244,8 @@ module.exports={
 
 			mongoose.connection.close();
 			this._isClosed=true;
-			cb();
 		}
-		else{
-			cb();
-		}
+		cb();
 	
 	},
 	list:function(schemaName,search,limit,page,fields,options,cb,populate){
