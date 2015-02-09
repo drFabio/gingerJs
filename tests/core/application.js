@@ -112,6 +112,12 @@ describe('Application',function(){
 
 			});
 		});
+		describe('Middleware',function(){
+			it('Should be able to get a middleware',function(done){
+				expect(ginger.getComponent('middleware.SomeMiddleware')).to.not.be.empty;
+				done();
+			});
+		});
 		describe('Schema',function(){
 			it('Should have loaded all schemas',function(){
 				fixtureData.schemas.auto.forEach(function(s){

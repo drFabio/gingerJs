@@ -8,9 +8,10 @@ var CONTEXT_MODULE_ROOT=5;
 var CONTEXT_COMPONENTS=6;
 var CONTEXT_GATEWAYS=7;
 var CONTEXT_ROOT=8;
-var CONTEXT_ROUTER=11;
 var CONTEXT_ERROR=9;
 var CONTEXT_SCHEMA=10;
+var CONTEXT_ROUTER=11;
+var CONTEXT_MIDDLEWARE=12;
 var _=require('lodash');
 
 module.exports={
@@ -51,7 +52,6 @@ module.exports={
 		this._errorFactory=engine.getBootstrap('ErrorFactory');
 		this._schemaFactory=engine.getBootstrap('SchemaFactory');
 		this._routerHandlerFactory=engine.getBootstrap('RouterHandlerFactory');
-
 		if(this._params['path']){
 			this.setApplicationPath(this._params['path']);
 		}
@@ -85,6 +85,11 @@ module.exports={
 					return CONTEXT_ROUTER;
 				}
 				return false;
+			case 'middleware':
+				if(currentContext==CONTEXT_COMPONENTS){
+					return CONTEXT_MIDDLEWARE;
+				}
+				return false;	
 			case 'schemas':
 				if(currentContext==CONTEXT_MODEL){
 					return CONTEXT_SCHEMA;
@@ -130,10 +135,23 @@ module.exports={
 				this._addRouterHandler(fullPath,name,parentModules);
 				cb();
 			break;
+			case CONTEXT_MIDDLEWARE:
+				this._addMiddleware(fullPath,name,parentModules);
+				cb();
+			break;
 			default:
 				cb();
 			break;
 		}
+	},
+	_addMiddleware:function(path,name,parentNamespace){
+		if(parentNamespace){
+			parentNamespace='middleware.'+parentNamespace;
+		}
+		else{
+			parentNamespace='middleware';
+		}
+		this._addComponent(path,name,parentNamespace);
 	},
 	_addRouterHandler:function(path,name,parentNamespace){
 		this._routerHandlerFactory.setAppClass(name,path,parentNamespace);
@@ -240,7 +258,7 @@ module.exports={
 						}
 					}
 				}
-				else if(context===CONTEXT_MODEL || childContext===CONTEXT_COMPONENTS || childContext==CONTEXT_ROUTER){
+				else if(context===CONTEXT_MODEL || childContext===CONTEXT_COMPONENTS || childContext==CONTEXT_ROUTER || childContext==CONTEXT_MIDDLEWARE){
 					asyncFunctions=asyncFunctions.concat(self._walkDir(false,path,childContext,parentModules));
 				}
 				else if(context===CONTEXT_MODULE){

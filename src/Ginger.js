@@ -131,7 +131,6 @@ Ginger.prototype._getFactories = function() {
     this._modelFactory=this.getBootstrap('ModelFactory');
     this._schemaFactory=this.getBootstrap('SchemaFactory');
     this._routerHandlerFactory=this.getBootstrap('RouterHandlerFactory');
-
     
 };
 /**

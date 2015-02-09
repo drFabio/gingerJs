@@ -82,5 +82,57 @@ module.exports={
 			obj=this._eventFactory.makeObjectEventEmitter(obj);
 		}
 		return obj;
-	}
+	},
+	setAppClass:function(name,path,parentNamespace,fullNamespace,POJO){
+
+		var defaultParent=null;
+		name=this._buildNamespace(parentNamespace,name);
+
+		if(this.hasDefaultParent()){
+			if(this._defaultEngineNamespace){
+
+				var engineName=this._defaultEngineNamespace+'.'+name;
+				if(this._classFactory.classFileExists(engineName)){
+					if(!this._classFactory.isClassSet(engineName)){
+						this.setEngineClass(name);
+					}
+					defaultParent=engineName;
+				}
+			}
+			if(!defaultParent && !!this._defaultAppParent){
+				defaultParent=this._defaultAppParent;
+			}
+		}
+		if(!POJO){
+			POJO={};
+			if(path){
+
+				POJO=this._getPojo(path,defaultParent);
+			}
+			else{
+				POJO=this._classFactory.getClassFileContents(fullNamespace);
+			}
+		}
+
+		if(!POJO.parent){
+			POJO=this._setDefaultParentOnPOJO(POJO,defaultParent);
+			
+		}
+		else {
+			var isEngineClass=POJO.parent.indexOf(this._defaultEngineNamespace)===0;
+			//POJO=this._setDefaultParentOnPOJO(POJO,defaultParent);
+			if(isEngineClass && !this._classFactory.isClassSet(POJO.parent)){
+				var engineName=POJO.parent.replace(this._defaultEngineNamespace+'.',"");
+				this.setEngineClass(engineName);
+
+			}
+
+		}
+
+		var appNamespace=this._buildNamespace(this._defaulAppNamespace,name);
+		console.log(' APP NAMESPACE '+appNamespace);
+		this._addToIndex(name,appNamespace,POJO,true);
+	 
+		return appNamespace;
+	},
 }
