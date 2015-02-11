@@ -12,8 +12,7 @@ module.exports={
 	},
 	start:function(cb){
 		this._initExpress();
-		this.buildRoutes();
-		cb();
+		this.buildRoutes(cb);
 
 	},
 	_getRouterHandlerComponent:function(){
@@ -51,6 +50,7 @@ module.exports={
 		for(var index in controllerList){
 			this._handleControllerRoutes(controllerList[index]);
 		}
+		cb();
 	},
 	_getHTTPVerb:function(routeVerb){
 		if(routeVerb){
