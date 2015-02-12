@@ -79,8 +79,14 @@ module.exports={
 		else{
 			var argsToAdd=[url];
 			middlewares.forEach(function(m){
-				var middleware=this._engine.getComponent('middleware.'+m);
-				argsToAdd.push(middleware.getMiddleware(controllerObj,self,controllerData));
+				if(typeof(m)=='function'{
+					argsToAdd.push(m);
+				})
+				else{
+					var middleware=this._engine.getComponent('middleware.'+m);
+					argsToAdd.push(middleware.getMiddleware(controllerObj,self,controllerData));
+
+				}
 			},this);
 
 			argsToAdd.push(controllerFunction);
