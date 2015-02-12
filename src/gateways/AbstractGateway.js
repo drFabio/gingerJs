@@ -79,9 +79,9 @@ module.exports={
 		else{
 			var argsToAdd=[url];
 			middlewares.forEach(function(m){
-				if(typeof(m)=='function'{
+				if(typeof(m)=='function'){
 					argsToAdd.push(m);
-				})
+				}
 				else{
 					var middleware=this._engine.getComponent('middleware.'+m);
 					argsToAdd.push(middleware.getMiddleware(controllerObj,self,controllerData));
