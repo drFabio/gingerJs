@@ -2,7 +2,7 @@
     "name": "gingerjs",
     "private": false,
     "author":"Fabio Oliveira Costa <fabio@dexus.com.br>",
-    "version": "0.0.3",
+    "version": "0.0.5",
     "description": "A HMVC framework",
     "devDependencies": {
          "chai":"*",
