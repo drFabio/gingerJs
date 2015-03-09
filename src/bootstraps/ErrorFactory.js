@@ -7,7 +7,7 @@ module.exports={
 	_isSingleton:false,
 	_getObject:function(name,message,code,data){
 	
-		return this._classFactory.createObject(name,message,code,data);
+		return this._classFactory.createObject(name,this._engine,message,code,data);
 	}
 
 }

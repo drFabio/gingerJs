@@ -6,8 +6,8 @@ module.exports={
 	isError:true,
 	defaultMessage:'There was an error',
 	
-	init:function(message,code,data){
-
+	init:function(engine,message,code,data){
+		this._engine=engine;
 		if(message){
 			this.setMessage(message);
 		}
